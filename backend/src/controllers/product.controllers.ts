@@ -59,9 +59,9 @@ const getProductById = asyncHandler(async (req, res) => {
 
 const updateProduct = asyncHandler(async (req, res) => {
     const { id } = req.params;
-    const { name, price, description } = req.body;
+    const { name, price, description , category_id } = req.body;
 
-    if (!name || !price || !description) {
+    if (!name || !price || !category_id) {
         throw new ApiError("All fields are required", 400);
     }
     const updatedProduct = await db.product.update({
@@ -72,7 +72,8 @@ const updateProduct = asyncHandler(async (req, res) => {
         data : {
             name,
             price,
-            description,
+            category_id,
+            description
         }
     })
 

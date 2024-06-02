@@ -67,6 +67,8 @@ model Product {
   description   String?
   restaurant_id String
   imagePath     String?
+  category_id   String
+  category      Category        @relation(fields: [category_id], references: [id])
   reviews       ProductReview[]
   restaurant    Restaurant      @relation(fields: [restaurant_id], references: [id], onDelete: Cascade)
   price         Float
@@ -75,6 +77,14 @@ model Product {
   createdAt     DateTime        @default(now())
   updatedAt     DateTime        @updatedAt
   deleted       Boolean         @default(false)
+}
+
+model Category {
+  id        String    @id @default(uuid())
+  name      String    @unique
+  products  Product[]
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
 }
 
 model Order {

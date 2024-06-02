@@ -11,7 +11,7 @@ declare global {
         id: string;
         email: string;
         username: string;
-        fullname: string;
+        fullname: string | null;
         phone: string | null;
       };
     }

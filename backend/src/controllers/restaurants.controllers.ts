@@ -129,7 +129,11 @@ const deleteRestaurant = asyncHandler(async(req,res)=>{
 
 const addRestaurantMenuItem = asyncHandler(async(req,res)=>{
     const { id } = req.params
-    const { name , price } = req.body
+    const { name , price , category_id } = req.body
+
+    if(!name || !price || !category_id){
+        throw new ApiError("Please provide all values" , 400)
+    }
 
     const restaurant = await db.restaurant.findUnique({
         where : {
@@ -146,6 +150,7 @@ const addRestaurantMenuItem = asyncHandler(async(req,res)=>{
             name : name as string,
             price : price as number,
             restaurant_id : id as string,
+            category_id : String(category_id),
             status : 'AVAILABLE', //TODO : add imageUrl
         }
     })
