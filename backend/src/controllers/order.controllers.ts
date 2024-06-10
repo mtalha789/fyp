@@ -4,12 +4,19 @@ import { ApiError } from "../ustils/ApiError";
 import { ApiResponse } from "../ustils/ApiResponse";
 import { asyncHandler } from "../ustils/asyncHandler";
 
+interface OrderItems {
+    productId: string;
+    quantity: number;
+    restaurantId: string;
+    priceAtOrder: number;
+    totalAmount: number;
+}
 const getAllOrders = asyncHandler(async (req, res) => {
     const user = req.user;
 
     const orders = await db.order.findMany({
         where: { userId: user?.id as string },
-        include: { _count: { select: { orderItems: true } } }
+        include: { _count: { select: { subOrder: true } } }
     })
 
     if (orders == null) {
@@ -38,7 +45,7 @@ const createOrder = asyncHandler(async (req, res) => {
         throw new ApiError("Some Products not found", 404);
     }
 
-    const orderItems = items.map((item: any) => {
+    const orderItems: OrderItems[] = items.map((item: OrderItems) => {
         const product = products.find((p: Product) => p.id === item.productId);
         if (!product) {
             throw new ApiError(`Product with id ${item.productId} not found`, 404);
@@ -51,12 +58,32 @@ const createOrder = asyncHandler(async (req, res) => {
         }
     })
 
+    const restaurants = [...new Set(products.map((product) => product.restaurant_id))];
+
+    let subOrders: any = []
+    restaurants.forEach((restaurant) => {
+        const restaurantOrder = orderItems.filter(item => item.restaurantId === restaurant).map(order => ({
+            productId: order.productId,
+            quantity: order.quantity,
+            totalAmount: order.totalAmount,
+            priceAtOrder: order.priceAtOrder
+        }))
+        subOrders.push({
+            restaurantId: restaurant,
+            orderItems: restaurantOrder
+        })
+
+    })
+
     const newOrder = await db.order.create({
         data: {
             userId: req.user?.id as string,
-            orderItems,
-            orderStatus: "PENDING",
-            totalAmount: orderItems.reduce((acc: number, item: OrderItem) => acc + item.totalAmount, 0)
+            totalAmount: orderItems.reduce((acc, item) => acc + item.totalAmount, 0),
+            // subOrder : subOrders.forEach(subOrder=>{})
+            subOrder: {
+                create: subOrders
+            },
+            orderStatus: "PENDING"
         }
     })
 
@@ -73,7 +100,7 @@ const getOrderById = asyncHandler(async (req, res) => {
     const { id } = req.params;
     const order = await db.order.findUnique({
         where: { id, userId: req.user?.id as string, deleted: false, },
-        include: { orderItems: true }
+        include: { subOrder: true }
     })
     if (order == null) {
         throw new ApiError("Order not found", 404);
@@ -83,11 +110,11 @@ const getOrderById = asyncHandler(async (req, res) => {
         .json(new ApiResponse(200, order, "Order fetched successfully"))
 })
 
-const updateOrderStatus = asyncHandler(async (req, res) => { 
+const updateOrderStatus = asyncHandler(async (req, res) => {
     const { id } = req.params;
     const orderStatus = req.body.orderStatus.toUpperCase();
 
-    if(orderStatus !== "ACCEPTED" && orderStatus!== 'DELIVERED' && orderStatus !== "CANCELED" && orderStatus !== "PENDING") {
+    if (orderStatus !== "ACCEPTED" && orderStatus !== 'DELIVERED' && orderStatus !== "CANCELED" && orderStatus !== "PENDING") {
         throw new ApiError("Order status can only be ACCEPTED or REJECTED", 400);
     }
     const order = await db.order.update({

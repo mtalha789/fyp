@@ -18,6 +18,8 @@ model User {
   username       String          @unique
   email          String          @unique
   password       String
+  avatar         String
+  coverImage     String?
   fullname       String?
   refreshToken   String?
   accessToken    String?
@@ -33,19 +35,22 @@ model User {
 }
 
 model Restaurant {
-  id             String    @id @default(uuid())
-  name           String
-  address        Address[]
-  corporateEmail String
-  phone          String
-  owner_id       String
-  closed         Boolean   @default(false)
-  owner          User      @relation(fields: [owner_id], references: [id], onDelete: Restrict)
-  products       Product[]
-  reviews        Review[]
-  createdAt      DateTime  @default(now())
-  updatedAt      DateTime  @updatedAt
-  deleted        Boolean   @default(false)
+  id                String     @id @default(uuid())
+  name              String
+  address           Address[]
+  imageUrl          String
+  corporateEmail    String
+  phone             String
+  minimumOrderPrice Int
+  owner_id          String
+  closed            Boolean    @default(false)
+  owner             User       @relation(fields: [owner_id], references: [id], onDelete: Restrict)
+  products          Product[]
+  reviews           Review[]
+  orders            SubOrder[]
+  createdAt         DateTime   @default(now())
+  updatedAt         DateTime   @updatedAt
+  deleted           Boolean    @default(false)
 }
 
 model Address {
@@ -64,6 +69,7 @@ model Address {
 model Product {
   id            String          @id @default(uuid())
   name          String
+  imageUrl      String
   description   String?
   restaurant_id String
   imagePath     String?
@@ -89,10 +95,10 @@ model Category {
 
 model Order {
   id          String      @id @default(uuid())
-  orderItems  OrderItem[]
   orderStatus OrderStatus
   totalAmount Float
   userId      String
+  subOrder    SubOrder[]
   user        User        @relation(fields: [userId], references: [id])
   createdAt   DateTime    @default(now())
   updatedAt   DateTime    @updatedAt
@@ -100,14 +106,27 @@ model Order {
   delivery    Delivery?
 }
 
+model SubOrder {
+  id           String      @id @default(uuid())
+  orderItems   OrderItem[]
+  orderId      String
+  order        Order       @relation(fields: [orderId], references: [id])
+  restaurantId String
+  restaurant   Restaurant  @relation(fields: [restaurantId], references: [id])
+  status       OrderStatus @default(PENDING)
+  createdAt    DateTime    @default(now())
+  updatedAt    DateTime    @updatedAt
+  deleted      Boolean     @default(false)
+}
+
 model OrderItem {
   id           String   @id @default(uuid())
-  orderId      String
+  subOrderId   String
   productId    String
   quantity     Int
   totalAmount  Float
   priceAtOrder Float
-  order        Order    @relation(fields: [orderId], references: [id])
+  subOrder     SubOrder @relation(fields: [subOrderId], references: [id])
   product      Product  @relation(fields: [productId], references: [id])
   createdAt    DateTime @default(now())
   updatedAt    DateTime @updatedAt

@@ -6,6 +6,7 @@ import { asyncHandler } from "../ustils/asyncHandler";
 import { comparePasswords, hashPassword } from "../ustils/passEncryption";
 import { generateAccessToken, generateRefreshToken } from "../ustils/jwtToken";
 import JWT, { type JwtPayload } from 'jsonwebtoken'
+import { uploadOnFirebase } from "../ustils/firebase";
 
 
 const cookieOptions = {
@@ -32,6 +33,8 @@ const generateRefreshAccessToken = async (userid:string) => {
 
 const registerUser = asyncHandler(async(req : Request,res : Response)=>{
     const { username , password , email , fullname, phone } = req.body
+
+    const files = req.files as { [fieldname: string]: Express.Multer.File[] }
     if([username ,password ,email ].some((x)=>x==null)){
         res.status(400).json({error : 'All fields are required'})
     }
@@ -46,6 +49,18 @@ const registerUser = asyncHandler(async(req : Request,res : Response)=>{
         throw new ApiError('User with this username or email already exists' , 400)
     }
     
+    if(!files || !files?.avatar || !files?.avatar.length) {
+        throw new ApiError('Avaatar is required!' , 400)
+    }
+    console.log(files);
+    
+    const avatar = await uploadOnFirebase(files.avatar[0])
+
+    let coverImage
+
+    if(files?.coverImage && files?.coverImage.length) {
+        coverImage = await uploadOnFirebase(files.coverImage[0])
+    }
     const hashedPass = await hashPassword(password);
     const newUser = await db.user.create({
         data : {
@@ -53,7 +68,9 @@ const registerUser = asyncHandler(async(req : Request,res : Response)=>{
             password : hashedPass as string,
             email : email as string,
             fullname : fullname as string,
-            phone : phone as string
+            phone : phone as string,
+            avatar : avatar as string,
+            coverImage : coverImage? coverImage : null
         }
     })
     
@@ -206,53 +223,53 @@ const changeCurrentPassword = asyncHandler(async (req, res) => {
         )
 })
 
-// const updateAvatar = asyncHandler(async (req, res) => {
-//     const { file, user } = req;
+const updateAvatar = asyncHandler(async (req, res) => {
+    const file = req.file
 
-//     if (!file?.path) {
-//         throw new ApiError("Avatar file is required", 400);
-//     }
+    if (!file) {
+        throw new ApiError("Avatar is required", 400);
+    }
+    const avatar = await uploadOnFirebase(file);
 
-//     const avatar = await uploadOnCloudinary( file.path);
+    const updatedUser = await db.user.update({
+        where: { id: req.user?.id },
+        data : {
+            avatar
+        },
+        select : {
+            id : true , username : true , email : true , fullname : true , phone : true , avatar : true
+        }
+    })
 
-//     if (!avatar?.url) {
-//         throw new ApiError("Error while uploading avatar");
-//     }
+    res.status(200).json(new ApiResponse(200, updatedUser, "Avatar updated successfully"));
+});
 
-//     await deletedOnClouinary(user?.avatar)
+const updateCoverImage = asyncHandler(async (req, res) => {
 
-//     const updatedUser = await User.findByIdAndUpdate(
-//         user?._id,
-//         { $set: { avatar: avatar.url } },
-//         { new: true }
-//     ).select("-password -refreshToken");
+    const file = req.file
 
-//     res.status(200).json(new ApiResponse(200, updatedUser, "Avatar updated successfully"));
-// });
+    if (!file) {
+        throw new ApiError("Cover image is missing", 400);
+    }
 
-// const updateCoverImage = asyncHandler(async (req, res) => {
-//     const coverImageLocalPath = req.file?.path;
+    const coverImage = await uploadOnFirebase(file);
 
-//     if (!coverImageLocalPath) {
-//         throw new ApiError("Cover image is missing", 400);
-//     }
+    if (!coverImage) {
+        throw new ApiError("Error while uploading cover image");
+    }
 
-//     const coverImage = await uploadOnCloudinary(coverImageLocalPath);
+    // await deletedOnClouinary(req.user?.coverImage)
 
-//     if (!coverImage?.url) {
-//         throw new ApiError("Error while uploading cover image");
-//     }
+    const user = await db.user.update({
+        where: { id: req.user?.id },
+        data : {
+            coverImage
+        },
+        select : { id : true , username : true , email : true , fullname : true , phone : true , avatar : true , coverImage : true}
+    })
 
-//     await deletedOnClouinary(req.user?.coverImage)
-
-//     const user = await User.findByIdAndUpdate(
-//         req.user?._id,
-//         { $set: { coverImage: coverImage.url } },
-//         { new: true }
-//     ).select("-password -refreshToken");
-
-//     res.status(200).json(new ApiResponse(200, user, "Cover image updated successfully"));
-// });
+    res.status(200).json(new ApiResponse(200, user, "Cover image updated successfully"));
+});
 
 const updateAccountDetails = asyncHandler(async (req, res) => {
     const { fullName, email } = req.body
@@ -280,8 +297,8 @@ export {
     logoutUser,
     refereshAccessToken,
     updateAccountDetails,
-    // updateAvatar,
-    // updateCoverImage,
+    updateAvatar,
+    updateCoverImage,
     getCurrentUser,
     changeCurrentPassword,
 };
