@@ -1,6 +1,6 @@
 import { Router } from "express";
 import { verifyJWT } from "../middlewares/auth.middleware";
-import { addRestaurantMenuItem, createRestaurant, deleteRestaurant, getAllRestaurants, getRestaurantById, getRestaurantMenuItems, updateRestaurant } from "../controllers/restaurants.controllers";
+import { addRestaurantMenuItem, createRestaurant, deleteRestaurant, getAllRestaurants, getRestaurantById, getRestaurantMenuItems, updateProfileImage, updateRestaurant } from "../controllers/restaurants.controllers";
 import { upload } from "../middlewares/multer.middleware";
 
 const router = Router()
@@ -17,8 +17,8 @@ router
     .delete(verifyJWT,deleteRestaurant)
 
 router
-    .route('/:id/profileImage')
-    .patch(verifyJWT,upload.single('profileImage'),(req,res)=>{res.send('profile image updated successfully')})
+    .route('/:id/profileimage')
+    .patch(verifyJWT,upload.single('profileImage'),updateProfileImage)
 
 router
     .route('/:id/menu')

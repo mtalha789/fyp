@@ -47,7 +47,7 @@ export const uploadOnFirebase = async (file: Express.Multer.File) => {
   }
 }
 
-export const deletedOnFirebase = async (url : string) => {
+export const deleteOnFirebase = async (url : string) => {
   try {
     console.log('deleting file...');
     

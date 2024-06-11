@@ -6,7 +6,7 @@ import { asyncHandler } from "../ustils/asyncHandler";
 import { comparePasswords, hashPassword } from "../ustils/passEncryption";
 import { generateAccessToken, generateRefreshToken } from "../ustils/jwtToken";
 import JWT, { type JwtPayload } from 'jsonwebtoken'
-import { deletedOnFirebase, uploadOnFirebase } from "../ustils/firebase";
+import { deleteOnFirebase, uploadOnFirebase } from "../ustils/firebase";
 
 
 const cookieOptions = {
@@ -236,7 +236,7 @@ const updateAvatar = asyncHandler(async (req, res) => {
         throw new ApiError("Error while uploading avatar", 500);
     }
 
-    await deletedOnFirebase(req.user?.avatar as string)
+    await deleteOnFirebase(req.user?.avatar as string)
     const updatedUser = await db.user.update({
         where: { id: req.user?.id },
         data : {
@@ -265,7 +265,7 @@ const updateCoverImage = asyncHandler(async (req, res) => {
     }
 
     if(req.user?.coverImage){
-        await deletedOnFirebase(req.user?.coverImage)
+        await deleteOnFirebase(req.user?.coverImage)
     }
 
     const user = await db.user.update({
