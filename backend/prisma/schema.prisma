@@ -69,7 +69,6 @@ model Address {
 model Product {
   id            String          @id @default(uuid())
   name          String
-  imageUrl      String
   description   String?
   restaurant_id String
   imagePath     String?

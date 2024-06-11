@@ -6,7 +6,7 @@ import { asyncHandler } from "../ustils/asyncHandler";
 import { comparePasswords, hashPassword } from "../ustils/passEncryption";
 import { generateAccessToken, generateRefreshToken } from "../ustils/jwtToken";
 import JWT, { type JwtPayload } from 'jsonwebtoken'
-import { uploadOnFirebase } from "../ustils/firebase";
+import { deletedOnFirebase, uploadOnFirebase } from "../ustils/firebase";
 
 
 const cookieOptions = {
@@ -34,9 +34,10 @@ const generateRefreshAccessToken = async (userid:string) => {
 const registerUser = asyncHandler(async(req : Request,res : Response)=>{
     const { username , password , email , fullname, phone } = req.body
 
+    debugger
     const files = req.files as { [fieldname: string]: Express.Multer.File[] }
     if([username ,password ,email ].some((x)=>x==null)){
-        res.status(400).json({error : 'All fields are required'})
+        throw new ApiError('All fields are required!' , 400)
     }
 
     const user = await db.user.findFirst({
@@ -53,7 +54,7 @@ const registerUser = asyncHandler(async(req : Request,res : Response)=>{
         throw new ApiError('Avaatar is required!' , 400)
     }
     console.log(files);
-    
+    debugger
     const avatar = await uploadOnFirebase(files.avatar[0])
 
     let coverImage
@@ -231,6 +232,11 @@ const updateAvatar = asyncHandler(async (req, res) => {
     }
     const avatar = await uploadOnFirebase(file);
 
+    if (!avatar) {
+        throw new ApiError("Error while uploading avatar", 500);
+    }
+
+    await deletedOnFirebase(req.user?.avatar as string)
     const updatedUser = await db.user.update({
         where: { id: req.user?.id },
         data : {
@@ -258,7 +264,9 @@ const updateCoverImage = asyncHandler(async (req, res) => {
         throw new ApiError("Error while uploading cover image");
     }
 
-    // await deletedOnClouinary(req.user?.coverImage)
+    if(req.user?.coverImage){
+        await deletedOnFirebase(req.user?.coverImage)
+    }
 
     const user = await db.user.update({
         where: { id: req.user?.id },

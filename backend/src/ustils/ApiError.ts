@@ -1,4 +1,8 @@
 class ApiError extends Error{
+    statusCode:number
+    data:any
+    errors:any
+    success:boolean
     constructor(
         message='Something went wrong',
         statusCode=500,

@@ -13,6 +13,8 @@ declare global {
         username: string;
         fullname: string | null;
         phone: string | null;
+        avatar: string;
+        coverImage: string | null;
       };
     }
   }
@@ -40,6 +42,8 @@ export const verifyJWT = asyncHandler(async (req, _, next) => {
       username: true,
       fullname: true,
       phone: true,
+      avatar: true,
+      coverImage: true,
     },
   });
 

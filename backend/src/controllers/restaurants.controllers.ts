@@ -2,20 +2,30 @@ import db from "../db";
 import { ApiError } from "../ustils/ApiError";
 import { ApiResponse } from "../ustils/ApiResponse";
 import { asyncHandler } from "../ustils/asyncHandler";
+import { uploadOnFirebase } from "../ustils/firebase";
 
 const createRestaurant = asyncHandler(async(req , res)=>{
-    const { name , phone , email} = req.body
+    const { name , phone , email , minOrderPrice } = req.body
 
-    if(!name || !phone || !email){
+    if(!name || !phone || !email || !minOrderPrice){
         throw new ApiError("Please provide all values" , 400)
     }
 
+    const file = req.file
+
+    if (!file) {
+        throw new ApiError('Please provide profile image',400)
+    }
+
+    const imageUrl = await uploadOnFirebase(file)
     const restaurant = await db.restaurant.create({
         data : {
             name : name as string,
             phone : phone as string, 
             owner_id : req.user?.id as string,
-            corporateEmail : email as string
+            corporateEmail : email as string,
+            imageUrl,
+            minimumOrderPrice : minOrderPrice as number
         }
     })
 
@@ -36,6 +46,8 @@ const getAllRestaurants = asyncHandler(async(req,res)=>{
             name : true,
             phone : true,
             corporateEmail : true,
+            imageUrl : true,
+            minimumOrderPrice : true,
             reviews : {
                 select : {
                     rating : true,
@@ -135,6 +147,12 @@ const addRestaurantMenuItem = asyncHandler(async(req,res)=>{
         throw new ApiError("Please provide all values" , 400)
     }
 
+    if (!req.file) {
+        throw new ApiError('Please provide profile image',400)
+    }
+
+    const imageUrl = await uploadOnFirebase(req.file)
+
     const restaurant = await db.restaurant.findUnique({
         where : {
             id : id as string , 
@@ -151,6 +169,7 @@ const addRestaurantMenuItem = asyncHandler(async(req,res)=>{
             price : price as number,
             restaurant_id : id as string,
             category_id : String(category_id),
+            imageUrl,
             status : 'AVAILABLE', //TODO : add imageUrl
         }
     })
@@ -174,6 +193,9 @@ const getRestaurantMenuItems = asyncHandler(async(req,res)=>{
             id : true,
             name : true,
             price : true,
+            category : true,
+            description : true,
+            imageUrl : true,
         }
     })
     if (restaurantMenu == null) {

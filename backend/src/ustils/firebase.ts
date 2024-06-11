@@ -1,7 +1,9 @@
 // Import the functions you need from the SDKs you need
 import { initializeApp } from "firebase/app";
-import { getDownloadURL, getStorage, ref, uploadBytesResumable } from "firebase/storage";
+import { deleteObject, getDownloadURL, getStorage, ref, uploadBytes, uploadBytesResumable } from "firebase/storage";
 import { ApiError } from "./ApiError";
+import { getAuth, signInWithEmailAndPassword } from "firebase/auth";
+import fs from 'fs'
 
 const firebaseConfig = {
   apiKey: process.env.FIREBASE_API_KEY,
@@ -21,8 +23,7 @@ const storage = getStorage(app)
 
 export const uploadOnFirebase = async (file: Express.Multer.File) => {
   try {
-    console.log(file);
-    const storageRef =ref(storage, file.originalname);
+    const storageRef =ref(storage, file.originalname + '-' + Date.now() + '-' + file.size + '-' + file.mimetype);
   
     const metadata = {
       contentType: file.mimetype,
@@ -31,15 +32,30 @@ export const uploadOnFirebase = async (file: Express.Multer.File) => {
   
     console.log('File uploading...');
     
-    const snapshot = await uploadBytesResumable(storageRef, file.buffer, metadata)
+    const snapshot = await uploadBytesResumable(storageRef,  fs.readFileSync(file.path), metadata)
   
     const downloadURL = await getDownloadURL(snapshot.ref)
   
     console.log('File uploaded successfully', downloadURL);
+    fs.unlinkSync(file.path)
   
     return downloadURL
   } catch (error) {
     console.log(error);
+    fs.unlinkSync(file.path)
     throw new ApiError('Error uploading file:' + error,500)
+  }
+}
+
+export const deletedOnFirebase = async (url : string) => {
+  try {
+    console.log('deleting file...');
+    
+    const storageRef = ref(storage, url);
+    await deleteObject(storageRef)
+    console.log('File deleted successfully', url);
+    
+  } catch (error) {
+    throw new ApiError('Error deleting file:' + error,500)
   }
 }

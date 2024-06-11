@@ -13,6 +13,8 @@ const io = new Server(server,{
     }
 })
 
+console.log(process.env.FIREBASE_API_KEY);
+
 app.set('io',io)
 io.use(verifyUser)
 initializeSocketIo(io)
