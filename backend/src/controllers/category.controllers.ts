@@ -18,6 +18,11 @@ const getAllCategories = asyncHandler( async (req,res) => {
 
 const createCategory = asyncHandler( async (req,res) => {
     const { name } = req.body
+
+    if (name == null) {
+        throw new ApiError("Please provide category name",400)
+        
+    }
     
     const category = await db.category.create({
         data : {

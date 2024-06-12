@@ -77,7 +77,7 @@ model Product {
   reviews       ProductReview[]
   restaurant    Restaurant      @relation(fields: [restaurant_id], references: [id], onDelete: Cascade)
   price         Float
-  status        ProductStatus
+  isAvailable   Boolean         @default(true)
   orderItems    OrderItem[]
   createdAt     DateTime        @default(now())
   updatedAt     DateTime        @updatedAt

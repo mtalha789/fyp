@@ -1,6 +1,7 @@
 import { Router } from "express";
-import { getAllProducts, getProductById, setProductUnavailable, updateProduct } from "../controllers/product.controllers";
+import { deleteProduct, getAllProducts, getProductById, toggleProductUnavailability, updateProduct, updateProductImage } from "../controllers/product.controllers";
 import { verifyJWT } from "../middlewares/auth.middleware";
+import { upload } from "../middlewares/multer.middleware";
 
 const router = Router()
 
@@ -12,8 +13,9 @@ router
     .route('/:id')
     .get(getProductById)
     .put(verifyJWT,updateProduct)
-    .delete(verifyJWT,updateProduct)
+    .delete(verifyJWT,deleteProduct)
 
-router.route('/:id/unavailable').put(verifyJWT,setProductUnavailable)
+router.route('/:id/toggle-unavailable').put(verifyJWT,toggleProductUnavailability)
+router.route('/:id/product-image').put(verifyJWT,upload.single('image'),updateProductImage)
 
 export default router

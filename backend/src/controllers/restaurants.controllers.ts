@@ -149,7 +149,7 @@ const deleteRestaurant = asyncHandler(async (req, res) => {
 
 const addRestaurantMenuItem = asyncHandler(async (req, res) => {
     const { id } = req.params
-    const { name, price, category_id } = req.body
+    let { name, price, category_id } = req.body
 
     if (!name || !price || !category_id) {
         throw new ApiError("Please provide all values", 400)
@@ -157,7 +157,7 @@ const addRestaurantMenuItem = asyncHandler(async (req, res) => {
     }
 
     if (!req.file) {
-        throw new ApiError('Please provide profile image', 400)
+        throw new ApiError('Please provide product image', 400)
     }
 
     const imageUrl = await uploadOnFirebase(req.file)
@@ -172,6 +172,12 @@ const addRestaurantMenuItem = asyncHandler(async (req, res) => {
 
     if (restaurant == null) {
         throw new ApiError('Unauthorized Request', 401)
+    }
+
+    price = parseInt(price)
+
+    if(isNaN(price)) {
+        throw new ApiError('Price must be a number', 400)
     }
     const newMenuItem = await db.product.create({
         data: {
@@ -211,7 +217,7 @@ const getRestaurantMenuItems = asyncHandler(async (req, res) => {
             imagePath: true,
         }
     })
-    if (restaurantMenu == null) {
+    if (restaurantMenu == null || restaurantMenu.length == 0) {
         throw new ApiError('Restaurant menu not found', 404)
     }
     res
@@ -239,9 +245,13 @@ const updateProfileImage = asyncHandler(async (req, res) => {
         throw new ApiError('Unauthorized Request', 401)
     }
 
-    await deleteOnFirebase(restaurant.imageUrl as string)
-
     const imageUrl = await uploadOnFirebase(file)
+
+    if(!imageUrl) {
+        throw new ApiError('Error updating profile image', 500)
+    }
+
+    await deleteOnFirebase(restaurant.imageUrl as string)
 
     const updatedRestaurant = await db.restaurant.update({
         where: { id: id as string, owner_id: req.user?.id as string },

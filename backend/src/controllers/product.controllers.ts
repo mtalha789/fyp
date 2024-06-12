@@ -2,11 +2,12 @@ import db from "../db";
 import { ApiError } from "../ustils/ApiError";
 import { ApiResponse } from "../ustils/ApiResponse";
 import { asyncHandler } from "../ustils/asyncHandler";
+import { deleteOnFirebase, uploadOnFirebase } from "../ustils/firebase";
 
 
 const getAllProducts = asyncHandler(async (req, res) => {
     const products = await db.product.findMany({
-        where : {status : 'AVAILABLE', deleted : false},
+        where : {isAvailable : true, deleted : false},
         select : {
             id : true,
             name : true,
@@ -59,15 +60,26 @@ const getProductById = asyncHandler(async (req, res) => {
 
 const updateProduct = asyncHandler(async (req, res) => {
     const { id } = req.params;
-    const { name, price, description , category_id } = req.body;
+    let { name, price, description , category_id } = req.body;
 
-    if (!name || !price || !category_id) {
+    if (!name || !price) {
         throw new ApiError("All fields are required", 400);
     }
+    
+    price = parseFloat(price)
+
+    if (isNaN(price)) {
+        throw new ApiError("Price must be a number", 400);
+    }
+
     const updatedProduct = await db.product.update({
         where : {
             id,
-            restaurant : {owner_id : req.user?.id}
+            deleted : false,
+            restaurant : {
+                deleted : false,
+                owner_id : req.user?.id
+            }
         },
         data : {
             name,
@@ -105,15 +117,33 @@ const deleteProduct = asyncHandler(async (req, res) => {
         .json(new ApiResponse(200, deletedProduct, "Product deleted successfully"));
 })
 
-const setProductUnavailable = asyncHandler(async (req, res) => {
+const toggleProductUnavailability = asyncHandler(async (req, res) => {
     const { id } = req.params;
+
+    const product = await db.product.findUnique({
+        where : {
+            id,
+            deleted : false,
+            restaurant : {
+                owner_id : req.user?.id,
+                deleted : false
+            }
+        },
+        select : {
+            isAvailable : true
+        }
+    })
+
+    if (!product) {
+        throw new ApiError('Unauthorized Request',401)
+    }
     const unavailableProduct = await db.product.update({
         where : {
             id,
             restaurant : {owner_id : req.user?.id}
         },
         data : {
-            status : 'UNAVAILABLE'
+            isAvailable : !product.isAvailable
         }
     })
     if (unavailableProduct == null) {
@@ -121,13 +151,52 @@ const setProductUnavailable = asyncHandler(async (req, res) => {
     }
     res
         .status(200)
-        .json(new ApiResponse(200, unavailableProduct, "Product set unavailable successfully"));
+        .json(new ApiResponse(200, unavailableProduct, product.isAvailable?"Product set unavailable successfully":'Product set available successfully'));
 })
 
+const updateProductImage = asyncHandler(async (req, res) => {
+    const { id } = req.params;
+
+    if (req.file == null) {
+        throw new ApiError("Image is required", 400);
+    }
+
+    const product = await db.product.findUnique({
+        where : {
+            id,
+            restaurant : {
+                deleted : false,
+                owner_id : req.user?.id
+            }
+        }
+    })
+
+    if (product == null) {
+        throw new ApiError('Unauthrized Request', 401);
+    }
+
+    const newImage = await uploadOnFirebase(req.file)
+    
+    product.imagePath && await deleteOnFirebase(product.imagePath as string)
+
+    const updatedProduct = await db.product.update({
+        where : {
+            id
+        },
+        data : {
+            imagePath : newImage
+        }
+    })  
+
+    res
+        .status(200)
+        .json(new ApiResponse(200, updatedProduct, "Product image updated successfully"));
+})
 export {
     getAllProducts,
     getProductById,
     updateProduct,
     deleteProduct,
-    setProductUnavailable
+    toggleProductUnavailability,
+    updateProductImage
 }
