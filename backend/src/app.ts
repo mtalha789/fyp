@@ -9,7 +9,7 @@ import productRouter from './routes/product.routes';
 import orderRoutes from './routes/order.routes';
 import categoryRoutes from './routes/category.routes';
 import reviewRoutes from './routes/review.routes';
-
+import productReviewRouter from './routes/productReview.router'
 
 
 const app = express()
@@ -31,5 +31,6 @@ app.use('/api/products',productRouter)
 app.use('/api/categories',categoryRoutes)
 app.use('/api/orders',orderRoutes)
 app.use('/api/reviews',reviewRoutes)
+app.use('/api/productreviews',productReviewRouter)
 
 export default app

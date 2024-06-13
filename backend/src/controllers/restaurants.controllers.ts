@@ -91,11 +91,13 @@ const getRestaurantById = asyncHandler(async (req, res) => {
                 }
             },
             products: {
-                where: { status: 'AVAILABLE' },
+                where: { isAvailable : true, deleted : false },
                 select: {
                     id: true,
                     name: true,
                     price: true,
+                    description: true,
+                    imagePath: true,
                     _count: {
                         select: { orderItems: true }
                     }
@@ -186,7 +188,7 @@ const addRestaurantMenuItem = asyncHandler(async (req, res) => {
             restaurant_id: id as string,
             category_id: String(category_id),
             imagePath: imageUrl as string,
-            status: 'AVAILABLE', //TODO : add imageUrl
+            isAvailable: true,
         }
     })
     if (newMenuItem == null) {
@@ -201,7 +203,7 @@ const getRestaurantMenuItems = asyncHandler(async (req, res) => {
     const { id } = req.params
     const restaurantMenu = await db.product.findMany({
         where: {
-            status: 'AVAILABLE',
+            isAvailable : true,
             restaurant_id: id as string,
             deleted: false,
             restaurant: {
@@ -264,6 +266,65 @@ const updateProfileImage = asyncHandler(async (req, res) => {
         .json(new ApiResponse(200, { updatedRestaurant, imageUrl }, 'Profile Image Updated Successfully'))
 })
 
+
+const getRestaurantReviews = asyncHandler(async (req,res)=>{
+    const restaurantId = req.params.id
+
+    if(restaurantId == null){
+        throw new ApiError('Restaurant id is required',400)
+    }
+
+    const restaurantReviews = await db.review.findMany({
+        where : { restaurantId ,deleted : false},
+    })
+
+    if(restaurantReviews == null){
+        throw new ApiError('Product not found',400)
+    }
+
+    const totalRating = restaurantReviews.reduce((acc,review)=>{
+        return acc+review.rating
+    },0)/restaurantReviews.length
+
+    res
+        .status(200)
+        .json(new ApiResponse(200,{totalRating,restaurantReviews},'Reviews fetched successfully'))
+})
+const addRestaurantReview = asyncHandler(async (req,res)=>{
+    const { id : restaurantId } = req.params
+    let { comment, rating } = req.body
+
+    if(!rating){
+        throw new ApiError('Rating is required',400)
+    }
+
+    rating = parseInt(rating)
+
+    if(rating < 1 || rating > 5){
+        throw new ApiError('Rating must be between 1 and 5',400)
+    }
+
+    const review = await db.review.findFirst({
+        where : {restaurantId, userId : req.user?.id as string, deleted:false},
+    })
+
+    if(review != null){
+        throw new ApiError('Already reviewed',400)
+    }
+
+    const newReview = await db.review.create({
+        data : {
+            comment,
+            rating,
+            restaurantId,
+            userId : req.user?.id as string
+        }
+    })
+    res
+        .status(200)
+        .json(new ApiResponse(200,{newReview },'Review added successfully'))
+})
+
 export {
     createRestaurant,
     getAllRestaurants,
@@ -272,5 +333,7 @@ export {
     deleteRestaurant,
     addRestaurantMenuItem,
     getRestaurantMenuItems,
-    updateProfileImage
+    updateProfileImage,
+    getRestaurantReviews,
+    addRestaurantReview
 }
