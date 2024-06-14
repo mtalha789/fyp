@@ -27,8 +27,14 @@ const initializeSocketIo = (io: Server) => {
         socket.on('newOrder', async (orderData: OrderData) => {
 
             try {
+                console.log(socket.id,'newOrder');
+                
+                console.log(orderData);
+                
+                const productIds= orderData.orderItems.map(item=>item.productId)
+
                 const products = await db.product.findMany({
-                    where: { id: { in: orderData.orderItems.map((item) => item.productId) }, deleted: false }
+                    where: { id: { in: productIds }, deleted: false }
                 })
 
                 if (products.length !== orderData.orderItems.length) {
@@ -72,7 +78,12 @@ const initializeSocketIo = (io: Server) => {
                         totalAmount: orderItems.reduce((acc, item) => acc + item.totalAmount, 0),
                         // subOrder : subOrders.forEach(subOrder=>{})
                         subOrder: {
-                            create: subOrders
+                            create: subOrders.map((subOrder: any) => ({
+                            orderItems : {
+                                create  : subOrder.orderItems
+                            },
+                            restaurantId : subOrder.restaurantId
+                        })),
                         },
                         orderStatus: "PENDING"
                     }

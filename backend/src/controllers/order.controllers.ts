@@ -55,6 +55,7 @@ const createOrder = asyncHandler(async (req, res) => {
             priceAtOrder: product.price,
             quantity: item.quantity,
             totalAmount: item.quantity * Number(product.price),
+            restaurantId: product.restaurant_id
         }
     })
 
@@ -79,9 +80,13 @@ const createOrder = asyncHandler(async (req, res) => {
         data: {
             userId: req.user?.id as string,
             totalAmount: orderItems.reduce((acc, item) => acc + item.totalAmount, 0),
-            // subOrder : subOrders.forEach(subOrder=>{})
             subOrder: {
-                create: subOrders
+                create: subOrders.map((subOrder:any) => ({
+                    orderItems: {
+                        create: subOrder?.orderItems
+                    },
+                    restaurantId: subOrder.restaurantId
+                }))
             },
             orderStatus: "PENDING"
         }
@@ -112,14 +117,14 @@ const getOrderById = asyncHandler(async (req, res) => {
 
 const updateOrderStatus = asyncHandler(async (req, res) => {
     const { id } = req.params;
-    const orderStatus = req.body.orderStatus.toUpperCase();
+    const orderStatus = req.body?.orderStatus?.toUpperCase();
 
     if (orderStatus !== "ACCEPTED" && orderStatus !== 'DELIVERED' && orderStatus !== "CANCELED" && orderStatus !== "PENDING") {
         throw new ApiError("Order status can only be ACCEPTED or REJECTED", 400);
     }
     const order = await db.order.update({
         where: { id, userId: req.user?.id as string, deleted: false, },
-        data: { orderStatus }
+        data: { orderStatus : orderStatus == 'ACCEPTED' ? 'CONFIRMED' : 'CANCELED' }
     })
     if (order == null) {
         throw new ApiError("Order not found", 404);

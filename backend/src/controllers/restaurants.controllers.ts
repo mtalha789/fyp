@@ -270,6 +270,8 @@ const updateProfileImage = asyncHandler(async (req, res) => {
 const getRestaurantReviews = asyncHandler(async (req,res)=>{
     const restaurantId = req.params.id
 
+    console.log(restaurantId);
+    
     if(restaurantId == null){
         throw new ApiError('Restaurant id is required',400)
     }
@@ -277,6 +279,8 @@ const getRestaurantReviews = asyncHandler(async (req,res)=>{
     const restaurantReviews = await db.review.findMany({
         where : { restaurantId ,deleted : false},
     })
+    console.log(restaurantReviews);
+    
 
     if(restaurantReviews == null){
         throw new ApiError('Product not found',400)
