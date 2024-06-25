@@ -19,48 +19,66 @@ model User {
   email          String          @unique
   password       String
   avatar         String
+  role           UserRole        @default(Customer)
   coverImage     String?
   fullname       String?
   refreshToken   String?
   accessToken    String?
   addresses      Address[]
   phone          String?
+  riderVehicle   String?
   restaurants    Restaurant[]
   orders         Order[]
   reviews        Review[]
   productReviews ProductReview[]
+  deliveries     Delivery[]
   createdAt      DateTime        @default(now())
   updatedAt      DateTime        @updatedAt
   deleted        Boolean         @default(false)
 }
 
 model Restaurant {
-  id                String     @id @default(uuid())
+  id                String              @id @default(uuid())
   name              String
-  address           Address[]
+  address           RestaurantAddress[]
   imageUrl          String
   corporateEmail    String
   phone             String
   minimumOrderPrice Int
   owner_id          String
-  closed            Boolean    @default(false)
-  owner             User       @relation(fields: [owner_id], references: [id], onDelete: Restrict)
+  closed            Boolean             @default(false)
+  owner             User                @relation(fields: [owner_id], references: [id], onDelete: Restrict)
   products          Product[]
   reviews           Review[]
   orders            SubOrder[]
-  createdAt         DateTime   @default(now())
-  updatedAt         DateTime   @updatedAt
-  deleted           Boolean    @default(false)
+  createdAt         DateTime            @default(now())
+  updatedAt         DateTime            @updatedAt
+  deleted           Boolean             @default(false)
+}
+
+enum UserRole {
+  Customer
+  Seller
+  Rider
 }
 
 model Address {
+  id      String  @id @default(uuid())
+  street  String?
+  city    String
+  state   String
+  zipCode String
+  userId  String
+  user    User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+  deleted Boolean @default(false)
+}
+
+model RestaurantAddress {
   id           String     @id @default(uuid())
-  street       String
+  street       String?
   city         String
   state        String
   zipCode      String
-  userId       String
-  user         User       @relation(fields: [userId], references: [id], onDelete: Cascade)
   restaurantId String
   restaurant   Restaurant @relation(fields: [restaurantId], references: [id], onDelete: Cascade)
   deleted      Boolean    @default(false)
@@ -182,7 +200,7 @@ model Delivery {
   updatedAt        DateTime       @updatedAt
   deleted          Boolean        @default(false)
   order            Order          @relation(fields: [orderId], references: [id], onDelete: Cascade)
-  deliveryPerson   DeliveryPerson @relation(fields: [deliveryPersonId], references: [id], onDelete: NoAction)
+  deliveryPerson   User           @relation(fields: [deliveryPersonId], references: [id], onDelete: NoAction)
 }
 
 enum DeliveryStatus {
@@ -192,14 +210,15 @@ enum DeliveryStatus {
   CANCELED
 }
 
-model DeliveryPerson {
-  id         String     @id @default(uuid())
-  name       String
-  phone      String     @unique
-  vehicle    String
-  deliveries Delivery[]
-  deleted    Boolean    @default(false)
-}
+// model DeliveryPerson {
+//   id         String     @id @default(uuid())
+//   name       String
+//   phone      String     @unique
+//   vehicle    String
+//   deliveries Delivery[]
+//   deleted    Boolean    @default(false)
+//   areas      Address[]
+// }
 
 model Coupon {
   id             String   @id @default(uuid())

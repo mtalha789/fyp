@@ -36,7 +36,7 @@ const registerUser = asyncHandler(async(req : Request,res : Response)=>{
 
     debugger
     const files = req.files as { [fieldname: string]: Express.Multer.File[] }
-    if([username ,password ,email ].some((x)=>x==null)){
+    if([username ,password ,email ].some((x)=>x.trim()==null)){
         throw new ApiError('All fields are required!' , 400)
     }
 
@@ -65,7 +65,7 @@ const registerUser = asyncHandler(async(req : Request,res : Response)=>{
     const hashedPass = await hashPassword(password);
     const newUser = await db.user.create({
         data : {
-            username : username as string,
+            username : username.trim() as string,
             password : hashedPass as string,
             email : email as string,
             fullname : fullname as string,
