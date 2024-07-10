@@ -6,6 +6,16 @@ To install dependencies:
 bun install
 ```
 
+For Database migrations:
+
+```bash
+bun add @prisma/client
+```
+
+```bash
+bunx prisma migrate dev --name mymigration
+```
+
 To run:
 
 ```bash
