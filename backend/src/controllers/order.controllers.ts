@@ -3,6 +3,7 @@ import db from "../db";
 import { ApiError } from "../ustils/ApiError";
 import { ApiResponse } from "../ustils/ApiResponse";
 import { asyncHandler } from "../ustils/asyncHandler";
+import { sendEmail } from "../ustils/resend";
 
 interface OrderItems {
     productId: string;
@@ -59,10 +60,14 @@ const createOrder = asyncHandler(async (req, res) => {
         }
     })
 
-    const restaurants = [...new Set(products.map((product) => product.restaurant_id))];
+    const restaurantIds = [...new Set(products.map((product) => product.restaurant_id))];
+
+    const restaurants = await db.restaurant.findMany({
+        where: { id: { in: restaurantIds } }
+    })
 
     let subOrders: any = []
-    restaurants.forEach((restaurant) => {
+    restaurantIds.forEach((restaurant) => {
         const restaurantOrder = orderItems.filter(item => item.restaurantId === restaurant).map(order => ({
             productId: order.productId,
             quantity: order.quantity,
@@ -76,6 +81,9 @@ const createOrder = asyncHandler(async (req, res) => {
 
     })
 
+    // subOrders.forEach((subOrder) => {
+    //     sendEmail(subOrder.)
+    // })
     const newOrder = await db.order.create({
         data: {
             userId: req.user?.id as string,
