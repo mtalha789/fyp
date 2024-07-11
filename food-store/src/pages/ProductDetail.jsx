@@ -1,6 +1,16 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
+import { useParams } from 'react-router-dom';
 
 const ProductDetail = () => {
+const {id]= useParams;
+  
+
+const [data, setdata]=useState(null);
+
+useEffect(()=>{
+    // fetch(`https://fakestoreapi.com/products/${id}`
+  },[setdata])
+
   const galleryImages = [
     "../assets/bloackarea.png",
     "../assets/bloackarea.png",
