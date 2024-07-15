@@ -7,10 +7,10 @@ function WhyJoin(props) {
   return (
     <div className="bg-gray-100 shadow-md rounded-lg p-6  text-center justify-center">
       <h4 className="text-3xl font-medium mb-4 mt-14 ">
-        Why should you partner with Zomato?
+        Why should you partner with Mealo?
       </h4>
       <p className="mb-16 text-xl text-gray-500">
-        Zomato enables you to get 60% more revenue, 10x new customers and boost
+       Mealo enables you to get 60% more revenue, 10x new customers and boost
         your brand <br />
         visibility by providing insights to improve your business.
       </p>

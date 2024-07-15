@@ -1,9 +1,14 @@
-import React from "react";
+import React, { useState } from "react";
 import { Card, CardBody, CardFooter, Image, link } from "@nextui-org/react";
-import { Link } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 // import ProductForm from "../pages/ProductForm";
 
+
+
 export default function ProductCard() {
+  // const [isModalOpen, setModalOpen] = useState(false);
+  const navigate = useNavigate();
+
   const list = [
     {
       id: 1,
@@ -20,7 +25,7 @@ export default function ProductCard() {
       desc: "Yummy Biryani",
     },
     {
-      id:3,
+      id: 3,
       title: "Pizza",
       img: "https://upload.wikimedia.org/wikipedia/commons/9/91/Pizza-3007395.jpg",
       price: "$10.00",
@@ -70,6 +75,10 @@ export default function ProductCard() {
     },
   ];
 
+  const HandleData =(id)=>{
+    navigate(`/product/${id}`)
+  }
+
   return (
     <section className="grid content-center justify-center items-center grid-flow-row ">
       <p className="text-3xl font-medium p-16">
@@ -83,28 +92,25 @@ export default function ProductCard() {
             shadow="sm"
             key={item.id}
             isPressable
-            onPress={() => console.log("item pressed")}
+            onPress={() => HandleData(item.id)}
           >
-            {/* <Link to={ProductForm}> */}
-              <CardBody className="flex overflow-visible p-0">
-                <Image
-                  src={item.img}
-                  shadow="sm"
-                  alt={item.title}
-                  className="w-full h-[250px] object-cover"
-                  radius="lg"
-                  width="100%"
-                />
-                {/* <Image src={item.img} /> */}
-              </CardBody>
-              <CardFooter className="text-small justify-between">
-                <div>
-                  <b className="grid justify-start">{item.title}</b>
-                  <p className="text-default-400">{item.desc}</p>
-                </div>
-                <p className="text-default-500">{item.price}</p>
-              </CardFooter>
-            {/* </Link> */}
+            <CardBody className="flex overflow-visible p-0">
+              <Image
+                src={item.img}
+                shadow="sm"
+                alt={item.title}
+                className="w-full h-[250px] object-cover"
+                radius="lg"
+                width="100%"
+              />
+            </CardBody>
+            <CardFooter className="text-small justify-between">
+              <div>
+                <b className="grid justify-start">{item.title}</b>
+                <p className="text-default-400">{item.desc}</p>
+              </div>
+              <p className="text-default-500">{item.price}</p>
+            </CardFooter>
           </Card>
         ))}
       </div>

@@ -16,7 +16,7 @@ function SignupForm() {
                 {(onClose) => (
                     <>
                      <p className="font-extrabold text-3xl text-inherit m-4 justify-center flex">
-                         Masala
+                         Mealo
                      </p>
                     <ModalHeader className="flex flex-col gap-1">
                         SignUp

@@ -5,6 +5,8 @@ import SignupForm from "../components/Signup/SignupForm";
 import Features from "../components/PartnerData/Feature";
 import StepSection from '../components/PartnerData/StepSection'
 import WhyJoin from "../components/PartnerData/WhyJoin";
+import Footer from "../components/Footer";
+
 
 
 
@@ -34,6 +36,9 @@ function PartnerWithUs(props) {
 
             <Features />
             <StepSection />
+            <Footer />
+
+                
 
            
         </div>
@@ -41,3 +46,6 @@ function PartnerWithUs(props) {
 }
 
 export default PartnerWithUs;
+
+
+

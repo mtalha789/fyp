@@ -4,7 +4,9 @@ import ProductCard from './components/ProductCard'
 import BrandContainer from './components/BrandContainer/BrandContainer'
 import Footer from './components/Footer'
 
+
 export default function App() {
+ 
   return (
     <>
       <MyNavbar/>
@@ -12,7 +14,13 @@ export default function App() {
       <BrandContainer />
       <ProductCard />
       <Footer />
-      {/* <ProductForm/> */}      
+
+
+
+
+        
+
+
 
       </>
 
