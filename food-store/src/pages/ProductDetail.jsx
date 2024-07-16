@@ -1,11 +1,12 @@
 import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import MyNavbar from "../components/MyNavbar";
+import ItemCard from "../components/ItemCard";
 
 const ProductDetail = () => {
   const { id } = useParams();
 
-  //  const [Data, SetData] = useState(null);
+   const [Data, SetData] = useState({});
   //  useEffect(() => {
   // fetch(`https://fakestoreapi.com/products/${id}`
 
@@ -19,11 +20,33 @@ const ProductDetail = () => {
       price:"Rs: 100 service Charges",
       delivery:"- Free Home delivery"
     },
+    {
+      id: 2,
+      title: "product 2",
+      img: "https://images.pexels.com/photos/3616956/pexels-photo-3616956.jpeg",
+      price:"Rs: 100 service Charges",
+      delivery:"- Free Home delivery"
+    },
+    {
+      id: 3,
+      title: "product 3",
+      img: "https://images.pexels.com/photos/3616956/pexels-photo-3616956.jpeg",
+      price:"Rs: 100 service Charges",
+      delivery:"- Free Home delivery"
+    },
   ];
+
+  useEffect(()=>{
+    const filterData= list.find((item)=>item.id===id)
+   SetData(filterData)
+   console.log(filterData.id);
+  },[id])
+
 
   return (
     <>
-      <MyNavbar />
+    <div>{Data.id}</div>
+      {/* <MyNavbar />
       <div className="  h-80 px-72 py-16 content-center shadow-lg ">
         {list.map((item) => (
           <div key={item.id} className="flex gap-7">
@@ -40,6 +63,12 @@ const ProductDetail = () => {
           </div>
         ))}
       </div>
+        <div className="py-7 px-72  ">
+          <h1 className="text-4xl font-bold">Popular</h1>
+          <p >Most orderd right Now </p>
+        </div>
+        <ItemCard />
+      */}
     </>
   );
 };
