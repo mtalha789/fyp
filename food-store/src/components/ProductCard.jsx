@@ -5,78 +5,78 @@ import { useNavigate } from "react-router-dom";
 
 
 
+const list = [
+  {
+    id: 1,
+    title: "Pizza",
+    img: "https://upload.wikimedia.org/wikipedia/commons/9/91/Pizza-3007395.jpg",
+    price: "$5.50",
+    desc: "Yummy Pizza",
+  },
+  {
+    id: 2,
+    title: "Biryani",
+    img: "https://upload.wikimedia.org/wikipedia/commons/5/5a/%22Hyderabadi_Dum_Biryani%22.jpg",
+    price: "$3.00",
+    desc: "Yummy Biryani",
+  },
+  {
+    id: 3,
+    title: "Pizza",
+    img: "https://upload.wikimedia.org/wikipedia/commons/9/91/Pizza-3007395.jpg",
+    price: "$10.00",
+    desc: "Yummy Pizza",
+  },
+  {
+    id: 4,
+    title: "Biryani",
+    img: "https://upload.wikimedia.org/wikipedia/commons/5/5a/%22Hyderabadi_Dum_Biryani%22.jpg",
+    price: "$5.30",
+    desc: "Yummy Biryani",
+  },
+  {
+    id: 5,
+    title: "Pizza",
+    img: "https://upload.wikimedia.org/wikipedia/commons/9/91/Pizza-3007395.jpg",
+    price: "$15.70",
+    desc: "Yummy Pizza",
+  },
+  {
+    id: 6,
+    title: "Pizza",
+    img: "https://upload.wikimedia.org/wikipedia/commons/9/91/Pizza-3007395.jpg",
+    price: "$8.00",
+    desc: "Yummy Pizza",
+  },
+  {
+    id: 7,
+    title: "Biryani",
+    img: "https://upload.wikimedia.org/wikipedia/commons/5/5a/%22Hyderabadi_Dum_Biryani%22.jpg",
+    price: "$7.50",
+    desc: "Yummy Biryani",
+  },
+  {
+    id: 8,
+    title: "Biryani",
+    img: "https://upload.wikimedia.org/wikipedia/commons/5/5a/%22Hyderabadi_Dum_Biryani%22.jpg",
+    price: "$7.50",
+    desc: "Yummy Biryani",
+  },
+  {
+    id: 9,
+    title: "Pizza",
+    img: "https://upload.wikimedia.org/wikipedia/commons/9/91/Pizza-3007395.jpg",
+    price: "$12.20",
+    desc: "Yummy Pizza",
+  },
+];
 export default function ProductCard() {
   // const [isModalOpen, setModalOpen] = useState(false);
   const navigate = useNavigate();
 
-  const list = [
-    {
-      id: 1,
-      title: "Pizza",
-      img: "https://upload.wikimedia.org/wikipedia/commons/9/91/Pizza-3007395.jpg",
-      price: "$5.50",
-      desc: "Yummy Pizza",
-    },
-    {
-      id: 2,
-      title: "Biryani",
-      img: "https://upload.wikimedia.org/wikipedia/commons/5/5a/%22Hyderabadi_Dum_Biryani%22.jpg",
-      price: "$3.00",
-      desc: "Yummy Biryani",
-    },
-    {
-      id: 3,
-      title: "Pizza",
-      img: "https://upload.wikimedia.org/wikipedia/commons/9/91/Pizza-3007395.jpg",
-      price: "$10.00",
-      desc: "Yummy Pizza",
-    },
-    {
-      id: 4,
-      title: "Biryani",
-      img: "https://upload.wikimedia.org/wikipedia/commons/5/5a/%22Hyderabadi_Dum_Biryani%22.jpg",
-      price: "$5.30",
-      desc: "Yummy Biryani",
-    },
-    {
-      id: 5,
-      title: "Pizza",
-      img: "https://upload.wikimedia.org/wikipedia/commons/9/91/Pizza-3007395.jpg",
-      price: "$15.70",
-      desc: "Yummy Pizza",
-    },
-    {
-      id: 6,
-      title: "Pizza",
-      img: "https://upload.wikimedia.org/wikipedia/commons/9/91/Pizza-3007395.jpg",
-      price: "$8.00",
-      desc: "Yummy Pizza",
-    },
-    {
-      id: 7,
-      title: "Biryani",
-      img: "https://upload.wikimedia.org/wikipedia/commons/5/5a/%22Hyderabadi_Dum_Biryani%22.jpg",
-      price: "$7.50",
-      desc: "Yummy Biryani",
-    },
-    {
-      id: 8,
-      title: "Biryani",
-      img: "https://upload.wikimedia.org/wikipedia/commons/5/5a/%22Hyderabadi_Dum_Biryani%22.jpg",
-      price: "$7.50",
-      desc: "Yummy Biryani",
-    },
-    {
-      id: 9,
-      title: "Pizza",
-      img: "https://upload.wikimedia.org/wikipedia/commons/9/91/Pizza-3007395.jpg",
-      price: "$12.20",
-      desc: "Yummy Pizza",
-    },
-  ];
 
   const HandleData =(id)=>{
-    navigate(`/product/${id}`)
+    navigate(`/catagory/${id}`)
   }
 
   return (

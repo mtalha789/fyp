@@ -9,16 +9,16 @@ import StarBucks from "../../assets/starbucks-logo-png-1688.png"
 import SubWay from "../../assets/subway-photo-logo-4293.png"
 
 
+const brandsData = [
+  { goto: 'https://www.dominos.com.pk/', BrandLogo: Dominos, BrandName: "Domino's Pizza" },
+  { goto: 'https://www.subway.com/', BrandLogo: SubWay, BrandName: 'SubWay' },
+  { goto: 'https://www.starbucks.com/', BrandLogo: StarBucks, BrandName: 'StarBucks' },
+  { goto: 'https://www.bk.com/', BrandLogo: BurgerKing, BrandName: 'Burger King' },
+  { goto: 'https://www.pizzahut.com/', BrandLogo: PizzaHut, BrandName: 'Pizza Hut' },
+  { goto: 'https://www.mcdonalds.com/', BrandLogo: McDonalds, BrandName: 'Mcdonalds' },
+];
 
 function BrandContainer(props) {
-  const brandsData = [
-    { goto: 'https://www.dominos.com.pk/', BrandLogo: Dominos, BrandName: "Domino's Pizza" },
-    { goto: 'https://www.subway.com/', BrandLogo: SubWay, BrandName: 'SubWay' },
-    { goto: 'https://www.starbucks.com/', BrandLogo: StarBucks, BrandName: 'StarBucks' },
-    { goto: 'https://www.bk.com/', BrandLogo: BurgerKing, BrandName: 'Burger King' },
-    { goto: 'https://www.pizzahut.com/', BrandLogo: PizzaHut, BrandName: 'Pizza Hut' },
-    { goto: 'https://www.mcdonalds.com/', BrandLogo: McDonalds, BrandName: 'Mcdonalds' },
-  ];
     return (
         <>
         <div className='flex justify-center p-16 '>

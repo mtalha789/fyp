@@ -1,6 +1,8 @@
+import { Link } from "react-router-dom";
 import FacebookIcon from "../assets/facebook-app-symbol.png" 
 import InstagramIcon from "../assets/instagram.png" 
 import TwitterIcon from "../assets/twitter.png" 
+
 
 
 import React from 'react';
@@ -28,7 +30,7 @@ const footerData = [
     {
       title: 'For Restaurants',
       links: [
-        { name: 'Partner With Us', url: '#' },
+        { name: 'Partner With Us', url: '/PartnerWithUs' },
       ],
     },
     {
@@ -45,7 +47,9 @@ const footerData = [
         <div className='bg-gray-100 h-78 mt-16'>
         <div className='grid content-center justify-center items-center grid-flow-row'>
           <div className='flex h-16 w-96 mt-8'>
+            <Link to='/'>
             <h1 className='font-extrabold text-4xl'>Mealo</h1>
+            </Link>
           </div>
           <div className='flex mb-6 justify-between'>
             {footerData.map((item, index) => (
@@ -54,13 +58,13 @@ const footerData = [
                 {item.links.map((link, linkIndex) => (
                   link.icon ? (
                     <div className='flex m-2' key={linkIndex}>
-                       <a href={link.url}>
+                       <Link to={link.url}>
                       <img className='w-6 h-6' src={link.icon} alt={link.name} />
-                    </a>
+                    </Link>
                     </div>
                   ) : (
                     <p key={linkIndex}>
-                       <a href={link.url}> {link.name}</a>
+                       <Link to={link.url}> {link.name}</Link>
                         </p>
                   )
                 ))}

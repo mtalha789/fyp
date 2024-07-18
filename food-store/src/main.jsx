@@ -6,7 +6,8 @@ import { NextUIProvider } from "@nextui-org/react";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import PartnerWithUs from "./pages/PartnerWithUs.jsx";
 import ProductDetail from "./pages/ProductDetail.jsx";
-// import ProductForm from './pages/ProductForm.jsx'
+import ProductModal from "./pages/ProductModal.jsx";
+
 
 const router = createBrowserRouter([
   {
@@ -18,8 +19,12 @@ const router = createBrowserRouter([
     element: <PartnerWithUs />,
   },
   {
-    path: "/product/:id",
+    path: "/catagory/:id",
     element: <ProductDetail />,
+  },
+  {
+    path: "/product/:id",
+    element: <ProductModal />,
   },
 ]);
 
