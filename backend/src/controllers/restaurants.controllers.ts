@@ -329,6 +329,42 @@ const addRestaurantReview = asyncHandler(async (req,res)=>{
         .json(new ApiResponse(200,{newReview },'Review added successfully'))
 })
 
+const addRestaurantAddress = asyncHandler(async (req, res) => {
+    const { id } = req.params
+    const { city, state, zipCode, street } = req.body
+
+    if (!city || !state || !zipCode || !street) {
+        throw new ApiError('All fields are required', 400)
+    }
+    const restaurant = await db.restaurant.findUnique({
+        where: {
+            id: id as string,
+            deleted: false,
+            owner_id: req.user?.id as string
+        },
+    })
+
+    if (restaurant == null) {
+        throw new ApiError('Unauthorized Request', 401)
+    }
+
+    const updatedRestaurant = await db.restaurantAddress.create({
+        data: {
+            city,
+            state,
+            zipCode,
+            restaurantId: id,
+            street
+        }
+    })
+    if (updatedRestaurant == null) {
+        throw new ApiError('Error updating restaurant', 500)
+    }
+    res
+        .status(200)
+        .json(new ApiResponse(200, { updatedRestaurant }, 'Updated Restaurant Successfully'))
+})
+
 export {
     createRestaurant,
     getAllRestaurants,
@@ -339,5 +375,6 @@ export {
     getRestaurantMenuItems,
     updateProfileImage,
     getRestaurantReviews,
-    addRestaurantReview
+    addRestaurantReview,
+    addRestaurantAddress
 }
