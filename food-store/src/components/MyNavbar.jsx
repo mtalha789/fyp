@@ -4,11 +4,13 @@ import {
   NavbarBrand,
   NavbarContent,
   NavbarItem,
+  Dropdown
 } from "@nextui-org/react";
 import { Link } from "react-router-dom";
 import LoginForm from "./LoginForm";
 import SignupForm from "./Signup/SignupForm";
 // import { Link } from 'react-router-dom';
+import { ShoppingCart } from "lucide-react";
 
 export default function MyNavbar() {
   return (
@@ -36,6 +38,10 @@ export default function MyNavbar() {
         </NavbarItem>
         <NavbarItem>
           <SignupForm />
+        </NavbarItem>
+        <NavbarItem>
+        <ShoppingCart fill="black" size={28} />
+
         </NavbarItem>
       </NavbarContent>
     </Navbar>
