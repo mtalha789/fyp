@@ -214,7 +214,12 @@ const getRestaurantMenuItems = asyncHandler(async (req, res) => {
             id: true,
             name: true,
             price: true,
-            category: true,
+            category: {
+                select: {
+                    id: true,
+                    name: true
+                }
+            },
             description: true,
             imagePath: true,
         }
@@ -363,6 +368,24 @@ const addRestaurantAddress = asyncHandler(async (req, res) => {
     res
         .status(200)
         .json(new ApiResponse(200, { updatedRestaurant }, 'Updated Restaurant Successfully'))
+})
+
+const restaurantSalesReport = asyncHandler(async (req, res) => {
+    const { id } = req.params
+
+    const orderStats = await db.subOrder.aggregate({
+        where: {
+            restaurantId: id,
+            restaurant: {
+                owner_id:  req.user?.id
+            }
+        },
+        _count: true,
+    })
+
+    res
+        .status(200)
+        .json(new ApiResponse(200, { totalOrders: orderStats._count }, 'Sales report fetched successfully'))
 })
 
 export {

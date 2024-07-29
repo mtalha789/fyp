@@ -6,6 +6,7 @@ import Footer from './components/Footer'
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 import SignupForm from './components/Signup/SignupForm'
 import RestaurantPortal from './pages/restaurant/RestaurantPortal'
+import MenuPage from './pages/restaurant/Menu'
 
 
 export default function App() {
@@ -13,15 +14,16 @@ export default function App() {
   return (
     <QueryClientProvider client={new QueryClient()}>
     <>
-      <RestaurantPortal/>
+      {/* <RestaurantPortal/>
       {/* <MyNavbar/> */}
       {/* <Hero />
       <BrandContainer />
       <ProductCard /> */}
       {/* <SignupForm /> */}
       {/* <Footer /> */}
-      </>
-    </QueryClientProvider>
+      <MenuPage/>
+    </>
+    </QueryClientProvider> 
 
   )
 }
