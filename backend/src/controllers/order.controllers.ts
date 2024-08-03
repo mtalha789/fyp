@@ -17,7 +17,7 @@ const getAllOrders = asyncHandler(async (req, res) => {
 
     const orders = await db.order.findMany({
         where: { userId: user?.id as string },
-        include: { _count: { select: { subOrder: true } } }
+        include: { _count: { select: { subOrder: true } },subOrder: true },
     })
 
     if (orders == null) {
@@ -93,7 +93,8 @@ const createOrder = asyncHandler(async (req, res) => {
                     orderItems: {
                         create: subOrder?.orderItems
                     },
-                    restaurantId: subOrder.restaurantId
+                    restaurantId: subOrder.restaurantId,
+                    totalAmount: subOrder.orderItems.reduce((acc: number, item:OrderItems) => acc + item.totalAmount, 0),
                 }))
             },
             orderStatus: "PENDING"

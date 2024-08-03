@@ -1,6 +1,6 @@
 import { Router } from "express";
 import { verifyJWT } from "../middlewares/auth.middleware";
-import { addRestaurantAddress, addRestaurantMenuItem, addRestaurantReview, createRestaurant, deleteRestaurant, getAllRestaurants, getRestaurantById, getRestaurantMenuItems, getRestaurantReviews, updateProfileImage, updateRestaurant } from "../controllers/restaurants.controllers";
+import { addRestaurantAddress, addRestaurantMenuItem, addRestaurantReview, createRestaurant, deleteRestaurant, getAllRestaurants, getRestaurantById, getRestaurantMenuItems, getRestaurantOrders, getRestaurantReviews, restaurantSalesReport, updateProfileImage, updateRestaurant } from "../controllers/restaurants.controllers";
 import { upload } from "../middlewares/multer.middleware";
 
 const router = Router()
@@ -34,4 +34,12 @@ router
     .route('/:id/address')
     .post(verifyJWT, addRestaurantAddress)
     // .get(getRes)
+
+router
+    .route('/:id/sales')
+    .get(verifyJWT, restaurantSalesReport)
+
+router
+    .route('/:id/orders')
+    .get(verifyJWT, getRestaurantOrders)
 export default router

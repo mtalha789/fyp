@@ -7,6 +7,9 @@ import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 import SignupForm from './components/Signup/SignupForm'
 import RestaurantPortal from './pages/restaurant/RestaurantPortal'
 import MenuPage from './pages/restaurant/Menu'
+import Dashboard from './pages/restaurant/Dashboard'
+import OrdersPage from './pages/restaurant/Orders'
+import Sales from './pages/restaurant/Sales'
 
 
 export default function App() {
@@ -21,7 +24,10 @@ export default function App() {
       <ProductCard /> */}
       {/* <SignupForm /> */}
       {/* <Footer /> */}
-      <MenuPage/>
+      {/* <MenuPage/> */}
+      {/* <Dashboard/> */}
+      <Sales/>
+      <OrdersPage/>
     </>
     </QueryClientProvider> 
 

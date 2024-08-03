@@ -127,6 +127,7 @@ model SubOrder {
   id           String      @id @default(uuid())
   orderItems   OrderItem[]
   orderId      String
+  amount       Int?
   order        Order       @relation(fields: [orderId], references: [id])
   restaurantId String
   restaurant   Restaurant  @relation(fields: [restaurantId], references: [id])

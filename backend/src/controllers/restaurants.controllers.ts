@@ -4,6 +4,7 @@ import { ApiResponse } from "../ustils/ApiResponse";
 import { asyncHandler } from "../ustils/asyncHandler";
 import { deleteOnFirebase, uploadOnFirebase } from "../ustils/firebase";
 import fs from 'fs/promises'
+
 const createRestaurant = asyncHandler(async (req, res) => {
     const { name, phone, email, minOrderPrice } = req.body
 
@@ -25,11 +26,22 @@ const createRestaurant = asyncHandler(async (req, res) => {
         throw new ApiError('Please provide valid minimum order price', 400)
     }
 
+    const owner = await db.user.update({
+        where: { id: req.user?.id as string },
+        data: {
+            role: 'Seller'
+        }
+    })
+
+    if (owner == null) {
+        throw new ApiError('User does not exist', 400)
+        file?.path && await fs.unlink(file?.path as string)
+    }
     const restaurant = await db.restaurant.create({
         data: {
             name: name as string,
             phone: phone as string,
-            owner_id: req.user?.id as string,
+            owner_id: owner.id,
             corporateEmail: email as string,
             imageUrl,
             minimumOrderPrice,
@@ -299,6 +311,7 @@ const getRestaurantReviews = asyncHandler(async (req,res)=>{
         .status(200)
         .json(new ApiResponse(200,{totalRating,restaurantReviews},'Reviews fetched successfully'))
 })
+
 const addRestaurantReview = asyncHandler(async (req,res)=>{
     const { id : restaurantId } = req.params
     let { comment, rating } = req.body
@@ -388,6 +401,40 @@ const restaurantSalesReport = asyncHandler(async (req, res) => {
         .json(new ApiResponse(200, { totalOrders: orderStats._count }, 'Sales report fetched successfully'))
 })
 
+const getRestaurantOrders = asyncHandler(async (req, res) => {
+    const { id } = req.params
+
+    const orders = await db.subOrder.findMany({
+        where: {
+            restaurantId: id,
+            restaurant: {
+                owner_id:  req.user?.id
+            }
+        },
+        select: {
+            id: true,
+            amount: true,
+            orderItems: true,
+            createdAt: true,
+            order: {
+                select: {
+                    id: true,
+                    orderStatus: true
+                },
+                include: {
+                    user: true,
+                }
+            }
+        },
+        orderBy: {
+            createdAt: 'desc'
+        }
+    })
+
+    res
+        .status(200)
+        .json(new ApiResponse(200, { orders }, 'Orders fetched successfully'))
+})
 export {
     createRestaurant,
     getAllRestaurants,
@@ -399,5 +446,7 @@ export {
     updateProfileImage,
     getRestaurantReviews,
     addRestaurantReview,
-    addRestaurantAddress
+    addRestaurantAddress,
+    restaurantSalesReport,
+    getRestaurantOrders
 }
