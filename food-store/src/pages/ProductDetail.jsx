@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
+import { useLocation, useParams } from "react-router-dom";
 import MyNavbar from "../components/MyNavbar";
 import ItemCard from "../components/ItemCard";
 import Footer from "../components/Footer";
@@ -12,7 +12,7 @@ const list = [
     img: "https://images.pexels.com/photos/3616956/pexels-photo-3616956.jpeg",
     price: "Rs: 100 service Charges",
     delivery: "- Free Home delivery",
-    ratting: "4.9/5"
+    ratting: "4.9/5 rating"
   },
   {
     id: 2,
@@ -20,7 +20,7 @@ const list = [
     img: "https://images.pexels.com/photos/3616956/pexels-photo-3616956.jpeg",
     price: "Rs: 100 service Charges",
     delivery: "- Free Home delivery",
-    ratting: "4.9/5"
+    ratting: "4.9/5 rating"
 
   },
   {
@@ -29,7 +29,7 @@ const list = [
     img: "https://images.pexels.com/photos/3616956/pexels-photo-3616956.jpeg",
     price: "Rs: 100 service Charges",
     delivery: "- Free Home delivery",
-    ratting: "4.9/5"
+    ratting: "4.9/5 rating"
 
   },
 ];
@@ -47,6 +47,10 @@ const ProductDetail = () => {
     setData(filterData);
     console.log(filterData.id);
   }, [id]);
+  const {pathName}= useLocation
+  useEffect(()=>{
+    window.scrollTo(0,0)
+  },[pathName])
 
   return (
     <>

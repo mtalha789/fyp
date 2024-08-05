@@ -1,4 +1,4 @@
-import React from "react";
+import React, {useState} from "react";
 import {
   Navbar,
   NavbarBrand,
@@ -9,10 +9,17 @@ import {
 import { Link } from "react-router-dom";
 import LoginForm from "./LoginForm";
 import SignupForm from "./Signup/SignupForm";
+import Cart from "./Cart";
 // import { Link } from 'react-router-dom';
-import { ShoppingCart } from "lucide-react";
+
+
 
 export default function MyNavbar() {
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const toggleLogin = () => {
+    setIsLoggedIn(!isLoggedIn);
+  };
+
   return (
     <Navbar shouldHideOnScroll isBordered>
       <NavbarBrand>
@@ -40,8 +47,7 @@ export default function MyNavbar() {
           <SignupForm />
         </NavbarItem>
         <NavbarItem>
-        <ShoppingCart fill="black" size={28} />
-
+          <Cart />
         </NavbarItem>
       </NavbarContent>
     </Navbar>

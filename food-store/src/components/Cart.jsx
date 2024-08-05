@@ -1,44 +1,109 @@
-import React, { useState } from 'react';
-import { Button, Card, Divider } from '@nextui-org/react';
+import React, { useState } from "react";
+import { ShoppingCart } from "lucide-react";
+import { useCart } from "../state/Cart";
+import { Card, Image, CardBody, CardFooter, Button } from "@nextui-org/react";
 
 const Cart = () => {
-  const [cartItems, setCartItems] = useState([]);
+  // const [isOpen, setIsOpen] = useState(false);
+  // const cart = useCart((state) => state.cart);
+  const { isOpen, toggleCart, cart, addToCart, removeFromCart, clearCart } = useCart();
+  // const [cartItems, setCartItems] = useState([]);
 
-  const addToCart = (item) => {
-    setCartItems([...cartItems, item]);
-  };
+  // const addToCart = (item) => {
+  //   setCartItems([...cartItems, item]);
+  // };
 
-  const removeFromCart = (index) => {
-    setCartItems(cartItems.filter((_, i) => i !== index));
-  };
+  // const removeFromCart = (index) => {
+  //   setCartItems(cartItems.filter((_, i) => i !== index));
+  // };
 
+  // const toggleCart = () => {
+  //   setIsOpen(!isOpen);
+  // };
   return (
-    <div className="p-4">
-      <h2 className="text-xl font-bold mb-4">Your Cart</h2>
-      {cartItems.length === 0 ? (
-        <p>Your cart is empty</p>
-      ) : (
-        <div>
-          {cartItems.map((item, index) => (
-            <Card key={index} className="mb-2">
-              <div className="flex justify-between p-2">
-                <span>{item.name}</span>
-                <Button auto flat color="error" onClick={() => removeFromCart(index)}>
-                  Remove
-                </Button>
+    <div className="relative">
+    <button
+      onClick={toggleCart}
+      className="bg-slate-900 text-white p-2 rounded-xl"
+    >
+      <ShoppingCart className="relative" />
+      <div className="bg-red-500 text-white rounded-full w-5 h-5 absolute">
+        <span>{cart && cart.length}</span>
+      </div>
+    </button>
+
+    {isOpen && (
+      <div className="absolute right-0 mt-2 w-96 bg-white shadow-lg rounded-lg p-4 z-50">
+        <h3 className="text-lg font-semibold">My Cart</h3>
+        <div className="mt-4">
+          {cart?.map((item, index) => (
+            <div key={index} className="flex justify-between items-center">
+              <div>
+                <Card className="w-[22rem]">
+                  <CardBody>
+                    <div className="flex items-center gap-2">
+                      <Image
+                        alt={item.name}
+                        height={80}
+                        radius="sm"
+                        src={item.image}
+                        width={80}
+                      />
+                      <div className="w-48 font-semibold">
+                        <p>{item.name}</p>
+                      </div>
+                    </div>
+                  </CardBody>
+                  <CardFooter className="flex justify-between">
+                    <div className="bg-gray-100 rounded-full flex w-20 h-8 px-2 gap-2">
+                      <button
+                        onClick={() => removeFromCart(item.id)}
+                        className="rounded-full w-5 h-5 font-bold text-lg text-center"
+                      >
+                        -
+                      </button>
+                      <h1 className="rounded-full w-5 h-5 font-normal text-md text-center">
+                        {item.quantity}
+                      </h1>
+                      <button
+                        onClick={() => addToCart(item)}
+                        className="rounded-full w-5 h-5 font-bold text-lg text-center"
+                      >
+                        +
+                      </button>
+                    </div>
+                    <div className="">
+                      <p className="text-red-500 line-through">{`Rs. ${item.originalPrice}`}</p>
+                      <p className="text-red-500">{`Rs. ${item.discountedPrice}`}</p>
+                    </div>
+                  </CardFooter>
+                </Card>
               </div>
-            </Card>
+            </div>
           ))}
-          <Divider />
-          <Button className="mt-4" auto flat color="success" onClick={() => alert('Proceed to Checkout')}>
+
+          <div className="mt-4">
+            <p className="flex justify-between">
+              <span>Subtotal</span>
+              <span>{/* Calculate and display the subtotal */}</span>
+            </p>
+            <p className="flex justify-between text-green-500">
+              <span>Standard delivery</span>
+              <span>Free</span>
+            </p>
+            <p className="flex justify-between font-semibold text-lg">
+              <span>Total (Incl. VAT)</span>
+              <span>{/* Calculate and display the total */}</span>
+            </p>
+          </div>
+
+          <button className="w-full mt-4 bg-black text-white p-2 rounded-lg">
             Checkout
-          </Button>
+          </button>
         </div>
-      )}
-      <Button className="mt-4" auto flat onClick={() => addToCart({ name: 'Sample Item' })}>
-        Add Sample Item
-      </Button>
-    </div>
+      </div>
+    )}
+  </div>
   );
 };
 
