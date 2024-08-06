@@ -8,9 +8,9 @@ export const useCart = create(
     immer((set) => ({
       // immer for using the methods of it
       hydrated: false,
-      isOpen: false,
+      // isOpen: false,
       cart: [],
-      toggleCart: () => set((state) => ({ isOpen: !state.isOpen })),
+      // toggleCart: () => set((state) => ({ isOpen: !state.isOpen })),
       addToCart: (item) =>
         set((state) => ({
           cart: [...state.cart, item],

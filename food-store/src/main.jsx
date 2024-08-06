@@ -6,6 +6,7 @@ import { NextUIProvider } from "@nextui-org/react";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import PartnerWithUs from "./pages/PartnerWithUs.jsx";
 import ProductDetail from "./pages/ProductDetail.jsx";
+import LoginForm from "./components/LoginForm.jsx";
 
 
 

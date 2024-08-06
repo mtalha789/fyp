@@ -1,14 +1,12 @@
 import React from "react";
-import LocationIcon from "./LocationIcon";
-import { SearchIcon } from "./SearchIcon";
-
+import {MapPin , SearchIcon} from "lucide-react"
 
 export default function SearchInput() {
   return (
     <>
     <div className="bg-white w-[80vh] h-12  rounded-lg gap-1	flex">
       <div className=" w-56  border-r-2 border-solid flex flex-wrap flex-col items-stretch gap-1 p-2">
-        <LocationIcon />
+        <MapPin   />
         <select name="choose your Location " className="w-40 h-12   ">
           <option value="Islamabad">Islamabad</option>
           <option value="Lahore">Lahore</option>

@@ -94,11 +94,11 @@ export default function ItemCard() {
   // const handleAddtoCart = () => {
   //   alert(`Added to Cart${selectedItem.title}`);
   // };
-const {addToCart} =useCart()
+  const { addToCart } = useCart();
 
   return (
     <>
-      <div className="grid grid-cols-3 px-72 bg-gray-100 py-10 gap-7">
+      <div className="grid grid-cols-3 px-72 py-10 gap-7">
         {productList.map((item) => (
           <Card
             className="py-4"
@@ -121,6 +121,11 @@ const {addToCart} =useCart()
                 src={item.img}
               />
               <Button
+                onClick={() => {
+                  console.log("added to cart", item);
+
+                  addToCart(item);
+                }}
                 isHoverable
                 variant="solid"
                 className=" absolute bottom-3 right-4 bg-white rounded-xl p-2 z-10"
@@ -144,18 +149,25 @@ const {addToCart} =useCart()
                 <Image src={selectedItem.img} alt={selectedItem.name} />
               </ModalHeader>
               <ModalBody>
-                <h3 className="text-2xl font-bold pt-3">{selectedItem.title}</h3>
-                <p className="text-xl font-medium">Rs. {selectedItem.price}</p> 
+                <h3 className="text-2xl font-bold pt-3">
+                  {selectedItem.title}
+                </h3>
+                <p className="text-xl font-medium">Rs. {selectedItem.price}</p>
                 <p>{selectedItem.description}</p>
                 <h1 className="text-xl font-bold">Special instructions</h1>
-                <p>Special requests are subject to the restaurant's approval. Tell us here!</p>
+                <p>
+                  Special requests are subject to the restaurant's approval.
+                  Tell us here!
+                </p>
                 <Input
                   placeholder="e.g. No mayo"
                   fullWidth
                   value={specialInstructions}
                   onChange={(e) => setSpecialInstructions(e.target.value)}
                 />
-                  <h1 className="text-xl font-bold">If this item is not available</h1>
+                <h1 className="text-xl font-bold">
+                  If this item is not available
+                </h1>
                 <Dropdown>
                   <DropdownTrigger>
                     <Button variant="bordered" className="capitalize">
@@ -191,7 +203,7 @@ const {addToCart} =useCart()
                 >
                   Close
                 </Button>
-                <Button auto onClick={addToCart}>
+                <Button onClick={() => addToCart(selectedItem.id)}>
                   Add to cart
                 </Button>
               </ModalFooter>

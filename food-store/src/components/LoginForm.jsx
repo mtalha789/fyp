@@ -9,12 +9,15 @@ import {
   useDisclosure,
   Input,
 } from "@nextui-org/react";
+import { Link } from "react-router-dom";
+
 
 export default function LoginForm() {
   const { isOpen, onOpen, onOpenChange } = useDisclosure();
 
   return (
     <>
+    <Link to="/login">
       <Button onPress={onOpen} color="primary" variant="solid">
         Login
       </Button>
@@ -55,6 +58,7 @@ export default function LoginForm() {
           )}
         </ModalContent>
       </Modal>
+      </Link>
     </>
   );
 }

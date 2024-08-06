@@ -1,12 +1,18 @@
 import React, { useState } from "react";
-import { ShoppingCart } from "lucide-react";
+import { ShoppingCart, Trash2  } from "lucide-react";
 import { useCart } from "../state/Cart";
-import { Card, Image, CardBody, CardFooter, Button } from "@nextui-org/react";
+import { Card, Image, CardBody, CardFooter, Button, button } from "@nextui-org/react";
+import { useNavigate } from "react-router-dom";
 
 const Cart = () => {
-  // const [isOpen, setIsOpen] = useState(false);
+  const [isOpen, setIsOpen] = useState(false);
   // const cart = useCart((state) => state.cart);
-  const { isOpen, toggleCart, cart, addToCart, removeFromCart, clearCart } = useCart();
+  const {cart, addToCart, removeFromCart, clearCart} = useCart((state)=>({
+    cart: state.cart,
+    removeFromCart: state.removeFromCart,
+    clearCart: state.clearCart,
+  }))  
+  const navigate =useNavigate()
   // const [cartItems, setCartItems] = useState([]);
 
   // const addToCart = (item) => {
@@ -17,9 +23,12 @@ const Cart = () => {
   //   setCartItems(cartItems.filter((_, i) => i !== index));
   // };
 
-  // const toggleCart = () => {
-  //   setIsOpen(!isOpen);
-  // };
+  const toggleCart = () => {
+    setIsOpen(!isOpen);
+  };
+  // const handleCheckout=()=>{
+  //   navigate('/')
+  // }
   return (
     <div className="relative">
     <button
@@ -28,7 +37,7 @@ const Cart = () => {
     >
       <ShoppingCart className="relative" />
       <div className="bg-red-500 text-white rounded-full w-5 h-5 absolute">
-        <span>{cart && cart.length}</span>
+        <span>{cart?.length}</span>
       </div>
     </button>
 
@@ -36,8 +45,8 @@ const Cart = () => {
       <div className="absolute right-0 mt-2 w-96 bg-white shadow-lg rounded-lg p-4 z-50">
         <h3 className="text-lg font-semibold">My Cart</h3>
         <div className="mt-4">
-          {cart?.map((item, index) => (
-            <div key={index} className="flex justify-between items-center">
+          {cart?.map((item) => (
+            <div key={item.id} className="flex justify-between items-center">
               <div>
                 <Card className="w-[22rem]">
                   <CardBody>
@@ -66,7 +75,7 @@ const Cart = () => {
                         {item.quantity}
                       </h1>
                       <button
-                        onClick={() => addToCart(item)}
+                        onClick={() => cart(item)}
                         className="rounded-full w-5 h-5 font-bold text-lg text-center"
                       >
                         +
@@ -81,6 +90,11 @@ const Cart = () => {
               </div>
             </div>
           ))}
+
+          {  
+          cart?.length > 0 && (
+            <Trash2 onClick={clearCart} /> 
+          )}
 
           <div className="mt-4">
             <p className="flex justify-between">

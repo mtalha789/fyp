@@ -41,7 +41,9 @@ export default function MyNavbar() {
       </NavbarContent>
       <NavbarContent justify="end">
         <NavbarItem className="hidden lg:flex">
+        
           <LoginForm />
+         
         </NavbarItem>
         <NavbarItem>
           <SignupForm />

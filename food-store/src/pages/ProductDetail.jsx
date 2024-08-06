@@ -55,7 +55,7 @@ const ProductDetail = () => {
   return (
     <>
       <MyNavbar />
-      <div className="  h-80 px-72 py-16 content-center shadow-lg ">
+      <div className="  bg-gray-100 h-80 px-72 py-16 content-center shadow-lg ">
         <div key={data.id} className="flex gap-7">
           <div className=" w-72 h-72 rounded-xl overflow-hidden">
             <img src={data.img} key={data.id} alt={data.title} />
