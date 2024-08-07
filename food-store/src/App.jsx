@@ -1,8 +1,9 @@
 import {  MyNavbar } from './pages'
-import Hero from './components/Hero/Hero'
-import ProductCard from './components/ProductCard'
-import BrandContainer from './components/BrandContainer/BrandContainer'
+
 import Footer from './components/Footer'
+import { Outlet } from 'react-router-dom'
+
+
 
 
 export default function App() {
@@ -10,17 +11,8 @@ export default function App() {
   return (
     <>
       <MyNavbar/>
-      <Hero />
-      <BrandContainer />
-      <ProductCard />
+      <Outlet/>
       <Footer />
-
-
-
-
-        
-
-
 
       </>
 

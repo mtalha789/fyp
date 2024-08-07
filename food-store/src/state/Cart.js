@@ -4,30 +4,94 @@ import { immer } from "zustand/middleware/immer";
 
 export const useCart = create(
   persist(
-    //for storing data into local storage
     immer((set) => ({
-      // immer for using the methods of it
       hydrated: false,
-      // isOpen: false,
       cart: [],
-      // toggleCart: () => set((state) => ({ isOpen: !state.isOpen })),
-      addToCart: (item) =>
-        set((state) => ({
-          cart: [...state.cart, item],
-        })),
-      removeFromCart: (itemId) =>
-        set((state) => ({
-          cart: state.cart.filter((item) => item.id !== itemId),
-        })),
-      clearCart: () => set(() => ({ cart: [] })),
-      setHydrated:()=>set({hydrated:true})
+      totalPrice: 0,
+
+      removeFromCart: (itemId) => {
+        console.log("Removing item with id:", itemId);
+        set((state) => {
+          if (state) {
+            const itemToRemove = state.cart.find((item) => item.id === itemId);
+            if (itemToRemove) {
+              state.totalPrice -= itemToRemove.price * itemToRemove.quantity;
+            }
+            state.cart = state.cart.filter((item) => item.id !== itemId);
+          } else {
+            console.error("State is undefined in removeFromCart");
+          }
+        });
+      },
+
+      clearCart: () => {
+        console.log("Clearing cart");
+        set((state) => {
+          if (state) {
+            state.cart = [];
+            state.totalPrice = 0;
+          } else {
+            console.error("State is undefined in clearCart");
+          }
+        });
+      },
+
+      addToCart: (item) => {
+        set((state) => {
+          const price = parseFloat(item.price);
+          const quantity = parseInt(item.quantity, 10);
+          if (!isNaN(price) && !isNaN(quantity)) {
+            state.cart.push(item);
+            state.totalPrice += price * quantity;
+          }
+        });
+      },
+
+      incQuantity: (id) => {
+        set((state) => {
+          const item = state.cart.find((item) => item.id === id);
+          if (item) {
+            const price = parseFloat(item.price);
+            if (!isNaN(price)) {
+              item.quantity += 1;
+              state.totalPrice += price;
+            }
+          }
+        });
+      },
+
+      decQuantity: (id) => {
+        set((state) => {
+          const itemIndex = state.cart.findIndex((item) => item.id === id);
+          if (itemIndex !== -1) {
+            const item = state.cart[itemIndex];
+            const price = parseFloat(item.price);
+            if (!isNaN(price)) {
+              if (item.quantity > 1) {
+                item.quantity -= 1;
+                state.totalPrice -= price;
+              } else {
+                state.totalPrice -= price;
+                state.cart.splice(itemIndex, 1);
+              }
+            }
+          }
+        });
+      },
+
+      setHydrated: () => {
+        set((state) => {
+          state.hydrated = true;
+        });
+      },
     })),
     {
-      name: "cart",
-      onRehydrateStorage: (state, error) => {
-        // for getting data from local storage
-        if (!error) state.setHydrated();
-      },
+      name: "cart-storage", // Name of the storage key
+      onRehydrateStorage(){
+        return (state, error) => {
+          if (!error) state?.setHydrated()
+        }
+      }
     }
   )
 );

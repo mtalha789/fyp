@@ -5,7 +5,7 @@ function SignupForm() {
     const {isOpen, onOpen, onOpenChange} = useDisclosure();
     return (
 <>
-    <Button onPress={onOpen} color="default" variant="solid">Sign Up</Button>
+    <Button onPress={onOpen} color="default" variant="flat">Sign Up</Button>
                
         <Modal
             isOpen={isOpen}

@@ -17,7 +17,7 @@ export default function LoginForm() {
 
   return (
     <>
-    <Link to="/login">
+    
       <Button onPress={onOpen} color="primary" variant="solid">
         Login
       </Button>
@@ -58,7 +58,6 @@ export default function LoginForm() {
           )}
         </ModalContent>
       </Modal>
-      </Link>
     </>
   );
 }

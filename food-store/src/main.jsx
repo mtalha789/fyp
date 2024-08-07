@@ -7,6 +7,11 @@ import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import PartnerWithUs from "./pages/PartnerWithUs.jsx";
 import ProductDetail from "./pages/ProductDetail.jsx";
 import LoginForm from "./components/LoginForm.jsx";
+import CheckoutPage from "./components/CheckoutForm.jsx";
+import Hero from "./components/Hero/Hero.jsx";
+import BrandContainer from "./components/BrandContainer/BrandContainer.jsx";
+import ProductCard from "./components/ProductCard.jsx";
+
 
 
 
@@ -14,16 +19,32 @@ const router = createBrowserRouter([
   {
     path: "/",
     element: <App />,
-  },
-  {
-    path: "PartnerWithUs",
-    element: <PartnerWithUs />,
-  },
-  {
-    path: "/catagory/:id",
-    element: <ProductDetail />,
-  },
+    children: [
+      
+      {
+        path: "/",
+        element: <>
+        <Hero/>
+        <BrandContainer/>
+        <ProductCard />
+        </>,
+      },
+      {
+        path:"/checkout",
+        element: <CheckoutPage />
+      },
+      {
+        path: "/partner-with-us",
+        element: <PartnerWithUs />,
+      },
+      {
+        path: "/product/:id",
+        element: <ProductDetail />,
+      }
 
+    ]
+  },
+  
 ]);
 
 ReactDOM.createRoot(document.getElementById("root")).render(

@@ -111,7 +111,7 @@ export default function ItemCard() {
               <h4 className="font-bold text-large">{item.title}</h4>
               <small className="text-default-500">{item.description}</small>
               <p className="text-tiny uppercase font-bold overflow-hidden">
-                {item.price}
+                {item.pr}
               </p>
             </CardHeader>
             <CardBody className="overflow-visible py-2 relative">
@@ -123,8 +123,7 @@ export default function ItemCard() {
               <Button
                 onClick={() => {
                   console.log("added to cart", item);
-
-                  addToCart(item);
+                  addToCart({...item,quantity:1});
                 }}
                 isHoverable
                 variant="solid"
