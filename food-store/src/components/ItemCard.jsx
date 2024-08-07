@@ -202,7 +202,7 @@ export default function ItemCard() {
                 >
                   Close
                 </Button>
-                <Button onClick={() => addToCart(selectedItem.id)}>
+                <Button onClick={() => addToCart({...selectedItem,quantity:1})}>
                   Add to cart
                 </Button>
               </ModalFooter>

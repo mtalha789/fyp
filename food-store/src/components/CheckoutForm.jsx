@@ -61,7 +61,7 @@ const CheckoutForm = () => {
     };
   
     return (
-      <form onSubmit={handleSubmit} className="max-w-lg mx-auto p-6 bg-white shadow-md rounded-lg">
+      <form onSubmit={handleSubmit} className="max-w-lg mx-auto p-6 bg-white shadow-lg rounded-lg mt-7">
         <h2 className="text-2xl font-semibold mb-6">Delivery Information</h2>
         <div className="space-y-4 mb-6">
           <input
@@ -134,7 +134,7 @@ const CheckoutForm = () => {
           ))}
         </ul>
         <div className="text-lg font-semibold mb-6">
-          Total: <span className="text-indigo-600">${totalPrice.toFixed(2)}</span>
+          Total: <span className="text-success-600">${totalPrice.toFixed(2)}</span>
         </div>
   
         <h2 className="text-2xl font-semibold mb-6">Payment Information</h2>
@@ -145,7 +145,7 @@ const CheckoutForm = () => {
         <button
           type="submit"
           disabled={!stripe}
-          className="w-full bg-black text-white py-2 rounded-md hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500"
+          className="w-full bg-gray-100  py-2 rounded-md hover:bg-black hover:text-white focus:outline-none focus:ring-2 focus:ring-indigo-500"
         >
           Confirm and Pay
         </button>

@@ -76,7 +76,7 @@ export default function ProductCard() {
 
 
   const HandleData =(id)=>{
-    navigate(`/catagory/${id}`)
+    navigate(`/product/${id}`)
   }
 
   return (

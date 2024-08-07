@@ -54,7 +54,7 @@ const ProductDetail = () => {
 
   return (
     <>
-      <MyNavbar />
+ 
       <div className="  bg-gray-100 h-80 px-72 py-16 content-center shadow-lg ">
         <div key={data.id} className="flex gap-7">
           <div className=" w-72 h-72 rounded-xl overflow-hidden">
@@ -86,7 +86,7 @@ const ProductDetail = () => {
         
       </div>
       <ItemCard />
-      <Footer />
+
     </>
   );
 };
