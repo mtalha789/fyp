@@ -49,8 +49,8 @@ export default function RestaurantDashboard() {
       </div>
       <div className="col-span-full p-4">
         <h1 className="text-2xl font-bold mb-4">Menu Items</h1>
-        <Button asChild>
-          <Link to="/restaurant/add-product" className="text-blue-500">Add New Item</Link>
+        <Button asChild variant="shadow" className='mb-4'>
+          <Link to="/corporate/menu/add-item" className="text-blue-500">Add New Item</Link>
         </Button>
         <ProductTable products={menuItems} />
       </div>

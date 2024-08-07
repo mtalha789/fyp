@@ -12,9 +12,9 @@ export default function MenuPage() {
 
   return (
     <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-      <h1 className="text-3xl mb-4">Products</h1>
+      <h1 className="text-3xl mb-4">Menu</h1>
       <div className="flex justify-between">
-        <Button asChild variant="outline">
+        <Button asChild variant="shadow" color="primary">
           <Link to="/corporate/menu/add-item" className="text-sm">Add New Item</Link>
         </Button>
       </div>
@@ -25,10 +25,10 @@ export default function MenuPage() {
 
 function ProductTable({ products }) {
   if (products.length === 0) {
-    return <p>Add some products</p>;
+    return <p className="mt-3 font-bold">Add some products</p>;
   }
   return (
-    <Table>
+    <Table className="mt-4">
       <TableHeader>
         <TableColumn className="w-0">
           <span className="sr-only">Available For Purchase</span>

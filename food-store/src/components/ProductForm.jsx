@@ -2,19 +2,14 @@ import React from 'react'
 import { Input, Button, Dropdown, DropdownTrigger, DropdownMenu, DropdownItem } from '@nextui-org/react'
 import { productSchema } from '../schemas/productSchema'
 import { useQuery } from '@tanstack/react-query'
+import useCategories from '../queries/queries';
+import { Loader2 } from 'lucide-react';
 
-export default function ProductForm({ product }) {
+export default function ProductForm({ mutationFunction}) {
     const [loading, setLoading] = React.useState(false);
     const [error, setError] = React.useState(null);
-    const [categories, setCategories] = React.useState([]);
+    const { data: categories, isError, isLoading, error: fetchError } = useCategories()
 
-    React.useEffect(() => {
-        useQuery(['categories'], async () => {
-            const res = await fetch(`${import.meta.env.VITE_API_URL}/categories`);
-            const data = await res.json();
-            setCategories(data);
-        })
-    })
     const handleSubmit = async (e) => {
         e.preventDefault();
         setLoading(true);
@@ -31,19 +26,24 @@ export default function ProductForm({ product }) {
             return;
         }
 
-        const response = await register(data);
-
-        if (response.error) {
-            setError(response.error);
-            setLoading(false);
-            return;
-        }
         setLoading(false);
+        setError(null);
+        
+        //send data to backend
+        mutationFunction.mutate(data);
     }
 
+    if (isLoading) {
+        return <Loader />
+    }
+    if (isError) {
+        return <p className="text-red-500">{fetchError.message}</p>
+    }
+    
     return (
         <form onSubmit={handleSubmit}>
             {error?.message && <p className="text-red-500">{error?.message}</p>}
+            {mutationFunction.isError && <p className="text-red-500">{JSON.stringify(mutationFunction.error)}</p>}
             <div className="flex flex-col gap-2 container mx-auto max-w-[80%]">
                 <div className="space-y-2">
                     <Input
@@ -68,10 +68,10 @@ export default function ProductForm({ product }) {
                 <div className="space-y-2">
                     <Dropdown>
                         <DropdownTrigger>
-                            <Button>Select Category</Button>
+                            <Button color="secondary">Select Category</Button>
                         </DropdownTrigger>
                         <DropdownMenu>
-                            {categories.map((category) => (
+                            {categories.data.map((category) => (
                                 <DropdownItem key={category.id} value={category.id}>{category.name}</DropdownItem>
                             ))}
                         </DropdownMenu>
@@ -91,10 +91,10 @@ export default function ProductForm({ product }) {
                 <Button
                     type="submit"
                     className="bg-blue-500 w-[50%] mx-auto hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
-                    disabled={loading}
+                    disabled={loading || mutationFunction.isLoading}
                     variant='shadow'
                 >
-                    {loading ? "Saving..." : 'Save'}
+                    {loading || mutationFunction.isLoading ? <Loader2 color='white' className='animate-spin' /> : 'Save'}
                 </Button>
             </div>
         </form>

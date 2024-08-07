@@ -1,14 +1,18 @@
-import { Link, useNavigate, Outlet } from 'react-router-dom'
+import { Link, useNavigate, Outlet, NavLink } from 'react-router-dom'
 import React from 'react'
 import { useRestaurantStore } from '../../store/Restaurant'
 import { MenuIcon } from 'lucide-react'
 import { Button } from '@nextui-org/react'
+import { QueryClientProvider, QueryClient } from '@tanstack/react-query'
+import LoaderComponent from '../../components/Loader'
 
 export default function RestaurantPortal() {
     return (
-        <RestaurantPortalLayout>
-            <Outlet />
-        </RestaurantPortalLayout>
+        <QueryClientProvider client={new QueryClient()}>
+            <RestaurantPortalLayout>
+                <Outlet />
+            </RestaurantPortalLayout>
+        </QueryClientProvider>
     )
 }
 
@@ -30,12 +34,14 @@ export const RestaurantPortalLayout = ({ children, restaurantStatus = true }) =>
 
     return (
         <>
-            {loader ? <div className="w-full h-screen flex items-center justify-center">Loading...</div> :
-                <div className="flex flex-col md:flex-row h-screen">
-                    <div className="w-full md:w-1/6 bg-gray-200 h-full">
+            {loader ? <div className="w-full h-screen flex items-center justify-center">
+                <LoaderComponent />
+            </div> :
+                <div className="flex text-blue-500 flex-col md:flex-row h-screen">
+                    <div className="w-full md:w-1/6 bg-green-900 h-full">
                         <SideMenu />
                     </div>
-                    <div className="w-full md:w-5/6 bg-gray-100 md:mt-0 mt-3">
+                    <div className="w-full md:w-5/6 bg-green-800 md:mt-0 mt-3">
                         {children}
                     </div>
                 </div>
@@ -46,6 +52,25 @@ export const RestaurantPortalLayout = ({ children, restaurantStatus = true }) =>
 
 
 const SideMenu = () => {
+    const  navList = [
+        {
+            name: 'Dashboard',
+            path: '/corporate'
+        },
+        {
+            name: 'Orders',
+            path: '/corporate/orders'
+        },
+        {
+            name: 'Sales',
+            path: '/corporate/sales'
+        },
+        {
+            name: 'Menu',
+            path: '/corporate/menu'
+        }
+    ]
+
     const [menuHidden, setMenuHidden] = React.useState(true)
     const toggleMenuHidden = () => {
         setMenuHidden(menuHidden => !menuHidden)
@@ -60,36 +85,21 @@ const SideMenu = () => {
                 </Button>
 
             </div>
-            <div className={`sticky md:block ${menuHidden ? 'hidden' : ''} top-0 pt-4 h-screen transition-all duration-300 ease-in-out bg-gray-200`}>
+            <div className={`sticky md:block ${menuHidden ? 'hidden' : ''} top-0 pt-4 h-screen transition-all duration-300 ease-in-out pl-4`}>
                 <div className="flex flex-row md:flex-col justify-between md:items-center">
-                    <h1 className="text-4xl font-bold">Logo</h1>
                     <nav className="mt-10 w-full space-y-4">
                         <ul className="space-y-2">
-                            <li>
-                                <Link to="/corporate" className="text-blue-500 flex items-center px-4 py-2 rounded-lg hover:bg-blue-100">
-                                    Dashboard
-                                </Link>
-                            </li>
-                            {/* <li>
-                            <Link to="/rating" className="text-blue-500 flex items-center px-4 py-2 rounded-lg hover:bg-blue-100">
-                                Rating and Reviews
-                            </Link>
-                        </li> */}
-                            <li>
-                                <Link to="/corporate/menu" className="text-blue-500 flex items-center px-4 py-2 rounded-lg hover:bg-blue-100">
-                                    Menu Management
-                                </Link>
-                            </li>
-                            <li>
-                                <Link to="/corporate/orders" className="text-blue-500 flex items-center px-4 py-2 rounded-lg hover:bg-blue-100">
-                                    Orders
-                                </Link>
-                            </li>
-                            <li>
-                                <Link to="/corporate/sales" className="text-blue-500 flex items-center px-4 py-2 rounded-lg hover:bg-blue-100">
-                                    Sale Reports
-                                </Link>
-                            </li>
+                            {navList.map((item, index) => (
+                                <li key={index}>
+                                    <NavLink
+                                        to={item.path}
+                                        end
+                                        className={({ isActive }) => `flex items-center p-2 hover:bg-transparent text-lg font-medium rounded-l-lg ${isActive ? 'bg-blue-500 text-white' : 'text-blue-500'}`}
+                                    >
+                                        <span className="ml-3">{item.name}</span>
+                                    </NavLink>
+                                </li>
+                            ))}
                         </ul>
                     </nav>
                 </div>

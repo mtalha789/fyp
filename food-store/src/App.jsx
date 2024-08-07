@@ -1,4 +1,4 @@
-import {  MyNavbar } from './pages'
+import { MyNavbar } from './pages'
 import Hero from './components/Hero/Hero'
 import ProductCard from './components/ProductCard'
 import BrandContainer from './components/BrandContainer/BrandContainer'
@@ -10,26 +10,27 @@ import MenuPage from './pages/restaurant/Menu'
 import Dashboard from './pages/restaurant/Dashboard'
 import OrdersPage from './pages/restaurant/Orders'
 import Sales from './pages/restaurant/Sales'
+import useCategories from './queries/queries'
+import { useEffect } from 'react'
 
 
 export default function App() {
- 
   return (
     <QueryClientProvider client={new QueryClient()}>
-    <>
-      {/* <RestaurantPortal/>
+      <>
+        {/* <RestaurantPortal/>
       {/* <MyNavbar/> */}
-      {/* <Hero />
+        {/* <Hero />
       <BrandContainer />
       <ProductCard /> */}
-      {/* <SignupForm /> */}
-      {/* <Footer /> */}
-      {/* <MenuPage/> */}
-      {/* <Dashboard/> */}
-      <Sales/>
-      <OrdersPage/>
-    </>
-    </QueryClientProvider> 
+        {/* <SignupForm /> */}
+        {/* <Footer /> */}
+        {/* <MenuPage/> */}
+        {/* <Dashboard/> */}
+        <Sales />
+        <OrdersPage />
+      </>
+    </QueryClientProvider>
 
   )
 }
