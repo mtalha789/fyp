@@ -19,7 +19,7 @@ export const useAuthStore = create(
                 }))
                 .json();
                 console.log(response);
-                set({user:response?.data?.user})
+                set({user:response?.data})
                 return {
                     success: true,
                     error: null

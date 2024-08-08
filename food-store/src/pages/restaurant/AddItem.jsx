@@ -1,5 +1,5 @@
 import React from 'react'
-import ProductForm from '../../components/ProductForm'
+import ProductForm from '../../components/forms/ProductForm'
 import {addProduct} from '../../queries/mutations'
 
 const AddItemPage = () => {

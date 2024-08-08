@@ -1,6 +1,6 @@
 import React from "react";
 import MyNavbar from "../components/MyNavbar";
-import LoginForm from "../components/LoginForm";
+import LoginForm from "../components/forms/LoginForm";
 import SignupForm from "../components/Signup/SignupForm";
 import Features from "../components/PartnerData/Feature";
 import StepSection from '../components/PartnerData/StepSection'

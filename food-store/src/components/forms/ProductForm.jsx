@@ -1,8 +1,8 @@
 import React from 'react'
 import { Input, Button, Dropdown, DropdownTrigger, DropdownMenu, DropdownItem } from '@nextui-org/react'
-import { productSchema } from '../schemas/productSchema'
+import { productSchema } from '../../schemas/productSchema'
 import { useQuery } from '@tanstack/react-query'
-import useCategories from '../queries/queries';
+import useCategories from '../../queries/queries';
 import { Loader2 } from 'lucide-react';
 
 export default function ProductForm({ mutationFunction}) {

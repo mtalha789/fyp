@@ -204,34 +204,34 @@ const Sales = () => {
       </Card>
     </div>
   );
-  return (
-    <div className="flex flex-col">
-      <h1 className="text-3xl font-bold mb-4">Sales</h1>
-      <div className="flex flex-col gap-4">
-        <div className="flex items-center justify-between border-b border-slate-200 pb-4 mb-4">
-          <div className="flex items-center gap-2">
-            <h2 className="text-xl font-semibold">February 2023</h2>
-            <p className="text-sm text-slate-500">Total Sales</p>
-          </div>
-          <p className="text-xl font-semibold">$1000</p>
-        </div>
-        <div className="grid grid-cols-3 gap-4">
-          <div className="bg-white p-4 rounded-lg shadow">
-            <p className="text-lg font-semibold mb-2">January</p>
-            <p className="text-xl font-semibold">$500</p>
-          </div>
-          <div className="bg-white p-4 rounded-lg shadow">
-            <p className="text-lg font-semibold mb-2">February</p>
-            <p className="text-xl font-semibold">$500</p>
-          </div>
-          <div className="bg-white p-4 rounded-lg shadow">
-            <p className="text-lg font-semibold mb-2">March</p>
-            <p className="text-xl font-semibold">$0</p>
-          </div>
-        </div>
-      </div>
-    </div>
-  )
+  // return (
+  //   <div className="flex flex-col">
+  //     <h1 className="text-3xl font-bold mb-4">Sales</h1>
+  //     <div className="flex flex-col gap-4">
+  //       <div className="flex items-center justify-between border-b border-slate-200 pb-4 mb-4">
+  //         <div className="flex items-center gap-2">
+  //           <h2 className="text-xl font-semibold">February 2023</h2>
+  //           <p className="text-sm text-slate-500">Total Sales</p>
+  //         </div>
+  //         <p className="text-xl font-semibold">$1000</p>
+  //       </div>
+  //       <div className="grid grid-cols-3 gap-4">
+  //         <div className="bg-white p-4 rounded-lg shadow">
+  //           <p className="text-lg font-semibold mb-2">January</p>
+  //           <p className="text-xl font-semibold">$500</p>
+  //         </div>
+  //         <div className="bg-white p-4 rounded-lg shadow">
+  //           <p className="text-lg font-semibold mb-2">February</p>
+  //           <p className="text-xl font-semibold">$500</p>
+  //         </div>
+  //         <div className="bg-white p-4 rounded-lg shadow">
+  //           <p className="text-lg font-semibold mb-2">March</p>
+  //           <p className="text-xl font-semibold">$0</p>
+  //         </div>
+  //       </div>
+  //     </div>
+  //   </div>
+  // )
 }
 
 export default Sales

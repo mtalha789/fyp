@@ -6,7 +6,7 @@ import {
   NavbarItem,
 } from "@nextui-org/react";
 import { Link } from "react-router-dom";
-import LoginForm from "./LoginForm";
+import LoginForm from "./forms/LoginForm";
 import SignupForm from "./Signup/SignupForm";
 // import { Link } from 'react-router-dom';
 

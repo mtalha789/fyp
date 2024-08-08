@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react'
 import { useMenuItem } from '../../queries/queries'
-import { useParams } from 'react-router-dom'
+import { useNavigate, useParams } from 'react-router-dom'
 import Loader from '../../components/Loader'
 import { imageSchema, updateProductSchema } from '../../schemas/productSchema'
 import { updateProduct, updateProductImage } from '../../queries/mutations'
@@ -12,6 +12,7 @@ import {
 } from '@nextui-org/react'
 
 export default function EditItemPage() {
+    const navigate = useNavigate()
     const {id} = useParams()
     const fileMutation = updateProductImage()
     const itemMutation = updateProduct()
@@ -75,12 +76,23 @@ export default function EditItemPage() {
             { error && <p className='text-center mt-3 text-red-500'>{error?.message}</p>}
             {validationError && <p className='text-center text-red-500'>{validationError}</p>}
             {fileMutation.error && <p className='text-center text-red-500 mt-2'>{fileMutation.error.message}</p>}
-            <div className="flex flex-col gap-3">
+            {
+                fileMutation.isSuccess ?
+                <div>
+                    <h1>Image Updated Successfully</h1>
+                    <Image
+                    src={fileMutation.data.imagePath}
+                    width={300}
+                    />
+                </div>
+                : 
+                <div className="flex flex-col gap-3">
                 <h1>Update Image</h1>
                 <Image
                 src={menuItem?.data.image}
                 width={300}
                 />
+                
                 <form onSubmit={updateFile}>
                     <div>
                         <label htmlFor="image">Choose Image to update</label>
@@ -88,34 +100,41 @@ export default function EditItemPage() {
                     </div>
                     <Button type="submit" disabled={loading || fileMutation.isLoading}>Update Image</Button>
                 </form>
-            </div>
-            <div>
-                <h1>Edit Item Details</h1>
-                { itemMutation.error && <p className='text-center text-red-500 mt-2'>{itemMutation.error.message}</p>}
-                <form onSubmit={updateItem}>
-                    <div>
-                        {validationError.name && <p className='text-center text-red-500'>{validationError.name}</p>}
-                        <label htmlFor="name">Name</label>
-                        <input type="text" name="name" id="name" defaultValue={menuItem?.data.name} />
-                    </div>
-                    <div>
-                        {validationError.price && <p className='text-center text-red-500'>{validationError.price}</p>}
-                        <label htmlFor="price">Price</label>
-                        <input type="number" name="price" id="price" defaultValue={menuItem?.data.price} />
-                    </div>
-                    <div>
-                        {validationError.description && <p className='text-center text-red-500'>{validationError.description}</p>}
-                        <label htmlFor="description">Description</label>
-                        <textarea type="text" name="description" id="description" defaultValue={menuItem?.data.description} />
-                    </div>
-                    <div>
-                        {validationError.category && <p className='text-center text-red-500'>{validationError.category}</p>}
-                        <label htmlFor="category">Category</label>
-                        <input type="text" name="category" id="category" defaultValue={menuItem?.data.category} /> 
-                    </div>
-                    <Button type="submit" disabled={loading || itemMutation.isLoading}>Update Item</Button>
-                </form>
-            </div>
+                
+                </div>
+            }
+            {
+                itemMutation.isSuccess ? <p className='text-center text-green-500 mt-2'>{itemMutation.data.message}</p>
+                :
+                <div>
+                    <h1>Edit Item Details</h1>
+                    { itemMutation.error && <p className='text-center text-red-500 mt-2'>{itemMutation.error.message}</p>}
+                    <form onSubmit={updateItem}>
+                        <div>
+                            {validationError.name && <p className='text-center text-red-500'>{validationError.name}</p>}
+                            <label htmlFor="name">Name</label>
+                            <input type="text" name="name" id="name" defaultValue={menuItem?.data.name} />
+                        </div>
+                        <div>
+                            {validationError.price && <p className='text-center text-red-500'>{validationError.price}</p>}
+                            <label htmlFor="price">Price</label>
+                            <input type="number" name="price" id="price" defaultValue={menuItem?.data.price} />
+                        </div>
+                        <div>
+                            {validationError.description && <p className='text-center text-red-500'>{validationError.description}</p>}
+                            <label htmlFor="description">Description</label>
+                            <textarea type="text" name="description" id="description" defaultValue={menuItem?.data.description} />
+                        </div>
+                        <div>
+                            {validationError.category && <p className='text-center text-red-500'>{validationError.category}</p>}
+                            <label htmlFor="category">Category</label>
+                            <input type="text" name="category" id="category" defaultValue={menuItem?.data.category} /> 
+                        </div>
+                        <Button type="submit" disabled={loading || itemMutation.isLoading}>Update Item</Button>
+                    </form>
+                </div>
+            }
+            <Button onClick={() => navigate('/corporate/menu')}>Back to Menu</Button>
         </div>
     )
 }

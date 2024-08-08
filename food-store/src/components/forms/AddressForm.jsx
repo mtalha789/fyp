@@ -1,7 +1,7 @@
 import React from 'react'
 import { Input, Button } from '@nextui-org/react'
-import { restaurantAddressSchema } from '../schemas/restaurantSchema';
-import { useRestaurantStore } from '../store/Restaurant';
+import { restaurantAddressSchema } from '../../schemas/restaurantSchema';
+import { useRestaurantStore } from '../../store/Restaurant';
 
 export default function RestaurantAddressForm() {
   const [loading, setLoading] = React.useState(false);

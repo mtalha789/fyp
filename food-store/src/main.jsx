@@ -14,8 +14,16 @@ import {
   MenuPage,
   OrdersPage,
   SalesPage,
-  AddItemPage  
+  AddItemPage,
 } from "./pages/restaurant/index.js";
+
+import {
+  AdminPortal,
+  Customers,
+  Dashboard as AdminDashboard,
+  Restaurants,
+  Riders,
+} from "./pages/admin/index.js";
 
 const router = createBrowserRouter([
   {
@@ -45,6 +53,28 @@ const router = createBrowserRouter([
       {
         path: "/corporate/sales",
         element: <SalesPage />,
+      },
+    ]
+  },
+  {
+    path: "/admin",
+    element: <AdminPortal />,
+    children: [
+      {
+        path: "/admin/",
+        element: <AdminDashboard />,
+      },
+      {
+        path: "/admin/customers",
+        element: <Customers />,
+      },
+      {
+        path: "/admin/restaurants",
+        element: <Restaurants />,
+      },
+      {
+        path: "/admin/rider",
+        element: <Riders />,
       },
     ]
   },
