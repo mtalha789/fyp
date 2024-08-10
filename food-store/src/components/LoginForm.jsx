@@ -18,7 +18,7 @@ export default function LoginForm() {
   return (
     <>
     
-      <Button onPress={onOpen} color="default" variant="flat">
+      <Button onPress={onOpen} color="default" variant="shadow">
         Login
       </Button>
       <Modal isOpen={isOpen} onOpenChange={onOpenChange} placement="top-center">

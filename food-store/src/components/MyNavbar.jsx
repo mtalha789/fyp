@@ -29,7 +29,7 @@ export default function MyNavbar() {
       </NavbarBrand>
       <NavbarContent className="hidden sm:flex gap-8" justify="center">
         <NavbarItem isActive>
-          <Link color="foreground" to="/PartnerWithUs">
+          <Link color="foreground" to="/partner-with-us">
             Partner with us
           </Link>
         </NavbarItem>
