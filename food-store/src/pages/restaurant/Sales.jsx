@@ -196,7 +196,7 @@ const Sales = () => {
         </CardBody>
         <CardFooter>
           <div className="flex justify-end">
-            <Button color="secondary" auto>
+            <Button color="success" variant='flat' auto>
               Download
             </Button>
           </div>

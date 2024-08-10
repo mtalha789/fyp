@@ -14,7 +14,7 @@ export default function MenuPage() {
     <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
       <h1 className="text-3xl mb-4">Menu</h1>
       <div className="flex justify-between">
-        <Button asChild variant="shadow" color="primary">
+        <Button asChild variant="shadow" color="default">
           <Link to="/corporate/menu/add-item" className="text-sm">Add New Item</Link>
         </Button>
       </div>

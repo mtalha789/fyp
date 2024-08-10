@@ -50,7 +50,7 @@ export default function RestaurantDashboard() {
       <div className="col-span-full p-4">
         <h1 className="text-2xl font-bold mb-4">Menu Items</h1>
         <Button asChild variant="shadow" className='mb-4'>
-          <Link to="/corporate/menu/add-item" className="text-blue-500">Add New Item</Link>
+          <Link to="/corporate/menu/add-item" className="">Add New Item</Link>
         </Button>
         <ProductTable products={menuItems} />
       </div>
@@ -87,7 +87,7 @@ function ProductTable({ products }) {
     return <h1>No products found.</h1>;
   }
   return (
-    <Table>
+    <Table >
       <TableHeader>
         <TableColumn>Available</TableColumn>
         <TableColumn>Name</TableColumn>
@@ -115,4 +115,5 @@ function ProductTable({ products }) {
     </Table>
   );
 }
+
 

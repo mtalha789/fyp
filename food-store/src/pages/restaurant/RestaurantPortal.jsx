@@ -54,11 +54,11 @@ export const RestaurantPortalLayout = ({ children, restaurantStatus = true }) =>
             {loader ? <div className="w-full h-screen flex items-center justify-center">
                 <LoaderComponent />
             </div> :
-                <div className="flex text-blue-500 flex-col md:flex-row h-screen">
-                    <div className="w-full md:w-1/6 bg-green-900 h-full">
+                <div className="flex text-black flex-col md:flex-row h-screen">
+                    <div className="w-full md:w-1/6 bg-gray-100 h-full">
                         <SideMenu navList={navList} />
                     </div>
-                    <div className="w-full md:w-5/6 bg-green-800 md:mt-0 mt-3">
+                    <div className="w-full md:w-5/6  md:mt-0 mt-3">
                         {children}
                     </div>
                 </div>

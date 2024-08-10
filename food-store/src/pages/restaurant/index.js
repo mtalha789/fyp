@@ -12,5 +12,6 @@ export {
     MenuPage,
     RestaurantPortal,
     RestaurantPortalLayout,
-    AddItemPage
+    AddItemPage,
+
 }

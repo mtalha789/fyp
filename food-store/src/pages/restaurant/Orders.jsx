@@ -108,11 +108,11 @@ const OrdersPage = () => {
                 ))}
               </CardBody>
               <CardFooter>
-                <div className="flex justify-between">
-                  <Button color="secondary" auto>
+                <div className="flex gap-2">
+                  <Button color="default" auto>
                     Accept
                   </Button>
-                  <Button color="error" auto>
+                  <Button color="danger" variant="flat" auto>
                     Reject
                   </Button>
                 </div>
