@@ -1,4 +1,6 @@
+import db from "../db";
 import { ApiError } from "../ustils/ApiError";
+import { ApiResponse } from "../ustils/ApiResponse";
 import { asyncHandler } from "../ustils/asyncHandler";
 import { generateAdminToken } from "../ustils/jwtToken";
 import { comparePasswords } from "../ustils/passEncryption";
@@ -12,9 +14,7 @@ const authenticateAdmin = asyncHandler(async (req, res) => {
     const adminToken = generateAdminToken(username)
     res
     .status(200)
-    .json({
-        token: adminToken
-    })
+    .json(new ApiResponse(200, {token: adminToken}, 'success'))
     .cookie('adminToken', adminToken, {
         httpOnly: true,
         secure: true,
@@ -22,6 +22,53 @@ const authenticateAdmin = asyncHandler(async (req, res) => {
     })
 })
 
+const getUnApprovedRestaurants = asyncHandler(async (req, res) => {
+    const unApprovedRestaurants = await db.restaurant.findMany(
+        {where: {approved: false}, include: {owner: true, address: true}},
+    )
+    
+    res
+    .status(200)
+    .json(new ApiResponse(200, unApprovedRestaurants, 'success'))
+})
+
+const approveRestaurant = asyncHandler(async (req, res) => {
+    const { id } = req.params
+
+    const approvedRestaurant = await db.restaurant.update({
+        where: {id},
+        data: {approved: true}
+    })
+    
+    if (!approvedRestaurant) {
+        throw new ApiError('Restaurant not found', 404)
+    }
+
+    res
+    .status(200)
+    .json(new ApiResponse(200, approvedRestaurant, 'Restaurant approved'))
+})
+
+const rejectRestaurant = asyncHandler(async (req, res) => {
+    const { id } = req.params
+
+    const rejectedRestaurant = await db.restaurant.update({
+        where: {id},
+        data: {approved: false}
+    })
+    
+    if (!rejectedRestaurant) {
+        throw new ApiError('Restaurant not found', 404)
+    }
+
+    res
+    .status(200)
+    .json(new ApiResponse(200, rejectedRestaurant, 'Restaurant rejected'))
+})
+
 export {
-    authenticateAdmin
+    authenticateAdmin,
+    getUnApprovedRestaurants,
+    approveRestaurant,
+    rejectRestaurant
 }
