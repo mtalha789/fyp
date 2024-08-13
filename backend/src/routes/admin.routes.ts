@@ -1,5 +1,5 @@
 import { Router } from "express"
-import { approveRestaurant, authenticateAdmin, getUnApprovedRestaurants, rejectRestaurant } from "../controllers/admin.controller"
+import { approveRestaurant, authenticateAdmin, getUnApprovedRestaurants, rejectRestaurant } from "../controllers/admin.controllers"
 import { verifyAdmin } from "../middlewares/adminAuth.middleware"
 
 const router = Router()

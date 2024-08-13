@@ -13,6 +13,7 @@ import reviewRouter from './routes/review.routes';
 import productReviewRouter from './routes/productReview.router'
 import deliveryRouter from './routes/delivery.routes';
 import riderRouter from './routes/rider.routes';
+import paymentRouter from './routes/payment.routes';
 
 const app = express()
 
@@ -37,5 +38,6 @@ app.use('/api/reviews',reviewRouter)
 app.use('/api/productreviews',productReviewRouter)
 app.use('/api/deliveries',deliveryRouter)
 app.use('/api/riders',riderRouter)
+app.use('/api/payments',paymentRouter)
 
 export default app

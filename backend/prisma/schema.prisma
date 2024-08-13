@@ -34,6 +34,7 @@ model User {
   reviews        Review[]
   productReviews ProductReview[]
   deliveries     Delivery[]
+  payments       Payment[]
   createdAt      DateTime        @default(now())
   updatedAt      DateTime        @updatedAt
   deleted        Boolean         @default(false)
@@ -144,6 +145,7 @@ model Order {
   updatedAt   DateTime    @updatedAt
   deleted     Boolean     @default(false)
   delivery    Delivery?
+  payment     Payment?
 }
 
 model SubOrder {
@@ -172,6 +174,18 @@ model OrderItem {
   createdAt    DateTime @default(now())
   updatedAt    DateTime @updatedAt
   deleted      Boolean  @default(false)
+}
+
+model Payment {
+  id            String   @id @default(uuid())
+  orderId       String   @unique
+  userId        String
+  user          User     @relation(fields: [userId], references: [id])
+  amount        Float
+  paymentMethod String
+  paymentStatus String
+  paymentDate   DateTime @default(now())
+  order         Order    @relation(fields: [orderId], references: [id])
 }
 
 model Review {
@@ -233,16 +247,6 @@ enum DeliveryStatus {
   COMPLETED
   CANCELED
 }
-
-// model DeliveryPerson {
-//   id         String     @id @default(uuid())
-//   name       String
-//   phone      String     @unique
-//   vehicle    String
-//   deliveries Delivery[]
-//   deleted    Boolean    @default(false)
-//   areas      Address[]
-// }
 
 model Coupon {
   id             String   @id @default(uuid())
