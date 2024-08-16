@@ -3,7 +3,7 @@ import { NavLink } from "react-router-dom"
 import { Button } from "@nextui-org/react"
 import { MenuIcon } from "lucide-react"
 
-const SideMenu = ({ navList }) => {
+const SideMenu = ({ navList, bgColor, textColor }) => {
     const [menuHidden, setMenuHidden] = useState(true)
     const toggleMenuHidden = () => {
         setMenuHidden(menuHidden => !menuHidden)
@@ -31,7 +31,7 @@ const SideMenu = ({ navList }) => {
                                     <NavLink
                                         to={item.path}
                                         end
-                                        className={({ isActive }) => `flex items-center p-2 hover:bg-black hover:text-white text-lg font-medium rounded-l-lg ${isActive &&'text-black '}`}
+                                        className={({ isActive }) => `flex items-center p-2 hover:bg-${bgColor} hover:text-white text-lg font-medium rounded-l-lg ${isActive && `bg-${bgColor} ${textColor} `}`}
                                     >
                                         <span className="ml-3">{item.name}</span>
                                     </NavLink>
