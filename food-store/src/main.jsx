@@ -14,6 +14,24 @@ import ProductCard from "./components/ProductCard.jsx";
 
 
 
+import ProductModal from "./pages/ProductModal.jsx";
+import AuthLayout from './components/AuthLayout.jsx'
+import { 
+  RestaurantPortal, 
+  Dashboard, 
+  MenuPage,
+  OrdersPage,
+  SalesPage,
+  AddItemPage,
+} from "./pages/restaurant/index.js";
+
+import {
+  AdminPortal,
+  Customers,
+  Dashboard as AdminDashboard,
+  Restaurants,
+  Riders,
+} from "./pages/admin/index.js";
 
 const router = createBrowserRouter([
   {
@@ -44,6 +62,92 @@ const router = createBrowserRouter([
 
     ]
   },
+  
+  },
+  {
+    path: "/corporate",
+    element: <RestaurantPortal />,
+    children: [
+      {
+        path: "/corporate/",
+        element: <Dashboard />,
+      },
+      {
+        path: "/corporate/menu",
+        element: <MenuPage />,
+      },
+      {
+        path: "/corporate/menu/add-item",
+        element: <AddItemPage />,
+      },
+      {
+        path: "/corporate/orders",
+        element: <OrdersPage />,
+      },
+      {
+        path: "/corporate/sales",
+        element: <SalesPage />,
+      },
+    ]
+  },
+  {
+    path: "/admin",
+    element: <AdminPortal />,
+    children: [
+      {
+        path: "/admin/",
+        element: <AdminDashboard />,
+      },
+      {
+        path: "/admin/customers",
+        element: <Customers />,
+      },
+      {
+        path: "/admin/restaurants",
+        element: <Restaurants />,
+      },
+      {
+        path: "/admin/rider",
+        element: <Riders />,
+      },
+    ]
+  },
+  {
+    path: "PartnerWithUs",
+    element: <PartnerWithUs />,
+  },
+  // {
+  //   path: "/restaurant/:restaurantId",
+  //   element: <AuthLayout><ProductDetail /></AuthLayout>,
+  // },
+  // {
+  //   path: "/restaurant/:restaurantId/cart",
+  //   element: <AuthLayout><ProductModal /></AuthLayout>,
+  // },
+  // // {
+  // //   path: "/about",
+  // //   element: <AuthLayout><About /></AuthLayout>,
+  // // },
+  // // {
+  // //   path: "/contact",
+  // //   element: <AuthLayout><Contact /></AuthLayout>,
+  // // },
+  // {
+  //   path: "/login",
+  //   element: <AuthLayout><Login /></AuthLayout>,
+  // },
+  // {
+  //   path: "/register",
+  //   element: <AuthLayout><Register /></AuthLayout>,
+  // },
+  // {
+  //   path: "/profile",
+  //   element: <AuthLayout><Profile /></AuthLayout>,
+  // },
+  // {
+  //   path: "/order",
+  //   element: <AuthLayout><Order /></AuthLayout>,
+  // },
   
 ]);
 

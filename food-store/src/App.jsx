@@ -4,6 +4,8 @@ import { Outlet } from 'react-router-dom'
 import { useEffect } from 'react'
 
 
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
+import Customers from './pages/admin/Customers'
 
 
 export default function App() {
@@ -24,6 +26,11 @@ export default function App() {
       <Footer />
 
       </>
+    <QueryClientProvider client={new QueryClient()}>
+      <>
+        <Customers />
+      </>
+    </QueryClientProvider>
 
   )
 }

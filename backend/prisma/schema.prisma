@@ -20,6 +20,7 @@ model User {
   password       String
   avatar         String
   role           UserRole        @default(Customer)
+  riderStatus    RiderStatus     @default(NOT)
   coverImage     String?
   fullname       String?
   refreshToken   String?
@@ -27,19 +28,30 @@ model User {
   addresses      Address[]
   phone          String?
   riderVehicle   String?
+  riderShift     String?
   restaurants    Restaurant[]
   orders         Order[]
   reviews        Review[]
   productReviews ProductReview[]
   deliveries     Delivery[]
+  payments       Payment[]
   createdAt      DateTime        @default(now())
   updatedAt      DateTime        @updatedAt
   deleted        Boolean         @default(false)
 }
 
+enum RiderStatus {
+  NOT
+  APPLIED
+  SERVING
+}
+
 model Restaurant {
   id                String              @id @default(uuid())
   name              String
+  approved          Boolean             @default(false)
+  rejected          Boolean             @default(false)
+  timeSlots         TimeSlot[]
   address           RestaurantAddress[]
   imageUrl          String
   corporateEmail    String
@@ -54,6 +66,18 @@ model Restaurant {
   createdAt         DateTime            @default(now())
   updatedAt         DateTime            @updatedAt
   deleted           Boolean             @default(false)
+}
+
+model TimeSlot {
+  id           String     @id @default(uuid())
+  restaurant   Restaurant @relation(fields: [restaurantId], references: [id])
+  restaurantId String
+  dayOfWeek    Int
+  startTime    DateTime
+  endTime      DateTime
+  createdAt    DateTime   @default(now())
+  updatedAt    DateTime   @updatedAt
+  deleted      Boolean    @default(false)
 }
 
 enum UserRole {
@@ -121,12 +145,14 @@ model Order {
   updatedAt   DateTime    @updatedAt
   deleted     Boolean     @default(false)
   delivery    Delivery?
+  payment     Payment?
 }
 
 model SubOrder {
   id           String      @id @default(uuid())
   orderItems   OrderItem[]
   orderId      String
+  amount       Int?
   order        Order       @relation(fields: [orderId], references: [id])
   restaurantId String
   restaurant   Restaurant  @relation(fields: [restaurantId], references: [id])
@@ -148,6 +174,18 @@ model OrderItem {
   createdAt    DateTime @default(now())
   updatedAt    DateTime @updatedAt
   deleted      Boolean  @default(false)
+}
+
+model Payment {
+  id            String   @id @default(uuid())
+  orderId       String   @unique
+  userId        String
+  user          User     @relation(fields: [userId], references: [id])
+  amount        Float
+  paymentMethod String
+  paymentStatus String
+  paymentDate   DateTime @default(now())
+  order         Order    @relation(fields: [orderId], references: [id])
 }
 
 model Review {
@@ -209,16 +247,6 @@ enum DeliveryStatus {
   COMPLETED
   CANCELED
 }
-
-// model DeliveryPerson {
-//   id         String     @id @default(uuid())
-//   name       String
-//   phone      String     @unique
-//   vehicle    String
-//   deliveries Delivery[]
-//   deleted    Boolean    @default(false)
-//   areas      Address[]
-// }
 
 model Coupon {
   id             String   @id @default(uuid())

@@ -4,6 +4,7 @@ import { ApiResponse } from "../ustils/ApiResponse";
 import { asyncHandler } from "../ustils/asyncHandler";
 import { deleteOnFirebase, uploadOnFirebase } from "../ustils/firebase";
 import fs from 'fs/promises'
+
 const createRestaurant = asyncHandler(async (req, res) => {
     const { name, phone, email, minOrderPrice } = req.body
 
@@ -25,11 +26,22 @@ const createRestaurant = asyncHandler(async (req, res) => {
         throw new ApiError('Please provide valid minimum order price', 400)
     }
 
+    const owner = await db.user.update({
+        where: { id: req.user?.id as string },
+        data: {
+            role: 'Seller'
+        }
+    })
+
+    if (owner == null) {
+        throw new ApiError('User does not exist', 400)
+        file?.path && await fs.unlink(file?.path as string)
+    }
     const restaurant = await db.restaurant.create({
         data: {
             name: name as string,
             phone: phone as string,
-            owner_id: req.user?.id as string,
+            owner_id: owner.id,
             corporateEmail: email as string,
             imageUrl,
             minimumOrderPrice,
@@ -46,25 +58,66 @@ const createRestaurant = asyncHandler(async (req, res) => {
         .json(new ApiResponse(200, { restaurant }, 'Created Restaurant Successfully'))
 })
 
-const getAllRestaurants = asyncHandler(async (req, res) => {
-    const restaurants = await db.restaurant.findMany({
-        where: { deleted: false },
-        select: {
-            id: true,
-            name: true,
-            phone: true,
-            corporateEmail: true,
-            imageUrl: true,
-            minimumOrderPrice: true,
-            reviews: {
-                select: {
-                    rating: true,
-                    user: { select: { id: true, username: true } },
-                    comment: true
-                }
-            }
-        },
+const addTimeSlot = asyncHandler(async (req, res) => {
+    const { id } = req.params
+    const { day, fromTime, toTime } = req.body
+
+    if (!day || !fromTime || !toTime) {
+        throw new ApiError('Please provide all values', 400)
+    }
+
+    if (fromTime >= toTime) {
+        throw new ApiError('End time should be greater than start time', 400)
+    }
+
+    const dayOfWeek = parseInt(day)
+
+    const timeSlot = await db.timeSlot.create({
+        data: {
+            dayOfWeek,
+            startTime: fromTime,
+            endTime: toTime,
+            restaurantId: id
+        }
     })
+    if (timeSlot == null) {
+        throw new ApiError('Error creating time slot', 500)
+    }
+    res
+        .status(200)
+        .json(new ApiResponse(200, { timeSlot }, 'Created Time Slot Successfully'))
+})
+
+const getAllRestaurants = asyncHandler(async (req, res) => {
+    const { search, city } = req.query
+
+    const restaurants = await db.restaurant.findMany({
+        where: {
+            deleted: false,
+            approved: true,
+            name: { contains: search as string, mode: 'insensitive' },
+            address: { 
+                some: { 
+                city: { contains: city as string, mode: 'insensitive' } 
+                }
+            } 
+        },
+            select: {
+                id: true,
+                name: true,
+                phone: true,
+                corporateEmail: true,
+                imageUrl: true,
+                minimumOrderPrice: true,
+                reviews: {
+                    select: {
+                        rating: true,
+                        user: { select: { id: true, username: true } },
+                        comment: true
+                    }
+                },
+            },
+        })
     if (restaurants == null) {
         throw new ApiError('Error getting restaurants', 500)
     }
@@ -77,7 +130,7 @@ const getRestaurantById = asyncHandler(async (req, res) => {
     const { id } = req.params
 
     const restaurant = await db.restaurant.findUnique({
-        where: { id: id as string, deleted: false },
+        where: { id: id as string, deleted: false, approved: true },
         select: {
             id: true,
             name: true,
@@ -91,7 +144,7 @@ const getRestaurantById = asyncHandler(async (req, res) => {
                 }
             },
             products: {
-                where: { isAvailable : true, deleted : false },
+                where: { isAvailable: true, deleted: false },
                 select: {
                     id: true,
                     name: true,
@@ -117,7 +170,7 @@ const updateRestaurant = asyncHandler(async (req, res) => {
     const { id } = req.params
     const { name, phone, email } = req.body
     const updatedRestaurant = await db.restaurant.update({
-        where: { id: id as string, deleted: false, owner_id: req.user?.id as string },
+        where: { id: id as string, deleted: false, owner_id: req.user?.id as string, approved: true },
         data: {
             name: name as string,
             phone: phone as string,
@@ -136,7 +189,7 @@ const deleteRestaurant = asyncHandler(async (req, res) => {
     const { id } = req.params
 
     const restaurant = await db.restaurant.update({
-        where: { id: id as string, owner_id: req.user?.id as string },
+        where: { id: id as string, owner_id: req.user?.id as string, deleted: false, approved: true },
         data: {
             deleted: true
         }
@@ -168,7 +221,8 @@ const addRestaurantMenuItem = asyncHandler(async (req, res) => {
         where: {
             id: id as string,
             deleted: false,
-            owner_id: req.user?.id as string
+            owner_id: req.user?.id as string,
+            approved: true
         },
     })
 
@@ -178,7 +232,7 @@ const addRestaurantMenuItem = asyncHandler(async (req, res) => {
 
     price = parseInt(price)
 
-    if(isNaN(price)) {
+    if (isNaN(price)) {
         throw new ApiError('Price must be a number', 400)
     }
     const newMenuItem = await db.product.create({
@@ -203,18 +257,24 @@ const getRestaurantMenuItems = asyncHandler(async (req, res) => {
     const { id } = req.params
     const restaurantMenu = await db.product.findMany({
         where: {
-            isAvailable : true,
+            isAvailable: true,
             restaurant_id: id as string,
             deleted: false,
             restaurant: {
-                deleted: false
+                deleted: false,
+                approved: true
             }
         },
         select: {
             id: true,
             name: true,
             price: true,
-            category: true,
+            category: {
+                select: {
+                    id: true,
+                    name: true
+                }
+            },
             description: true,
             imagePath: true,
         }
@@ -239,7 +299,8 @@ const updateProfileImage = asyncHandler(async (req, res) => {
         where: {
             id: id as string,
             owner_id: req.user?.id as string,
-            deleted: false
+            deleted: false,
+            approved: true
         },
     })
 
@@ -249,7 +310,7 @@ const updateProfileImage = asyncHandler(async (req, res) => {
 
     const imageUrl = await uploadOnFirebase(file)
 
-    if(!imageUrl) {
+    if (!imageUrl) {
         throw new ApiError('Error updating profile image', 500)
     }
 
@@ -267,68 +328,157 @@ const updateProfileImage = asyncHandler(async (req, res) => {
 })
 
 
-const getRestaurantReviews = asyncHandler(async (req,res)=>{
+const getRestaurantReviews = asyncHandler(async (req, res) => {
     const restaurantId = req.params.id
 
     console.log(restaurantId);
-    
-    if(restaurantId == null){
-        throw new ApiError('Restaurant id is required',400)
+
+    if (restaurantId == null) {
+        throw new ApiError('Restaurant id is required', 400)
     }
 
     const restaurantReviews = await db.review.findMany({
-        where : { restaurantId ,deleted : false},
+        where: { restaurantId, deleted: false, restaurant: { deleted: false, approved: true } },
     })
     console.log(restaurantReviews);
-    
 
-    if(restaurantReviews == null){
-        throw new ApiError('Product not found',400)
+
+    if (restaurantReviews == null) {
+        throw new ApiError('Product not found', 400)
     }
 
-    const totalRating = restaurantReviews.reduce((acc,review)=>{
-        return acc+review.rating
-    },0)/restaurantReviews.length
+    const totalRating = restaurantReviews.reduce((acc, review) => {
+        return acc + review.rating
+    }, 0) / restaurantReviews.length
 
     res
         .status(200)
-        .json(new ApiResponse(200,{totalRating,restaurantReviews},'Reviews fetched successfully'))
+        .json(new ApiResponse(200, { totalRating, restaurantReviews }, 'Reviews fetched successfully'))
 })
-const addRestaurantReview = asyncHandler(async (req,res)=>{
-    const { id : restaurantId } = req.params
+
+const addRestaurantReview = asyncHandler(async (req, res) => {
+    const { id: restaurantId } = req.params
     let { comment, rating } = req.body
 
-    if(!rating){
-        throw new ApiError('Rating is required',400)
+    if (!rating) {
+        throw new ApiError('Rating is required', 400)
     }
 
     rating = parseInt(rating)
 
-    if(rating < 1 || rating > 5){
-        throw new ApiError('Rating must be between 1 and 5',400)
+    if (rating < 1 || rating > 5) {
+        throw new ApiError('Rating must be between 1 and 5', 400)
     }
 
     const review = await db.review.findFirst({
-        where : {restaurantId, userId : req.user?.id as string, deleted:false},
+        where: { restaurantId, userId: req.user?.id as string, deleted: false },
     })
 
-    if(review != null){
-        throw new ApiError('Already reviewed',400)
+    if (review != null) {
+        throw new ApiError('Already reviewed', 400)
     }
 
     const newReview = await db.review.create({
-        data : {
+        data: {
             comment,
             rating,
             restaurantId,
-            userId : req.user?.id as string
+            userId: req.user?.id as string
         }
     })
     res
         .status(200)
-        .json(new ApiResponse(200,{newReview },'Review added successfully'))
+        .json(new ApiResponse(200, { newReview }, 'Review added successfully'))
 })
 
+const addRestaurantAddress = asyncHandler(async (req, res) => {
+    const { id } = req.params
+    const { city, state, zipCode, street } = req.body
+
+    if (!city || !state || !zipCode || !street) {
+        throw new ApiError('All fields are required', 400)
+    }
+    const restaurant = await db.restaurant.findUnique({
+        where: {
+            id: id as string,
+            deleted: false,
+            owner_id: req.user?.id as string
+        },
+    })
+
+    if (restaurant == null) {
+        throw new ApiError('Unauthorized Request', 401)
+    }
+
+    const updatedRestaurant = await db.restaurantAddress.create({
+        data: {
+            city,
+            state,
+            zipCode,
+            restaurantId: id,
+            street
+        }
+    })
+    if (updatedRestaurant == null) {
+        throw new ApiError('Error updating restaurant', 500)
+    }
+    res
+        .status(200)
+        .json(new ApiResponse(200, { updatedRestaurant }, 'Updated Restaurant Successfully'))
+})
+
+const restaurantSalesReport = asyncHandler(async (req, res) => {
+    const { id } = req.params
+
+    const orderStats = await db.subOrder.aggregate({
+        where: {
+            restaurantId: id,
+            restaurant: {
+                owner_id: req.user?.id
+            }
+        },
+        _count: true,
+    })
+
+    res
+        .status(200)
+        .json(new ApiResponse(200, { totalOrders: orderStats._count }, 'Sales report fetched successfully'))
+})
+
+const getRestaurantOrders = asyncHandler(async (req, res) => {
+    const { id } = req.params
+
+    const orders = await db.subOrder.findMany({
+        where: {
+            restaurantId: id,
+            restaurant: {
+                owner_id: req.user?.id
+            }
+        },
+        select: {
+            id: true,
+            amount: true,
+            orderItems: true,
+            createdAt: true,
+            order: {
+                select: {
+                    id: true,
+                    orderStatus: true
+                },
+                include: {
+                    user: true,
+                }
+            }
+        },
+        orderBy: {
+            createdAt: 'desc'
+        }
+    })
+
+    res
+        .status(200)
+        .json(new ApiResponse(200, { orders }, 'Orders fetched successfully'))
+})
 export {
     createRestaurant,
     getAllRestaurants,
@@ -339,5 +489,9 @@ export {
     getRestaurantMenuItems,
     updateProfileImage,
     getRestaurantReviews,
-    addRestaurantReview
+    addRestaurantReview,
+    addRestaurantAddress,
+    restaurantSalesReport,
+    getRestaurantOrders,
+    addTimeSlot
 }
