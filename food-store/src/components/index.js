@@ -1,11 +1,11 @@
-import Navbar from './Navbar'
+import Navbar from './MyNavbar'
 import ProductCard from './ProductCard'
-import LoginForm from './LoginForm'
-import ProductForm from './ProductForm'
+import Footer from './Footer'
+import AuthLayout from './AuthLayout'
 
 export {
+    AuthLayout,
     Navbar,
     ProductCard,
-    LoginForm,
-    ProductForm
+    Footer
 }

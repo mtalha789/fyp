@@ -10,7 +10,7 @@ export const useAdminStore = create(
             adminToken: null,
             authenticateAdmin: async (username, password) => {
                 try {
-                    const response = await (await fetch(`${import.meta.env.VITE_API_URL}/admin/auth`,{
+                    const response = await (await fetch(`${import.meta.env.VITE_API_URL}/admin/auth`, {
                         body: JSON.stringify({
                             username,
                             password
@@ -21,7 +21,7 @@ export const useAdminStore = create(
                         }
                     })).json();
                     console.log(response);
-                    set({adminStatus: true, adminToken: response.data.access_token,});
+                    set({ adminStatus: true, adminToken: response.data.token, });
                     return {
                         success: true,
                         error: null
@@ -33,12 +33,12 @@ export const useAdminStore = create(
                     }
                 }
             },
-            setHydrated: () => set({hydrated: true}),
+            setHydrated: () => set({ hydrated: true }),
         })),
-        { 
-            name: 'admin-storage', 
-            onRehydrateStorage: () => (error,state) => {
-                if(!error) state.setHydrated()
+        {
+            name: 'admin-storage',
+            onRehydrateStorage: () => (error, state) => {
+                if (!error) state.setHydrated()
             }
         },
     ),

@@ -3,7 +3,7 @@ import { persist } from 'zustand/middleware';
 import { immer } from 'zustand/middleware/immer';
 import { useAuthStore } from './Auth';
 
-const access_token = useAuthStore.getState().access_token
+
 
 export const useRestaurantStore = create(
     persist(
@@ -18,14 +18,15 @@ export const useRestaurantStore = create(
             //     set({restaurant: response?.data?.restaurant})
             // },
             registerRestaurant: async (restaurantData) => {
+                const { accessToken } = useAuthStore()
                 try {
                     const response = await (await fetch(
                         `${import.meta.env.VITE_API_URL}/restaurants/`,
                         {
                             body: restaurantData,
                             method: 'POST',
-                            headers: access_token && {
-                                'Authotization': `Bearer ${access_token}`
+                            headers: accessToken && {
+                                'Authotization': `Bearer ${accessToken}`
                             }
                         }
                     )).json()
@@ -45,6 +46,7 @@ export const useRestaurantStore = create(
                 }
             },
             addRestaurantAddress: async (addressData) => {
+                const { accessToken } = useAuthStore()
                 try {
                     const restaurantId = useRestaurantStore.getState().restaurant?.id
                     const response = await (await fetch(
@@ -52,8 +54,8 @@ export const useRestaurantStore = create(
                         {
                             body: addressData,
                             method: 'POST',
-                            headers: access_token && {
-                                'Authotization': `Bearer ${access_token}`
+                            headers: accessToken && {
+                                'Authotization': `Bearer ${accessToken}`
                             }
                         }
                     )).json()

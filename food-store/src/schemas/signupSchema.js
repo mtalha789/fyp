@@ -25,3 +25,13 @@ export const signupSchema = z.object({
 export const coverImageSchema = z
     .instanceof(File)
     .refine((file) => file.size <= 5 * 1024 * 1024 || file.type.startsWith('image/'), 'Cover Image size should be less than 5MB')
+
+
+export const loginSchema = z.object({
+    username: z
+        .string('Username is required')
+        .min(3, 'Username should be at least 3 characters long'),
+    password: z
+        .string('Password is required')
+        .min(8, 'Password should be at least 8 characters long')
+})
