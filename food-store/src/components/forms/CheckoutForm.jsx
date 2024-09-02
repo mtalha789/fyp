@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { useCart } from "../state/Cart"
+import { useCart } from "../../state/Cart"
 import { loadStripe } from '@stripe/stripe-js';
 import { Elements, CardElement, useStripe, useElements } from '@stripe/react-stripe-js';
 

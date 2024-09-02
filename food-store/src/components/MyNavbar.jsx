@@ -7,25 +7,14 @@ import {
   NavbarItem,
   Dropdown
 } from "@nextui-org/react";
-import { Link } from "react-router-dom";
-<<<<<<< HEAD
-import LoginForm from "./forms/LoginForm";
-import SignupForm from "./Signup/SignupForm";
-import Cart from "./Cart";
-// import { Link } from 'react-router-dom';
-=======
+import { Link, useNavigate } from "react-router-dom";
 import { useAuthStore } from '../store/Auth'
->>>>>>> dev
+
 
 
 
 export default function MyNavbar() {
-<<<<<<< HEAD
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
-  const toggleLogin = () => {
-    setIsLoggedIn(!isLoggedIn);
-  };
-=======
+  const navigate = useNavigate()
   const { status: authStatus, logout } = useAuthStore()
 
   const handleLogout = () => {
@@ -39,7 +28,6 @@ export default function MyNavbar() {
     alert('Logged out successfully...')
     
   }
->>>>>>> dev
 
   return (
     <Navbar isBordered>
@@ -61,35 +49,24 @@ export default function MyNavbar() {
         </NavbarItem>
       </NavbarContent>
       <NavbarContent justify="end">
-<<<<<<< HEAD
-        <NavbarItem className="hidden lg:flex">
-        
-          <LoginForm />
-         
-        </NavbarItem>
-        <NavbarItem>
-          <SignupForm />
-        </NavbarItem>
         <NavbarItem>
           <Cart />
         </NavbarItem>
-=======
         {!authStatus ? (<>
           <NavbarItem className="">
-            <Link color="default" to="/login">Login</Link>
+            <Button color="primary" onClick={() => navigate('/login')} >Login</Button>
           </NavbarItem>
           <NavbarItem>
-            <Link color="" to="/signup">Signup</Link>
+            <Button color="primary" onClick={() => navigate('/signup')}>Signup</Button>
           </NavbarItem>
         </>
         ):(
           <>
-            <Button onClick={handleLogout}>
+            <Button onClick={handleLogout} color="primary">
               Logout
             </Button>
           </>
         )}
->>>>>>> dev
       </NavbarContent>
     </Navbar>
   );

@@ -6,19 +6,20 @@ import { NextUIProvider } from "@nextui-org/react";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import PartnerWithUs from "./pages/PartnerWithUs.jsx";
 import ProductDetail from "./pages/ProductDetail.jsx";
-import LoginForm from "./components/LoginForm.jsx";
-import CheckoutPage from "./components/CheckoutForm.jsx";
 import Hero from "./components/Hero/Hero.jsx";
 import BrandContainer from "./components/BrandContainer/BrandContainer.jsx";
 import ProductCard from "./components/ProductCard.jsx";
+import {
+  LoginForm,
+  CheckoutPage,
+  SignupForm,
+} from './components/forms/index.js';
 
+import AuthLayout from './components/AuthLayout.jsx';
 
-
-import ProductModal from "./pages/ProductModal.jsx";
-import AuthLayout from './components/AuthLayout.jsx'
-import { 
-  RestaurantPortal, 
-  Dashboard, 
+import {
+  RestaurantPortal,
+  Dashboard,
   MenuPage,
   OrdersPage,
   SalesPage,
@@ -32,17 +33,12 @@ import {
   Restaurants,
   Riders,
 } from "./pages/admin/index.js";
-import {
-  LoginForm,
-  SignupForm,
-} from "./components/forms/index.js";
 
 const router = createBrowserRouter([
   {
     path: "/",
     element: <App />,
     children: [
-<<<<<<< HEAD
       
       {
         path: "/",
@@ -63,19 +59,6 @@ const router = createBrowserRouter([
       {
         path: "/product/:id",
         element: <ProductDetail />,
-      }
-
-    ]
-  },
-  
-=======
-      {
-        path: "/",
-        element: <h1>Hello</h1>,
-      },
-      {
-        path: "/product/:productId",
-        element: <AuthLayout><ProductDetail /></AuthLayout>,
       },
       {
         path: "/login",
@@ -94,7 +77,6 @@ const router = createBrowserRouter([
         )
       }
     ]
->>>>>>> dev
   },
   {
     path: "/corporate",

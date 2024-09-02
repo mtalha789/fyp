@@ -3,14 +3,11 @@ import {
   Button,
   Input,
 } from "@nextui-org/react";
-<<<<<<< HEAD
 import { Link } from "react-router-dom";
 
-=======
 import { useAuthStore } from "../../store/Auth";
 import { loginSchema } from "../../schemas/signupSchema";
 import { EyeFilledIcon, EyeSlashFilledIcon } from "../icons";
->>>>>>> dev
 
 export default function LoginForm() {
   const [error, setError] = React.useState(null);
@@ -51,22 +48,6 @@ export default function LoginForm() {
     }
 
   return (
-<<<<<<< HEAD
-    <>
-    
-      <Button onPress={onOpen} color="default" variant="shadow">
-        Login
-      </Button>
-      <Modal isOpen={isOpen} onOpenChange={onOpenChange} placement="top-center">
-        <ModalContent>
-          {(onClose) => (
-            <>
-              <p className="font-extrabold text-3xl text-inherit m-4 justify-center flex">
-                Mealo
-              </p>
-              <ModalHeader className="flex flex-col gap-1">Log in</ModalHeader>
-              <ModalBody>
-=======
     <div className='text-primary-500 h-screen flex flex-col justify-center gap-6 items-center'>
             <p className="font-thin text-3xl text-center text-inherit my-4">
                 SignIn
@@ -74,7 +55,6 @@ export default function LoginForm() {
             <form onSubmit={handleSubmit} className="flex flex-col gap-y-4 justify-center items-center mx-auto w-[90%]">
                 {error?.message && <p className="text-red-500">{error?.message}</p>}
                 
->>>>>>> dev
                 <Input
                     type="text"
                     label="Enter Username"
@@ -112,6 +92,7 @@ export default function LoginForm() {
                     {loading ? "Signing In..." : 'Login'}
                 </Button>
             </form>
+            <p className="text-gray-500 text-center my-2">Don't have an account? <Link to='/signup' className="text-blue-500">Create Account</Link> </p>
         </div>
   );
 }

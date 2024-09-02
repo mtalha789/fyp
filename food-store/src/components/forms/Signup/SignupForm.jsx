@@ -146,6 +146,7 @@ function SignupForm() {
                     {loading ? "Registering..." : 'Sign Up'}
                 </Button>
             </form>
+            <p className="text-gray-500 text-center my-2">Already have an account? <Link to="/login" className="text-blue-500">Login</Link></p>
         </div>
     )
 }
