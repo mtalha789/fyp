@@ -2,31 +2,29 @@ import { useState, useEffect } from 'react'
 import { useAuthStore } from '../store/Auth'
 import { useNavigate } from 'react-router-dom'
 import MyNavbar from './MyNavbar'
+import LoaderComponent from './Loader'
+import Footer from './Footer'
 
 
-export default function AuthLayout({ children, authenicated = true }) {
+export default function AuthLayout({ children, authenticated = true }) {
     const [loader, setLoader] = useState(true)
     const navigate = useNavigate()
     const status = useAuthStore.getState().status
 
+    console.log(status);
     useEffect(() => {
-        if (authenicated && status !== authenicated) {
+        if (authenticated && status !== authenticated) {
             navigate('/login')
         }
-        else if (!authenicated && status !== authenicated) {
+        else if (!authenticated && status !== authenticated) {
             navigate('/')
         }
         setLoader(false)
-    }, [status, navigate, authenicated])
+    }, [status, navigate, authenticated])
     
     return (
         <div>
-            {loader ? <div>Loading...</div> : 
-            <>
-            <MyNavbar/>
-            {children}
-            </>
-            }
+            {loader ? <LoaderComponent/> : <>{children}</>}
         </div>
     )
 }

@@ -1,7 +1,7 @@
 import React from 'react'
 import { Input, Button } from '@nextui-org/react'
-import { restaurantSchema } from '../schemas/restaurantSchema';
-import { useRestaurantStore } from '../store/Restaurant';
+import { restaurantSchema } from '../../schemas/restaurantSchema';
+import { useRestaurantStore } from '../../store/Restaurant';
 
 export default function RestaurantForm({ restaurant }) {
   const [loading, setLoading] = React.useState(false);

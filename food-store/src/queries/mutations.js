@@ -9,7 +9,7 @@ export const toggleProductAvailability = async () =>{
             method:'PUT',
             headers: {
                 'Content-Type': 'application/json',
-                'Authorization': `Bearer ${useAuthStore(state=> state.access_token)}`
+                'Authorization': `Bearer ${useAuthStore(state=> state.accessToken)}`
             }
         })
         .then((res) => res.json())
@@ -26,7 +26,7 @@ export const deleteProduct = async () =>{
             method:'DELETE',
             headers: {
                 'Content-Type': 'application/json',
-                'Authorization': `Bearer ${useAuthStore(state => state.access_token)}`
+                'Authorization': `Bearer ${useAuthStore(state => state.accessToken)}`
             }
         })
         .then((res) => res.json())
@@ -43,7 +43,7 @@ export const addProduct = async () =>{
             method:'POST',
             body: postData,
             headers: {
-                'Authorization': `Bearer ${useAuthStore(state => state.access_token)}`
+                'Authorization': `Bearer ${useAuthStore(state => state.accessToken)}`
             }
         })
         .then((res) => res.json())
@@ -60,7 +60,7 @@ export const updateProduct = () =>{
             method:'PUT',
             body: updateData,
             headers: {
-                'Authorization': `Bearer ${useAuthStore(state => state.access_token)}`
+                'Authorization': `Bearer ${useAuthStore(state => state.accessToken)}`
             }
         })
         .then((res) => res.json())
@@ -77,7 +77,7 @@ export const updateProductImage = () =>{
             method:'PUT',
             body: updateData.fileData,
             headers: {
-                'Authorization': `Bearer ${useAuthStore(state => state.access_token)}`
+                'Authorization': `Bearer ${useAuthStore(state => state.accessToken)}`
             }
         })
         .then((res) => res.json())

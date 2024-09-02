@@ -24,11 +24,41 @@ import {
   Restaurants,
   Riders,
 } from "./pages/admin/index.js";
+import {
+  LoginForm,
+  SignupForm,
+} from "./components/forms/index.js";
 
 const router = createBrowserRouter([
   {
     path: "/",
     element: <App />,
+    children: [
+      {
+        path: "/",
+        element: <h1>Hello</h1>,
+      },
+      {
+        path: "/product/:productId",
+        element: <AuthLayout><ProductDetail /></AuthLayout>,
+      },
+      {
+        path: "/login",
+        element: (
+        <AuthLayout authenticated={false}>
+          <LoginForm />
+        </AuthLayout>
+        )
+      },
+      {
+        path: "/signup",
+        element: (
+          <AuthLayout authenticated={false}>
+            <SignupForm />
+          </AuthLayout>
+        )
+      }
+    ]
   },
   {
     path: "/corporate",
@@ -78,42 +108,6 @@ const router = createBrowserRouter([
       },
     ]
   },
-  {
-    path: "PartnerWithUs",
-    element: <PartnerWithUs />,
-  },
-  // {
-  //   path: "/restaurant/:restaurantId",
-  //   element: <AuthLayout><ProductDetail /></AuthLayout>,
-  // },
-  // {
-  //   path: "/restaurant/:restaurantId/cart",
-  //   element: <AuthLayout><ProductModal /></AuthLayout>,
-  // },
-  // // {
-  // //   path: "/about",
-  // //   element: <AuthLayout><About /></AuthLayout>,
-  // // },
-  // // {
-  // //   path: "/contact",
-  // //   element: <AuthLayout><Contact /></AuthLayout>,
-  // // },
-  // {
-  //   path: "/login",
-  //   element: <AuthLayout><Login /></AuthLayout>,
-  // },
-  // {
-  //   path: "/register",
-  //   element: <AuthLayout><Register /></AuthLayout>,
-  // },
-  // {
-  //   path: "/profile",
-  //   element: <AuthLayout><Profile /></AuthLayout>,
-  // },
-  // {
-  //   path: "/order",
-  //   element: <AuthLayout><Order /></AuthLayout>,
-  // },
   
 ]);
 
