@@ -23,8 +23,7 @@ const Cart = () => {
     clearCart,
     incQuantity,
     decQuantity,
-  } = useCart((state) => state);
-  console.log(cart);
+  } = useCart();
 
   const navigate = useNavigate();
 
@@ -114,6 +113,7 @@ const Cart = () => {
             </div>
 
             <button
+              disabled={cart?.length === 0}
               onClick={() => {
                 setIsOpen(false);
                 navigate("/checkout");

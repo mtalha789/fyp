@@ -1,14 +1,14 @@
-import React, {useState} from "react";
+import React from "react";
 import {
   Button,
   Navbar,
   NavbarBrand,
   NavbarContent,
-  NavbarItem,
-  Dropdown
+  NavbarItem
 } from "@nextui-org/react";
 import { Link, useNavigate } from "react-router-dom";
-import { useAuthStore } from '../store/Auth'
+import { useAuthStore } from '../store/Auth';
+import { Cart } from './index' 
 
 
 
@@ -30,7 +30,7 @@ export default function MyNavbar() {
   }
 
   return (
-    <Navbar isBordered>
+    <Navbar isBordered className="shadow-lg py-1 mb-2 md:mb-4">
       <NavbarBrand>
         <Link to="/">
           <p className="font-extrabold text-3xl text-inherit">Mealo</p>

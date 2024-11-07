@@ -136,11 +136,21 @@ const getRestaurantById = asyncHandler(async (req, res) => {
             name: true,
             phone: true,
             corporateEmail: true,
+            imageUrl: true,
+            minimumOrderPrice: true,
+            timeSlots: {
+                select: {
+                    startTime: true,
+                    endTime: true,
+                    dayOfWeek: true
+                }
+            },
             reviews: {
                 select: {
                     rating: true,
-                    user: { select: { id: true, username: true } },
-                    comment: true
+                    user: { select: { id: true, username: true, fullname: true, avatar: true } },
+                    comment: true,
+                    createdAt: true
                 }
             },
             products: {

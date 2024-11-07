@@ -1,10 +1,11 @@
 import React from 'react'
-import { Loader2 } from 'lucide-react'
+import { Spinner } from '@nextui-org/react'
 
 const LoaderComponent = () => {
   return (
     <div className='w-full h-screen flex items-center justify-center'>
-        <Loader2 size='100' color='gray' className='animate-spin' />
+      <Spinner />
+      <h1 className='text-3xl font-bold'>Loading...</h1>
     </div>
   )
 }

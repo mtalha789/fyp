@@ -4,18 +4,27 @@ import App from "./App.jsx";
 import "./index.css";
 import { NextUIProvider } from "@nextui-org/react";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
-import PartnerWithUs from "./pages/PartnerWithUs.jsx";
-import ProductDetail from "./pages/ProductDetail.jsx";
-import Hero from "./components/Hero/Hero.jsx";
-import BrandContainer from "./components/BrandContainer/BrandContainer.jsx";
-import ProductCard from "./components/ProductCard.jsx";
+
+import {
+  RestaurantDetails,
+  ProductDetail,
+  ProductCard,
+  PartnerWithUs,
+} from "./pages/index.js";
+
+import {
+  Hero,
+  BrandContainer,
+  AuthLayout,
+} from "./components/index.js"
+
+//forms
 import {
   LoginForm,
   CheckoutPage,
   SignupForm,
 } from './components/forms/index.js';
 
-import AuthLayout from './components/AuthLayout.jsx';
 
 import {
   RestaurantPortal,
@@ -47,6 +56,10 @@ const router = createBrowserRouter([
         <BrandContainer/>
         <ProductCard />
         </>,
+      },
+      {
+        path: "/restaurant/:id",
+        element: <RestaurantDetails />
       },
       {
         path:"/checkout",

@@ -41,8 +41,13 @@ export const useCart = create(
           const price = parseFloat(item.price);
           const quantity = parseInt(item.quantity, 10);
           if (!isNaN(price) && !isNaN(quantity)) {
-            state.cart.push(item);
-            state.totalPrice += price * quantity;
+            if(state.cart.some(cartItem => cartItem.id === item.id)) {
+              state.cart = state.cart.map(cartItem => cartItem.id === item.id ? {...cartItem, quantity: cartItem.quantity + quantity} : cartItem)
+              state.totalPrice += price * quantity;
+            }else{
+              state.cart.push(item);
+              state.totalPrice += price * quantity;
+            }
           }
         });
       },
