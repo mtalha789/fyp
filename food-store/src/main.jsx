@@ -11,6 +11,8 @@ import CheckoutPage from "./components/CheckoutForm.jsx";
 import Hero from "./components/Hero/Hero.jsx";
 import BrandContainer from "./components/BrandContainer/BrandContainer.jsx";
 import ProductCard from "./components/ProductCard.jsx";
+import Menu from "./components/Menu.jsx";
+
 
 
 
@@ -40,6 +42,10 @@ const router = createBrowserRouter([
       {
         path: "/product/:id",
         element: <ProductDetail />,
+      },
+      {
+        path: "/menu",
+        element: <Menu />,
       }
 
     ]
