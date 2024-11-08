@@ -4,13 +4,13 @@ import App from "./App.jsx";
 import "./index.css";
 import { NextUIProvider } from "@nextui-org/react";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
-import PartnerWithUs from "./pages/PartnerWithUs.jsx";
-import ProductDetail from "./pages/ProductDetail.jsx";
-import LoginForm from "./components/LoginForm.jsx";
-import CheckoutPage from "./components/CheckoutForm.jsx";
-import Hero from "./components/Hero/Hero.jsx";
-import BrandContainer from "./components/BrandContainer/BrandContainer.jsx";
-import ProductCard from "./components/ProductCard.jsx";
+// import PartnerWithUs from "./pages/PartnerWithUs.jsx";
+// import ProductDetail from "./pages/ProductDetail.jsx";
+// import LoginForm from "./components/LoginForm.jsx";
+// import CheckoutPage from "./components/CheckoutForm.jsx";
+// import Hero from "./components/Hero/Hero.jsx";
+// import BrandContainer from "./components/BrandContainer/BrandContainer.jsx";
+// import ProductCard from "./components/ProductCard.jsx";
 import Menu from "./components/Menu.jsx";
 
 
@@ -85,6 +85,8 @@ const router = createBrowserRouter([
       {
         path: "/menu",
         element: <Menu />,
+      },
+      {
         path: "/login",
         element: (
         <AuthLayout authenticated={false}>
