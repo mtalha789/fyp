@@ -17,7 +17,7 @@ const getAllOrders = asyncHandler(async (req, res) => {
 
     const orders = await db.order.findMany({
         where: { userId: user?.id as string },
-        include: { _count: { select: { subOrder: true } } }
+        include: { _count: { select: { subOrder: true } },subOrder: true },
     })
 
     if (orders == null) {
@@ -66,7 +66,10 @@ const createOrder = asyncHandler(async (req, res) => {
         where: { id: { in: restaurantIds } }
     })
 
-    let subOrders: any = []
+    let subOrders: {
+        restaurantId: string,
+        orderItems: any[]
+    }[] = []
     restaurantIds.forEach((restaurant) => {
         const restaurantOrder = orderItems.filter(item => item.restaurantId === restaurant).map(order => ({
             productId: order.productId,
@@ -81,9 +84,6 @@ const createOrder = asyncHandler(async (req, res) => {
 
     })
 
-    // subOrders.forEach((subOrder) => {
-    //     sendEmail(subOrder.)
-    // })
     const newOrder = await db.order.create({
         data: {
             userId: req.user?.id as string,
@@ -93,16 +93,23 @@ const createOrder = asyncHandler(async (req, res) => {
                     orderItems: {
                         create: subOrder?.orderItems
                     },
-                    restaurantId: subOrder.restaurantId
+                    restaurantId: subOrder.restaurantId,
+                    totalAmount: subOrder.orderItems.reduce((acc: number, item:OrderItems) => acc + item.totalAmount, 0),
                 }))
             },
             orderStatus: "PENDING"
         }
     })
-
+    
     if (newOrder == null) {
         throw new ApiError("Error while creating order", 500);
     }
+
+    subOrders.forEach(async(subOrder) => {
+        const restaurantEmail = restaurants.find(restaurant => restaurant.id == subOrder.restaurantId)?.corporateEmail
+
+        await sendEmail(restaurantEmail as string,'New Order','Goto restaurant portal for new orders' )
+    })
 
     res
         .status(201)

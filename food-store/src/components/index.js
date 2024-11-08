@@ -1,11 +1,24 @@
-import Navbar from './Navbar'
+import Navbar from './MyNavbar'
 import ProductCard from './ProductCard'
-import LoginForm from './LoginForm'
-import ProductForm from './ProductForm'
+import Footer from './Footer'
+import AuthLayout from './AuthLayout'
+import Rating from './Rating'
+import Loader from './Loader'
+import Review from './Review'
+import Hero from './Hero/Hero'
+import BrandContainer from './BrandContainer/BrandContainer'
+import Cart from './Cart'
+
 
 export {
+    AuthLayout,
     Navbar,
     ProductCard,
-    LoginForm,
-    ProductForm
+    Footer,
+    Rating,
+    Loader,
+    Cart,
+    Review,
+    Hero,
+    BrandContainer,
 }

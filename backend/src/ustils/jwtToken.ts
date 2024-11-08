@@ -24,3 +24,15 @@ export const generateAccessToken = async function(userId :string,email : string)
         }
     )
 }
+
+export const generateAdminToken = async function(username : string){
+    return jwt.sign(
+        {
+            username: username
+        },
+        process.env.ACCESS_TOKEN_SECRET as string,
+        {
+            expiresIn: process.env.ACCESS_TOKEN_EXPIRY
+        }
+    )
+}

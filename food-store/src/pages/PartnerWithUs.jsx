@@ -1,13 +1,9 @@
 import React from "react";
-import MyNavbar from "../components/MyNavbar";
-import LoginForm from "../components/LoginForm";
-import SignupForm from "../components/Signup/SignupForm";
 import Features from "../components/PartnerData/Feature";
 import StepSection from "../components/PartnerData/StepSection";
 import WhyJoin from "../components/PartnerData/WhyJoin";
-import Footer from "../components/Footer";
 
-function PartnerWithUs(props) {
+function PartnerWithUs() {
   return (
     <div>
       <section className="bg-gray-100 py-16 bg-hero-pattern bg-cover relative overflow-hidden h-[50vh]">

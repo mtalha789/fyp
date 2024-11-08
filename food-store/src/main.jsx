@@ -14,8 +14,43 @@ import ProductCard from "./components/ProductCard.jsx";
 import Menu from "./components/Menu.jsx";
 
 
+import {
+  RestaurantDetails,
+  ProductDetail,
+  ProductCard,
+  PartnerWithUs,
+} from "./pages/index.js";
+
+import {
+  Hero,
+  BrandContainer,
+  AuthLayout,
+} from "./components/index.js"
+
+//forms
+import {
+  LoginForm,
+  CheckoutPage,
+  SignupForm,
+} from './components/forms/index.js';
 
 
+import {
+  RestaurantPortal,
+  Dashboard,
+  MenuPage,
+  OrdersPage,
+  SalesPage,
+  AddItemPage,
+} from "./pages/restaurant/index.js";
+
+import {
+  AdminPortal,
+  Customers,
+  Dashboard as AdminDashboard,
+  Restaurants,
+  Riders,
+} from "./pages/admin/index.js";
 
 const router = createBrowserRouter([
   {
@@ -32,6 +67,10 @@ const router = createBrowserRouter([
         </>,
       },
       {
+        path: "/restaurant/:id",
+        element: <RestaurantDetails />
+      },
+      {
         path:"/checkout",
         element: <CheckoutPage />
       },
@@ -46,8 +85,69 @@ const router = createBrowserRouter([
       {
         path: "/menu",
         element: <Menu />,
+        path: "/login",
+        element: (
+        <AuthLayout authenticated={false}>
+          <LoginForm />
+        </AuthLayout>
+        )
+      },
+      {
+        path: "/signup",
+        element: (
+          <AuthLayout authenticated={false}>
+            <SignupForm />
+          </AuthLayout>
+        )
       }
-
+    ]
+  },
+  {
+    path: "/corporate",
+    element: <RestaurantPortal />,
+    children: [
+      {
+        path: "/corporate/",
+        element: <Dashboard />,
+      },
+      {
+        path: "/corporate/menu",
+        element: <MenuPage />,
+      },
+      {
+        path: "/corporate/menu/add-item",
+        element: <AddItemPage />,
+      },
+      {
+        path: "/corporate/orders",
+        element: <OrdersPage />,
+      },
+      {
+        path: "/corporate/sales",
+        element: <SalesPage />,
+      },
+    ]
+  },
+  {
+    path: "/admin",
+    element: <AdminPortal />,
+    children: [
+      {
+        path: "/admin/",
+        element: <AdminDashboard />,
+      },
+      {
+        path: "/admin/customers",
+        element: <Customers />,
+      },
+      {
+        path: "/admin/restaurants",
+        element: <Restaurants />,
+      },
+      {
+        path: "/admin/rider",
+        element: <Riders />,
+      },
     ]
   },
   

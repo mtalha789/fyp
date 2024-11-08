@@ -1,6 +1,7 @@
 import express from 'express'
 import cookieParser from 'cookie-parser'
 import cors from 'cors'
+import bodyParser from 'body-parser';
 
 // importing routes
 import userRouter from './routes/user.routes';
@@ -12,6 +13,7 @@ import reviewRouter from './routes/review.routes';
 import productReviewRouter from './routes/productReview.router'
 import deliveryRouter from './routes/delivery.routes';
 import riderRouter from './routes/rider.routes';
+import paymentRouter from './routes/payment.routes';
 
 const app = express()
 
@@ -20,7 +22,8 @@ app.use(cors({
     credentials : true
 }))
 
-app.use(express.json({limit:'16kb'}))
+app.use(bodyParser.json({limit:'16mb'}))
+// app.use(express.json({limit:'16mb'}))
 app.use(express.urlencoded({limit:'16kb' , extended : true}))
 app.use(express.static('public'))
 
@@ -35,5 +38,6 @@ app.use('/api/reviews',reviewRouter)
 app.use('/api/productreviews',productReviewRouter)
 app.use('/api/deliveries',deliveryRouter)
 app.use('/api/riders',riderRouter)
+app.use('/api/payments',paymentRouter)
 
 export default app
