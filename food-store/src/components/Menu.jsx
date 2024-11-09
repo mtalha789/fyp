@@ -16,7 +16,7 @@ const steps = [
   { id: "Step 3", name: "Add Photo", fields: ["addPhoto"] },
 ];
 
-const Step1 = ({ state, setState }) => {
+const Step1 = () => {
   const [currentStep, setCurrentStep] = useState(0);
   const [display, setDisplay] = useState(false);
 
@@ -121,7 +121,7 @@ const Step1 = ({ state, setState }) => {
           >
             Back
           </button>
-          <p className="text-gray-600">4 steps to complete</p>
+          <p className="text-gray-600">{currentStep + 1} of 3 steps to complete</p>
           <button
             className="bg-gray-100 text-black px-6 py-2 rounded-lg hover:bg-black hover:text-white"
             onClick={() => next()}
