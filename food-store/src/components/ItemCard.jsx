@@ -98,43 +98,44 @@ export default function ItemCard() {
 
   return (
     <>
-      <div className="grid grid-cols-3 px-72 py-10 gap-7">
-        {productList.map((item) => (
-          <Card
-            className="py-4"
-            key={item.id}
-            isPressable
-            isHoverable
-            onPress={() => handleClick(item)}
-          >
-            <CardHeader className="pb-0 pt-2 px-4 flex-col items-start">
-              <h4 className="font-bold text-large">{item.title}</h4>
-              <small className="text-default-500">{item.description}</small>
-              <p className="text-tiny uppercase font-bold overflow-hidden">
-                {item.pr}
-              </p>
-            </CardHeader>
-            <CardBody className="overflow-visible py-2 relative">
-              <Image
-                alt="Card background"
-                className="object-cover rounded-xl "
-                src={item.img}
-              />
-              <Button
-                onClick={() => {
-                  console.log("added to cart", item);
-                  addToCart({...item,quantity:1});
-                }}
-                isHoverable
-                variant="solid"
-                className=" absolute bottom-3 right-4 bg-white rounded-xl p-2 z-10"
-              >
-                Add to Cart
-              </Button>
-            </CardBody>
-          </Card>
-        ))}
-      </div>
+     <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4 px-4 py-6">
+  {productList.map((item) => (
+    <Card
+      className="py-4"
+      key={item.id}
+      isPressable
+      isHoverable
+      onPress={() => handleClick(item)}
+    >
+      <CardHeader className="pb-0 pt-2 px-4 flex-col items-start">
+        <h4 className="font-bold text-large">{item.title}</h4>
+        <small className="text-default-500">{item.description}</small>
+        <p className="text-tiny uppercase font-bold overflow-hidden">
+          {item.pr}
+        </p>
+      </CardHeader>
+      <CardBody className="overflow-visible py-2 relative">
+        <Image
+          alt="Card background"
+          className="object-cover rounded-xl"
+          src={item.img}
+        />
+        <Button
+          onClick={() => {
+            console.log("added to cart", item);
+            addToCart({ ...item, quantity: 1 });
+          }}
+          isHoverable
+          variant="solid"
+          className="absolute bottom-3 right-5  p-2 z-10 "
+        >
+          Add to Cart
+        </Button>
+      </CardBody>
+    </Card>
+  ))}
+</div>
+
       <Modal
         className="pt-9"
         backdrop={"blur"}

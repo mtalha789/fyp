@@ -11,6 +11,9 @@ export default {
       backgroundImage: {
       'hero-pattern': "url('/src/assets/bloackarea.png')",
       'hero-pattern2': "url('/src/assets/pexels-ella-olsson-572949-1640772.jpg')",
+      fontFamily: {
+        sans: ['Poppins', 'sans-serif'],
+      },
     }
       
     },

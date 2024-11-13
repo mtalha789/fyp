@@ -2,6 +2,9 @@ import React from "react";
 import Features from "../components/PartnerData/Feature";
 import StepSection from "../components/PartnerData/StepSection";
 import WhyJoin from "../components/PartnerData/WhyJoin";
+import LoginForm from "../components/forms/LoginForm";
+import SignupForm from "../components/forms/Signup/SignupForm";
+// import { Link } from "react-router-dom";
 
 function PartnerWithUs() {
   return (
@@ -19,7 +22,7 @@ function PartnerWithUs() {
           </p>
           <div className="flex gap-5">
             <LoginForm />
-            <SignupForm />
+            {/* <SignupForm /> */}
           </div>
         </div>
       </section>

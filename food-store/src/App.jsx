@@ -11,7 +11,7 @@ import {
 
 export default function App() {
   return (
-    <QueryClientProvider client={new QueryClient()}>
+    <QueryClientProvider  client={new QueryClient()}>
       <>
         <Navbar />
         <Outlet />
