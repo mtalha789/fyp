@@ -1,0 +1,260 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id             String          @id @default(uuid())
+  username       String          @unique
+  email          String          @unique
+  password       String
+  avatar         String
+  role           UserRole        @default(Customer)
+  riderStatus    RiderStatus     @default(NOT)
+  coverImage     String?
+  fullname       String?
+  refreshToken   String?
+  accessToken    String?
+  addresses      Address[]
+  phone          String?
+  riderVehicle   String?
+  riderShift     String?
+  restaurants    Restaurant[]
+  orders         Order[]
+  reviews        Review[]
+  productReviews ProductReview[]
+  deliveries     Delivery[]
+  payments       Payment[]
+  createdAt      DateTime        @default(now())
+  updatedAt      DateTime        @updatedAt
+  deleted        Boolean         @default(false)
+}
+
+enum RiderStatus {
+  NOT
+  APPLIED
+  SERVING
+}
+
+model Restaurant {
+  id                String              @id @default(uuid())
+  name              String
+  approved          Boolean             @default(false)
+  rejected          Boolean             @default(false)
+  timeSlots         TimeSlot[]
+  address           RestaurantAddress[]
+  imageUrl          String
+  corporateEmail    String
+  phone             String
+  minimumOrderPrice Int
+  owner_id          String
+  closed            Boolean             @default(false)
+  owner             User                @relation(fields: [owner_id], references: [id], onDelete: Restrict)
+  products          Product[]
+  reviews           Review[]
+  orders            SubOrder[]
+  createdAt         DateTime            @default(now())
+  updatedAt         DateTime            @updatedAt
+  deleted           Boolean             @default(false)
+}
+
+model TimeSlot {
+  id           String     @id @default(uuid())
+  restaurant   Restaurant @relation(fields: [restaurantId], references: [id])
+  restaurantId String
+  dayOfWeek    Int
+  startTime    DateTime
+  endTime      DateTime
+  createdAt    DateTime   @default(now())
+  updatedAt    DateTime   @updatedAt
+  deleted      Boolean    @default(false)
+}
+
+enum UserRole {
+  Customer
+  Seller
+  Rider
+}
+
+model Address {
+  id      String  @id @default(uuid())
+  street  String?
+  city    String
+  state   String
+  zipCode String
+  userId  String
+  user    User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+  deleted Boolean @default(false)
+}
+
+model RestaurantAddress {
+  id           String     @id @default(uuid())
+  street       String?
+  city         String
+  state        String
+  zipCode      String
+  restaurantId String
+  restaurant   Restaurant @relation(fields: [restaurantId], references: [id], onDelete: Cascade)
+  deleted      Boolean    @default(false)
+}
+
+model Product {
+  id            String          @id @default(uuid())
+  name          String
+  description   String?
+  restaurant_id String
+  imagePath     String?
+  category_id   String
+  category      Category        @relation(fields: [category_id], references: [id])
+  reviews       ProductReview[]
+  restaurant    Restaurant      @relation(fields: [restaurant_id], references: [id], onDelete: Cascade)
+  price         Float
+  isAvailable   Boolean         @default(true)
+  orderItems    OrderItem[]
+  createdAt     DateTime        @default(now())
+  updatedAt     DateTime        @updatedAt
+  deleted       Boolean         @default(false)
+}
+
+model Category {
+  id        String    @id @default(uuid())
+  name      String    @unique
+  products  Product[]
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+}
+
+model Order {
+  id          String      @id @default(uuid())
+  orderStatus OrderStatus
+  totalAmount Float
+  userId      String
+  subOrder    SubOrder[]
+  user        User        @relation(fields: [userId], references: [id])
+  createdAt   DateTime    @default(now())
+  updatedAt   DateTime    @updatedAt
+  deleted     Boolean     @default(false)
+  delivery    Delivery?
+  payment     Payment?
+}
+
+model SubOrder {
+  id           String      @id @default(uuid())
+  orderItems   OrderItem[]
+  orderId      String
+  amount       Int?
+  order        Order       @relation(fields: [orderId], references: [id])
+  restaurantId String
+  restaurant   Restaurant  @relation(fields: [restaurantId], references: [id])
+  status       OrderStatus @default(PENDING)
+  createdAt    DateTime    @default(now())
+  updatedAt    DateTime    @updatedAt
+  deleted      Boolean     @default(false)
+}
+
+model OrderItem {
+  id           String   @id @default(uuid())
+  subOrderId   String
+  productId    String
+  quantity     Int
+  totalAmount  Float
+  priceAtOrder Float
+  subOrder     SubOrder @relation(fields: [subOrderId], references: [id])
+  product      Product  @relation(fields: [productId], references: [id])
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+  deleted      Boolean  @default(false)
+}
+
+model Payment {
+  id            String   @id @default(uuid())
+  orderId       String   @unique
+  userId        String
+  user          User     @relation(fields: [userId], references: [id])
+  amount        Float
+  paymentMethod String
+  paymentStatus String
+  paymentDate   DateTime @default(now())
+  order         Order    @relation(fields: [orderId], references: [id])
+}
+
+model Review {
+  id           String     @id @default(uuid())
+  rating       Int        @default(0)
+  restaurantId String
+  userId       String
+  restaurant   Restaurant @relation(fields: [restaurantId], references: [id])
+  user         User       @relation(fields: [userId], references: [id])
+  comment      String?
+  createdAt    DateTime   @default(now())
+  updatedAt    DateTime   @updatedAt
+  deleted      Boolean    @default(false)
+}
+
+model ProductReview {
+  id        String   @id @default(uuid())
+  rating    Int      @default(0)
+  productId String
+  userId    String
+  product   Product  @relation(fields: [productId], references: [id])
+  user      User     @relation(fields: [userId], references: [id])
+  comment   String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  deleted   Boolean  @default(false)
+}
+
+enum OrderStatus {
+  PENDING
+  CONFIRMED
+  DELIVERED
+  CANCELED
+}
+
+enum ProductStatus {
+  AVAILABLE
+  UNAVAILABLE
+  DISCONTINUED
+}
+
+model Delivery {
+  id               String         @id @default(uuid())
+  orderId          String         @unique
+  deliveryPersonId String
+  status           DeliveryStatus @default(PENDING)
+  pickupTime       DateTime?
+  deliveryTime     DateTime?
+  createdAt        DateTime       @default(now())
+  updatedAt        DateTime       @updatedAt
+  deleted          Boolean        @default(false)
+  order            Order          @relation(fields: [orderId], references: [id], onDelete: Cascade)
+  deliveryPerson   User           @relation(fields: [deliveryPersonId], references: [id], onDelete: NoAction)
+}
+
+enum DeliveryStatus {
+  PENDING
+  IN_PROGRESS
+  COMPLETED
+  CANCELED
+}
+
+model Coupon {
+  id             String   @id @default(uuid())
+  code           String   @unique
+  discountAmount Float
+  validFrom      DateTime
+  validUntil     DateTime
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+  deleted        Boolean  @default(false)
+}
