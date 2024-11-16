@@ -17,10 +17,10 @@ function PartnerWithUs() {
           <p className="text-xl mb-8 text-white">
             Join us and grow your business by reaching millions of customers.
           </p>
-          <div className="flex gap-5">
+          {/* <div className="flex gap-5">
             <LoginForm />
             <SignupForm />
-          </div>
+          </div> */}
         </div>
       </section>
       <WhyJoin />
