@@ -1,13 +1,14 @@
 import React from 'react';
+import Carousel from 'react-multi-carousel';
+import 'react-multi-carousel/lib/styles.css';
 import DeliveryIcon from './DeliveryIcon';
 import BrandCard from './BrandCard';
-import Dominos from "../../assets/dominos-logo-4182.png"
-import PizzaHut from "../../assets/pizza-hut-png-logo-3811.png"
-import BurgerKing from "../../assets/picture-logo-42717.png"
-import McDonalds from "../../assets/mcdonalds-png-logo-2771.png"
-import StarBucks from "../../assets/starbucks-logo-png-1688.png"
-import SubWay from "../../assets/subway-photo-logo-4293.png"
-
+import Dominos from "../../assets/dominos-logo-4182.png";
+import PizzaHut from "../../assets/pizza-hut-png-logo-3811.png";
+import BurgerKing from "../../assets/picture-logo-42717.png";
+import McDonalds from "../../assets/mcdonalds-png-logo-2771.png";
+import StarBucks from "../../assets/starbucks-logo-png-1688.png";
+import SubWay from "../../assets/subway-photo-logo-4293.png";
 
 const brandsData = [
   { goto: 'https://www.dominos.com.pk/', BrandLogo: Dominos, BrandName: "Domino's Pizza" },
@@ -18,35 +19,67 @@ const brandsData = [
   { goto: 'https://www.mcdonalds.com/', BrandLogo: McDonalds, BrandName: 'Mcdonalds' },
 ];
 
+const responsive = {
+  superLargeDesktop: {
+    breakpoint: { max: 4000, min: 1024 },
+    items: 5, // Number of items to show on large screens
+  },
+  desktop: {
+    breakpoint: { max: 1024, min: 768 },
+    items: 4, // Number of items to show on medium screens
+  },
+  tablet: {
+    breakpoint: { max: 768, min: 464 },
+    items: 2, // Number of items to show on tablets
+  },
+  mobile: {
+    breakpoint: { max: 464, min: 0 },
+    items: 1, // Number of items to show on mobile screens
+  }
+};
+
 function BrandContainer(props) {
-    return (
-        <>
-        <div className='flex justify-center p-16 '>
-          <div className='flex gap-3 '>
-            <DeliveryIcon />
-            <h1 className='font-bold text-4xl flex justify-center items-center'>Order Online</h1>
-          </div>
+  return (
+    <>
+      {/* Header Section */}
+      <div className='flex justify-center p-16'>
+        <div className='flex gap-3'>
+          <DeliveryIcon />
+          <h1 className='font-bold text-4xl flex justify-center items-center'>Order Online</h1>
         </div>
-          <div className='bg-gray-100 h-[27rem]  justify-center flex flex-col'>
-             <div className=' grid content-center justify-center items-center grid-flow-row'>
-                <div className='flex h-16 w-96 mb-8'>
-                   <h1 className='font-medium text-4xl  '>Top Brands For You</h1>
-                </div>
-            <div className='flex gap-12'>
-              {brandsData.map((brand,index)=>(
-                <BrandCard
-                key={index}
+      </div>
+
+      {/* Brands Carousel Section */}
+      <div className='bg-gray-100 py-10 flex flex-col items-center justify-center'>
+        <div className='text-center mb-8'>
+          <h1 className='font-medium text-4xl'>Top Brands For You</h1>
+        </div>
+
+        {/* Carousel with 5 items shown on large screens */}
+        <Carousel
+          responsive={responsive}
+          infinite={true}
+          arrows={true}
+          autoPlay={false}
+          draggable={true}
+          swipeable={true}
+          keyBoardControl={true}
+          showDots={false}
+          className="w-full max-w-6xl"
+        >
+          {brandsData.map((brand, index) => (
+            <div key={index} className="flex justify-center">
+              <BrandCard
                 goto={brand.goto}
                 BrandLogo={brand.BrandLogo}
                 BrandName={brand.BrandName}
-                />
-              ))}
+              />
             </div>
-              </div>
-          </div>  
-            
-        </>
-    );
+          ))}
+        </Carousel>
+      </div>
+    </>
+  );
 }
 
 export default BrandContainer;

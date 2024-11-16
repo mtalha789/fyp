@@ -1,7 +1,10 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+/* Add this to your global styles file */
 
-.custom-Navbar{
-    background-color: black;
-}
+
+body {
+    @apply font-sans;
+  }
+

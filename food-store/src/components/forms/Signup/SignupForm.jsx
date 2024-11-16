@@ -3,7 +3,7 @@ import React from 'react';
 import { coverImageSchema, signupSchema } from '../../../schemas/signupSchema';
 import { useAuthStore } from '../../../store/Auth';
 import { EyeFilledIcon, EyeSlashFilledIcon } from '../../icons';
-import {Link} from 'react-router-dom'
+import { Link } from 'react-router-dom';
 
 function SignupForm() {
     const [error, setError] = React.useState(null);
