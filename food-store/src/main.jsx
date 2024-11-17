@@ -83,8 +83,8 @@ const router = createBrowserRouter([
         element: <ProductDetail />,
       },
       {
-        path: "/menu",
-        element: <Menu />,
+        path: "/partner-portal",
+        // element: 
       },
       {
         path: "/login",
