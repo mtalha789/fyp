@@ -1,12 +1,23 @@
-import React from "react";
+import { useEffect } from "react";
 import Features from "../components/PartnerData/Feature";
 import StepSection from "../components/PartnerData/StepSection";
 import WhyJoin from "../components/PartnerData/WhyJoin";
-import LoginForm from "../components/forms/LoginForm";
-import SignupForm from "../components/forms/Signup/SignupForm";
+// import LoginForm from "../components/forms/LoginForm";
+// import SignupForm from "../components/forms/Signup/SignupForm";
 // import { Link } from "react-router-dom";
+import { useAuthStore } from "../store/Auth";
+import { useNavigate } from "react-router-dom";
 
 function PartnerWithUs() {
+  const { status: authStatus } = useAuthStore();
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    if (!authStatus) {
+      navigate("/login");
+    }
+  }, [authStatus, navigate]);
+
   return (
     <div>
       <section className="bg-gray-100 py-16 bg-hero-pattern bg-cover relative overflow-hidden h-[50vh]">
