@@ -4,6 +4,7 @@ import { ApiError } from "../ustils/ApiError";
 import { ApiResponse } from "../ustils/ApiResponse";
 import { asyncHandler } from "../ustils/asyncHandler";
 import { sendEmail } from "../ustils/resend";
+import { stripe } from "../ustils/stripe";
 
 interface OrderItems {
     productId: string;
@@ -222,13 +223,13 @@ const updateParentOrderStatus = async (parentOrderId:string) => {
     } else if (!hasItems) {
         newStatus = 'INCOMPLETE';
     } else {
-        newStatus = 'ACTIVE';
+        newStatus = 'PENDING';
     }
 
     // Update parent Order status if there's a change
     await db.order.update({
         where: { id: parentOrderId },
-        data: { status: newStatus }
+        data: { orderStatus: newStatus === 'PENDING' ? 'PENDING' : newStatus === 'INCOMPLETE' ? 'INCOMPLETE' : 'CANCELED' }
     });
 };
 
@@ -238,7 +239,7 @@ const editOrder = asyncHandler(async (req, res) => {
     const { productIds } = req.body;
 
     // Verify the order exists and belongs to the user
-    const order = await verifyOrderOwnership(orderId, req.user?.id);
+    const order = await verifyOrderOwnership(orderId, req.user?.id as string);
     if (!order) {
         return res.status(404).json({ message: 'Order not found or unauthorized' });
     }
@@ -264,7 +265,7 @@ const cancelOrder = asyncHandler(async (req, res) => {
     const { id: orderId } = req.params;
 
     // Verify the order exists and belongs to the user
-    const order = await verifyOrderOwnership(orderId, req.user?.id);
+    const order = await verifyOrderOwnership(orderId, req.user?.id as string);
     if (!order) {
         return res.status(404).json({ message: 'Order not found or unauthorized' });
     }
@@ -281,6 +282,57 @@ const cancelOrder = asyncHandler(async (req, res) => {
     return res.status(200).json({ message: 'Order canceled', canceledOrder });
 });
 
+const orderPayment = asyncHandler(async (req, res) => {
+    const { id:orderId } = req.params;
+    const { paymentMethod, amount } = req.body;
+
+    if(paymentMethod == null || amount == null) {
+        throw new ApiError('Missing required fields', 400)
+    }
+
+    if(paymentMethod?.toLowerCase() === 'card') {
+        const paymentIntent = await stripe.paymentIntents.create({
+            amount: parseFloat(amount) * 100,
+            currency: 'pkr',
+            payment_method_types: ['card'],
+        })
+
+        if(paymentIntent == null) {
+            throw new ApiError("Order not found", 404);
+        }
+        
+        const payment = await db.payment.create({
+            data: {
+                amount: parseFloat(amount),
+                orderId: orderId as string,
+                paymentMethod: paymentMethod as string,
+                paymentStatus: 'PENDING',
+                stripePaymentId: paymentIntent.id,
+                userId: req.user?.id as string
+            }
+        })
+
+        res
+            .status(200)
+            .json(new ApiResponse(200, { clientSecret: paymentIntent.client_secret}, "Order payment intent created successfully"))
+    }
+    else if(paymentMethod?.toLowerCase() === 'cod') {
+        const payment = await db.payment.create({
+            data: {
+                amount: parseFloat(amount),
+                orderId: orderId as string,
+                paymentMethod: 'COD',
+                paymentStatus: 'PENDING',
+                userId: req.user?.id as string
+            }
+        })
+
+        res
+            .status(200)
+            .json(new ApiResponse(200, {}, "Order payment intent created successfully"))
+    }
+})  
+
 
 export {
     getAllOrders,
@@ -289,4 +341,7 @@ export {
     updateOrderStatus,
     deleteOrder,
     getAllRestaurantOrders,
+    orderPayment,
+    editOrder,
+    cancelOrder
 }
