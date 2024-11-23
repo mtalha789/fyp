@@ -5,6 +5,7 @@ import Footer from '../components/Footer'
 import RestaurantDetails from './RestaurantDetails'
 import ProductDetail from './ProductDetail'
 import PartnerWithUs from './PartnerWithUs'
+import RegisterRestaurant from './RegisterRestaurant'
 
 
 export {
@@ -14,5 +15,6 @@ export {
     Footer,
     RestaurantDetails,
     ProductDetail,
+    RegisterRestaurant,
     PartnerWithUs
 }

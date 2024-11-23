@@ -1,22 +1,11 @@
-import { useEffect } from "react";
 import Features from "../components/PartnerData/Feature";
 import StepSection from "../components/PartnerData/StepSection";
 import WhyJoin from "../components/PartnerData/WhyJoin";
-// import LoginForm from "../components/forms/LoginForm";
-// import SignupForm from "../components/forms/Signup/SignupForm";
-// import { Link } from "react-router-dom";
-import { useAuthStore } from "../store/Auth";
 import { useNavigate } from "react-router-dom";
+import { Button } from "@nextui-org/react";
 
 function PartnerWithUs() {
-  const { status: authStatus } = useAuthStore();
   const navigate = useNavigate();
-
-  useEffect(() => {
-    if (!authStatus) {
-      navigate("/login");
-    }
-  }, [authStatus, navigate]);
 
   return (
     <div>
@@ -31,6 +20,9 @@ function PartnerWithUs() {
           <p className="text-xl mb-8 text-white">
             Join us and grow your business by reaching millions of customers.
           </p>
+          <Button color="primary" onClick={()=> navigate("/business/register")}>
+            Register as a Partner
+          </Button>
           {/* <div className="flex gap-5">
             <LoginForm />
             <SignupForm />
