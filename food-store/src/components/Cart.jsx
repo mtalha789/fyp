@@ -58,62 +58,72 @@ const Cart = () => {
         >
           <h3 className="font-bold text-2xl text-gray-800">Cart</h3>
 
-          <div className={`max-h-[25rem] w-full p-2 gap-6 ${cart?.length > 3 ? " overflow-y-scroll" : ""}`}>
+          <div
+            className={`max-h-[25rem] w-full p-2 gap-6 ${
+              cart?.length > 3 ? " overflow-y-scroll" : ""
+            }`}
+          >
             {/* Cart Items */}
-            {cart?.map((item) => (
-              <Card
-              isHoverable
-              isBlurred
-              isFooterBlurred
-                key={item.id}
-                className="flex justify-between rounded-lg "
-              >
-                <div className="flex flex-col p-2">
-                  <div className="flex justify-between items-center">
-                  <span className="text-gray-800 font-semibold">{item.title}</span>
-                  <Image
-                    alt={item.title}
-                    width={100}
-                    src={item.img}
-                    className="rounded-md "
-                  />
-                  </div>
-                  <div className="flex items-center justify-between gap-36 ">
-                    <div className="flex items-center rounded-full  ">
-                      <Button
-                        size="sm"
-                        variant="light"
-                        isIconOnly
-                        onClick={() => decQuantity(item.id)}
-                        className="rounded-full"
-                      >
-                        <Minus size={10} />
-                      </Button>
-                      <span className="px-2 text-sm">{item.quantity}</span>
-                      <Button
-                        size="sm"
-                        variant="light"
-                        isIconOnly
-                        onClick={() => incQuantity(item.id)}
-                        className="rounded-full"
-                      >
-                        <Plus size={10} />
-                      </Button>
+            {cart?.length > 0 ? (
+              cart.map((item) => (
+                <Card
+                  isHoverable
+                  isBlurred
+                  isFooterBlurred
+                  key={item.id}
+                  className="flex justify-between rounded-lg "
+                >
+                  <div className="flex flex-col p-2">
+                    <div className="flex justify-between items-center">
+                      <span className="text-gray-800 font-semibold">
+                        {item.title}
+                      </span>
+                      <Image
+                        alt={item.title}
+                        width={100}
+                        src={item.img}
+                        className="rounded-md "
+                      />
                     </div>
-                    <p className="text-gray-700 font-semibold">
-                      Rs. {item.price}
-                    </p>
+                    <div className="flex items-center justify-between gap-36 ">
+                      <div className="flex items-center rounded-full  ">
+                        <Button
+                          size="sm"
+                          variant="light"
+                          isIconOnly
+                          onClick={() => decQuantity(item.id)}
+                          className="rounded-full"
+                        >
+                          <Minus size={10} />
+                        </Button>
+                        <span className="px-2 text-sm">{item.quantity}</span>
+                        <Button
+                          size="sm"
+                          variant="light"
+                          isIconOnly
+                          onClick={() => incQuantity(item.id)}
+                          className="rounded-full"
+                        >
+                          <Plus size={10} />
+                        </Button>
+                      </div>
+                      <p className="text-gray-700 font-semibold">
+                        Rs. {item.price}
+                      </p>
+                    </div>
                   </div>
-                </div>
-              </Card>
-            ))}
+                </Card>
+              ))
+            ) : (
+              <p className="text-center">No items in cart</p>
+            )}
 
             {/* Clear Cart Button */}
             {cart?.length > 0 && (
               <div className="flex justify-center mt-2">
                 <Button
-                isIconOnly
-                variant="flat"
+                  isIconOnly
+                  variant="flat"
                   color="danger"
                   onClick={clearCart}
                   className="rounded-full p-2   transition"

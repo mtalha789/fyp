@@ -4,7 +4,7 @@ import SearchInput from "./SearchInput";
 function Hero(props) {
   return (
     <>
-      <div className="bg-hero-pattern h-[70vh] content-center text-center relative overflow-hidden bg-cover flex flex-col">
+      <div className="bg-hero-pattern h-[70vh] content-center text-center relative overflow-hidden bg-cover flex flex-col justify-center">
         <span className="font-extrabold text-8xl text-inherit text-white my-4">
           Mealo
         </span>

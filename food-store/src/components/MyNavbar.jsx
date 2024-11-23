@@ -30,11 +30,11 @@ export default function MyNavbar() {
   const toggleMenu = () => setIsMenuOpen(!isMenuOpen);
 
   return (
-    <Navbar isBordered className="flex items-center justify-evenly px-4 py-2">
+    <Navbar isBordered className="flex items-center justify-evenly px-4 py-1">
       {/* Brand Logo */}
       <NavbarBrand>
         <Link to="/">
-          <p className="font-extrabold text-3xl  cursor-pointer font-sans">
+          <p className="font-extrabold text-3xl  cursor-pointer">
             Mealo
           </p>
         </Link>
@@ -70,12 +70,12 @@ export default function MyNavbar() {
         {!authStatus ? (
           <>
             <NavbarItem>
-              <Button color="primary" onClick={() => navigate("/login")}>
+              <Button variant="flat" onClick={() => navigate("/login")}>
                 Login
               </Button>
             </NavbarItem>
             <NavbarItem className="hidden sm:hidden md:block">
-              <Button color="primary" onClick={() => navigate("/signup")}>
+              <Button color="default" onClick={() => navigate("/signup")}>
                 Signup
               </Button>
             </NavbarItem>
