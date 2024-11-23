@@ -85,7 +85,10 @@ const ProductDetail = () => {
         </div>
         
       </div>
+      <div className="px-72">
       <ItemCard />
+
+      </div>
 
     </>
   );

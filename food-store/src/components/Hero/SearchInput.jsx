@@ -1,29 +1,50 @@
 import React from "react";
 import {MapPin , SearchIcon} from "lucide-react"
+import MapComponent from "./MapComponent";
+import { Input } from "@nextui-org/react";
+
+
 
 export default function SearchInput() {
   return (
     <>
-    <div className="bg-white w-[80vh] h-12  rounded-lg gap-1	flex">
-      <div className=" w-56  border-r-2 border-solid flex flex-wrap flex-col items-stretch gap-1 p-2">
-        <MapPin   />
-        <select name="choose your Location " className="w-40 h-12   ">
-          <option value="Islamabad">Islamabad</option>
-          <option value="Lahore">Lahore</option>
-          <option value="Faislabad">Faislabad</option>
-          <option value="Peshawar">Peshawar</option>
-        </select>
-      </div>
-      <div className="w-[59vh] h-12 justify-center text-center items-stretch ">
-        <div  className=" flex gap-1 items-center rounded-lg">
-        <SearchIcon />
+      <div className="flex">   
 
-        <input type="text" placeholder="Search for resturant, cuisine and dish" className="w-[53vh] h-12 rounded-lg "/>
-
-        </div>
+        <Input
+        size="lg"
+        label=""
+        isClearable
+        radius="lg"
+        classNames={{
+          label: "text-black/50 dark:text-white/90",
+          input: [
+            "bg-transparent",
+            "text-black/90 dark:text-white/90",
+            "placeholder:text-default-800/50 dark:placeholder:text-white/60",
+          ],
+          innerWrapper: "bg-transparent",
+          inputWrapper: [
+            "shadow-xl",
+            "bg-default-200/50",
+            "dark:bg-default/60",
+            "backdrop-blur-xl",
+            "backdrop-saturate-200",
+            "hover:bg-default-200/70",
+            "dark:hover:bg-default/70",
+            "group-data-[focus=true]:bg-default-200/50",
+            "dark:group-data-[focus=true]:bg-default/60",
+            "!cursor-text",
+          ],
+        }}
+        placeholder="Enter your location" 
+        startContent={
+          <MapComponent className="text-black/50 mb-0.5 dark:text-white/90 text-slate-400 pointer-events-none flex-shrink-0 rounded-full" />
+        }
+      />
       </div>
-    </div>
-    </>
+   
+    
+       </>
    
       
     

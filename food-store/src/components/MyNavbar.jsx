@@ -9,7 +9,7 @@ import {
 import { Link, useNavigate } from "react-router-dom";
 import { useAuthStore } from "../store/Auth";
 import { Cart } from "./index";
-import { Menu, X } from "lucide-react";
+import { Menu, X, } from "lucide-react";
 
 export default function MyNavbar() {
   const navigate = useNavigate();
@@ -64,7 +64,7 @@ export default function MyNavbar() {
                 Login
               </Button>
             </NavbarItem>
-            <NavbarItem>
+            <NavbarItem className="hidden sm:hidden md:block">
               <Button color="primary" onClick={() => navigate("/signup")}>
                 Signup
               </Button>
