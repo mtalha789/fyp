@@ -44,7 +44,7 @@ export const useAuthStore = create(
                         }
                     })).json();
                     console.log(response);
-                    set({ status: true, accessToken: response.data.accessToken, refreshToken: response.data.refreshToken, });
+                    set({ status: true, accessToken: response.data?.accessToken, refreshToken: response.data?.refreshToken, });
                     return {
                         success: true,
                         error: null

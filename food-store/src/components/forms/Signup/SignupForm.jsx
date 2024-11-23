@@ -3,12 +3,13 @@ import React from 'react';
 import { coverImageSchema, signupSchema } from '../../../schemas/signupSchema';
 import { useAuthStore } from '../../../store/Auth';
 import { EyeFilledIcon, EyeSlashFilledIcon } from '../../icons';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 
 function SignupForm() {
     const [error, setError] = React.useState(null);
     const [loading, setLoading] = React.useState(false);
     const [isVisible, setIsVisible] = React.useState(false);
+    const navigate = useNavigate()
 
     const { register, login } = useAuthStore();
 
@@ -52,6 +53,7 @@ function SignupForm() {
             return;
         }
         setLoading(false);
+        navigate('/')
     }
 
     return (
