@@ -3,7 +3,7 @@ import { Input, Button } from '@nextui-org/react'
 import { restaurantSchema } from '../../schemas/restaurantSchema';
 import { useRestaurantStore } from '../../store/Restaurant';
 
-export default function RestaurantForm({ restaurant }) {
+export default function RestaurantForm({ setFormState }) {
   const [loading, setLoading] = React.useState(false);
   const [error, setError] = React.useState(null);
 
@@ -35,62 +35,73 @@ export default function RestaurantForm({ restaurant }) {
 
     setError(null);
     setLoading(false);
+    setFormState({restaurantSubmitted: true}) 
   }
 
 
   return (
-    <form className="flex flex-col gap-4" onSubmit={handleSubmit}>
-      <div className={`flex flex-col gap-2 ${error?.name ? 'text-red-500' : ''}`}>
-        <span>Enter Restaurant Name</span>
-        <Input
-          type="text"
-          placeholder="name"
-          name='name'
-          className="border border-gray-300 rounded-md px-3 py-2"
-        />
-        {error?.name && <span className="text-red-500">{error.name}</span>}
-      </div>
-      <div className={`flex flex-col gap-2 ${error?.email ? 'text-red-500' : ''}`}>
-        <span>Enter Restaurant Email</span>
-        <Input
-          type="email"
-          placeholder="email"
-          name='email'
-          className="border border-gray-300 rounded-md px-3 py-2"
-        />
-        {error?.email && <span className="text-red-500">{error.email}</span>}
-      </div>
-      <div className={`flex flex-col gap-2 ${error?.minOrderPrice ? 'text-red-500' : ''}`}>
-        <span>Enter Restaurant Minimum Order Price</span>
-        <Input
-          type="number"
-          placeholder="minOrderPrice"
-          name='minOrderPrice'
-          className="border border-gray-300 rounded-md px-3 py-2"
-        />
-        {error?.minOrderPrice && <span className="text-red-500">{error.minOrderPrice}</span>}
-      </div>
-      <div className={`flex flex-col gap-2 ${error?.phone ? 'text-red-500' : ''}`}>
-        <span>Enter Restaurant Phone Number</span>
-        <Input
-          type="tel"
-          placeholder="phone"
-          name='phone'
-          className="border border-gray-300 rounded-md px-3 py-2"
-        />
-        {error?.phone && <span className="text-red-500">{error.phone}</span>}
-      </div>
-      <div className={`flex flex-col gap-2 ${error?.profileImage ? 'text-red-500' : ''}`}>
-        <span>Upload Restaurant Profile Image</span>
-        <Input
-          type="file"
-          placeholder="profileImage"
-          name='profileImage'
-          className="border border-gray-300 rounded-md px-3 py-2"
-        />
-        {error?.profileImage && <span className="text-red-500">{error.profileImage}</span>}
-      </div>
-      <Button disabled={loading} variant="light" color="primary" type="submit">{loading ? 'Registering...' : 'Register'}</Button>
+    <form className="flex flex-col gap-y-4 justify-center items-center mx-auto w-[90%]" onSubmit={handleSubmit}>
+      <h1 className='text-3xl font-bold py-3'>Create your Restaurant</h1>
+      {error?.message && <p className="text-red-500">{error?.message}</p>}
+      <Input
+        type="text"
+        // placeholder="Full Name"
+        name='name'
+        label="Enter Restaurant Name"
+        isInvalid={error?.name}
+        errorMessage={error?.name}
+        color='primary'
+        variant='underlined'
+        className="border border-gray-300 max-w-sm sm:min-w-lg rounded-md px-3 py-2"
+      />
+      <Input
+        type="email"
+        label="Enter Restaurant Email"
+        isInvalid={error?.email}
+        errorMessage={error?.email}
+        isRequired
+        name='email'
+        color='primary'
+        variant='underlined'
+        className="border border-gray-300 max-w-sm sm:min-w-lg rounded-md px-3 py-2"
+      />
+      <Input
+        type="number"
+        label="Enter Minimum Order Price"
+        isInvalid={error?.minOrderPrice}
+        errorMessage={error?.minOrderPrice}
+        isRequired
+        name='minOrderPrice'
+        color='primary'
+        variant='underlined'
+        className="border border-gray-300 max-w-sm sm:min-w-lg rounded-md px-3 py-2"
+      />
+      <Input
+        type="tel"
+        label="Enter Restaurant Phone Number"
+        isInvalid={error?.phone}
+        errorMessage={error?.phone}
+        isRequired
+        name='phone'
+        color='primary'
+        variant='underlined'
+        className="border border-gray-300 max-w-sm sm:min-w-lg rounded-md px-3 py-2"
+      />
+      <Input
+        type="file"
+        label="Profile Image"
+        isInvalid={error?.profileImage}
+        errorMessage={error?.profileImage}
+        isRequired
+        labelPlacement='outside-left'
+        name='profileImage'
+        color='primary'
+        accept='image/*'
+        variant='underlined'
+        className="border border-gray-300 max-w-sm sm:min-w-lg rounded-md px-3 py-2"
+      />
+
+      <Button disabled={loading} variant="light" color="primary" className='bg-blue-500 focus:outline max-w-xl mx-auto hover:bg-blue-700 text-white font-bold py-2 px-4 rounded'  type="submit">{loading ? 'Registering...' : 'Register'}</Button>
     </form>
   )
 }

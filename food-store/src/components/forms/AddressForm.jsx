@@ -3,7 +3,7 @@ import { Input, Button } from '@nextui-org/react'
 import { restaurantAddressSchema } from '../../schemas/restaurantSchema';
 import { useRestaurantStore } from '../../store/Restaurant';
 
-export default function RestaurantAddressForm() {
+export default function RestaurantAddressForm({ setFormState, formState }) {
   const [loading, setLoading] = React.useState(false);
   const [error, setError] = React.useState(null);
 
@@ -35,52 +35,70 @@ export default function RestaurantAddressForm() {
 
     setError(null);
     setLoading(false);
+    setFormState({ ...formState, addressSubmitted: true})
   }
 
 
   return (
-    <form className="flex flex-col gap-4" onSubmit={handleSubmit}>
-      <div className={`flex flex-col gap-2 ${error?.city ? 'text-red-500' : ''}`}>
-        <span>Enter Restaurant City</span>
-        <Input
-          type="text"
-          placeholder="city"
-          name='city'
-          className="border border-gray-300 rounded-md px-3 py-2"
-        />
-        {error?.city && <span className="text-red-500">{error.city}</span>}
-      </div>
-      <div className={`flex flex-col gap-2 ${error?.state ? 'text-red-500' : ''}`}>
-        <span>Enter Restaurant State</span>
-        <Input
-          type="text"
-          placeholder="state"
-          name='state'
-          className="border border-gray-300 rounded-md px-3 py-2"
-        />
-        {error?.state && <span className="text-red-500">{error.state}</span>}
-      </div>
-      <div className={`flex flex-col gap-2 ${error?.zipCode ? 'text-red-500' : ''}`}>
-        <span>Enter Restaurant Zip Code</span>
-        <Input
-          type="text"
-          placeholder="zipCode"
-          name='zipCode'
-          className="border border-gray-300 rounded-md px-3 py-2"
-        />
-        {error?.zipCode && <span className="text-red-500">{error.zipCode}</span>}
-      </div>
-      <div className={`flex flex-col gap-2 ${error?.street ? 'text-red-500' : ''}`}>
-        <span>Enter Restaurant Street</span>
-        <Input
-          type="text"
-          placeholder="street"
-          name='street'
-          className="border border-gray-300 rounded-md px-3 py-2"
-        />
-        {error?.street && <span className="text-red-500">{error.street}</span>}
-      </div>
-      <Button variant="light" color="primary" type="submit">{loading ? 'Adding...' : 'Add Address'}</Button>
+    <form
+      className="flex flex-col gap-y-4 justify-center items-center mx-auto w-[90%]"
+      onSubmit={handleSubmit}
+    >
+      {error?.message && <p className="text-red-500">{error.message}</p>}
+
+      <Input
+        type="text"
+        label="Enter Restaurant City"
+        name="city"
+        isInvalid={error?.city}
+        errorMessage={error?.city}
+        color="primary"
+        variant="underlined"
+        className="border border-gray-300 max-w-sm sm:min-w-lg rounded-md px-3 py-2"
+      />
+
+      <Input
+        type="text"
+        label="Enter Restaurant State"
+        name="state"
+        isInvalid={error?.state}
+        errorMessage={error?.state}
+        color="primary"
+        variant="underlined"
+        className="border border-gray-300 max-w-sm sm:min-w-lg rounded-md px-3 py-2"
+      />
+
+      <Input
+        type="text"
+        label="Enter Restaurant Zip Code"
+        name="zipCode"
+        isInvalid={error?.zipCode}
+        errorMessage={error?.zipCode}
+        color="primary"
+        variant="underlined"
+        className="border border-gray-300 max-w-sm sm:min-w-lg rounded-md px-3 py-2"
+      />
+
+      <Input
+        type="text"
+        label="Enter Restaurant Street"
+        name="street"
+        isInvalid={error?.street}
+        errorMessage={error?.street}
+        color="primary"
+        variant="underlined"
+        className="border border-gray-300 max-w-sm sm:min-w-lg rounded-md px-3 py-2"
+      />
+
+      <Button
+        variant="solid"
+        color="primary"
+        type="submit"
+        disabled={loading}
+      >
+        {loading ? 'Adding...' : 'Add Address'}
+      </Button>
     </form>
+
   )
 }
