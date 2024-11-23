@@ -51,6 +51,7 @@ const Cart = () => {
       </Button>
 
       {/* Cart Dropdown */}
+
       {isOpen && (
         <div
           ref={cartRef}
@@ -163,6 +164,8 @@ const Cart = () => {
           </Button>
         </div>
       )}
+      
+  
     </div>
   );
 };

@@ -5,6 +5,7 @@ import {
   NavbarBrand,
   NavbarContent,
   NavbarItem,
+  useDisclosure,
 } from "@nextui-org/react";
 import { Link, useNavigate } from "react-router-dom";
 import { useAuthStore } from "../store/Auth";
@@ -14,7 +15,7 @@ import { Menu, X, } from "lucide-react";
 export default function MyNavbar() {
   const navigate = useNavigate();
   const { status: authStatus, logout, user } = useAuthStore();
-  const [isMenuOpen, setIsMenuOpen] = useState(false); // State to track menu open/close status
+  const {isOpen, onOpen, onOpenChange}= useDisclosure()
 
   const handleLogout = () => {
     const response = logout();
@@ -27,7 +28,7 @@ export default function MyNavbar() {
     alert("Logged out successfully...");
   };
 
-  const toggleMenu = () => setIsMenuOpen(!isMenuOpen);
+  const toggleMenu = () => onOpenChange(false);
 
   return (
     <Navbar isBordered className="flex items-center justify-evenly px-4 py-1">
@@ -64,9 +65,6 @@ export default function MyNavbar() {
 
       {/* Right Side Content (Cart and Auth Buttons) */}
       <NavbarContent justify="end" className=" md:flex items-center gap-4">
-        <NavbarItem>
-          <Cart />
-        </NavbarItem>
         {!authStatus ? (
           <>
             <NavbarItem>
@@ -82,22 +80,27 @@ export default function MyNavbar() {
           </>
         ) : (
           <NavbarItem>
-            <Button onClick={handleLogout} color="primary">
+            <Button onClick={handleLogout} color="default">
               Logout
             </Button>
           </NavbarItem>
         )}
+        <NavbarItem>
+          <Cart />
+        </NavbarItem>
       </NavbarContent>
 
       {/* Mobile Menu Icon */}
-      <div className="md:hidden cursor-pointer" onClick={toggleMenu}>
-        {isMenuOpen ? <X /> : <Menu />}
-      </div>
+      <Button isIconOnly variant="light" className="md:hidden cursor-pointer rounded-full" onClick={isOpen ? onOpenChange : onOpen}>
+        {isOpen ? <X /> : <Menu />}
+      </Button>
 
       {/* Mobile Menu Links */}
+      {isOpen &&(
+
       <div
-        className={`md:hidden flex flex-col md:static space-y-4 bg-white px-5 items-center  p-4 absolute top-16 left-0 w-full z-10  duration-500  ${
-          isMenuOpen ? "block" : "hidden"
+        className={`md:hidden flex flex-col md:static space-y-4 md:justify-center md:content-center md:bg-black bg-white px-5 items-center  p-4 absolute top-16 left-0 w-full z-10  duration-500  ${
+          isOpen ? "block" : "hidden"
         }`}
       >
         <Link
@@ -115,6 +118,7 @@ export default function MyNavbar() {
           Careers
         </Link>
       </div>
+      )}
     </Navbar>
   );
 }

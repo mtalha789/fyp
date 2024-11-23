@@ -58,8 +58,8 @@ function SignupForm() {
 
     return (
         <div className='h-screen'>
-            <p className="font-thin text-3xl text-center text-inherit my-4">
-                SignUp
+            <p className="font-bold text-3xl text-center text-inherit my-4">
+                Sign Up
             </p>
             <form onSubmit={handleSubmit} className="flex flex-col gap-y-4 justify-center items-center mx-auto w-[90%]">
                 {error?.message && <p className="text-red-500">{error?.message}</p>}

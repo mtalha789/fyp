@@ -51,9 +51,9 @@ export default function LoginForm() {
     }
 
   return (
-    <div className=' h-screen flex flex-col justify-center gap-6 items-center'>
-            <p className="font-thin text-3xl text-center text-inherit my-4">
-                SignIn
+    <div className='h-screen flex flex-col justify-center items-center'>
+            <p className=" font-bold text-3xl text-center text-inherit my-4">
+               Log In
             </p>
             <form onSubmit={handleSubmit} className="flex flex-col gap-y-4 justify-center items-center mx-auto w-[90%]">
                 {error?.message && <p className="text-red-500">{error?.message}</p>}
