@@ -3,7 +3,7 @@ import {
   Button,
   Input,
 } from "@nextui-org/react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 import { useAuthStore } from "../../store/Auth";
 import { loginSchema } from "../../schemas/signupSchema";
@@ -13,6 +13,7 @@ export default function LoginForm() {
   const [error, setError] = React.useState(null);
     const [loading, setLoading] = React.useState(false);
     const [isVisible, setIsVisible] = React.useState(false);
+    const navigate = useNavigate()
 
     const { login } = useAuthStore();
 
@@ -43,6 +44,8 @@ export default function LoginForm() {
             setLoading(false);
             return;
         }
+
+        navigate('/')
 
         setLoading(false);
     }

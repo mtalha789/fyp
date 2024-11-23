@@ -177,15 +177,27 @@ model OrderItem {
 }
 
 model Payment {
-  id            String   @id @default(uuid())
-  orderId       String   @unique
-  userId        String
-  user          User     @relation(fields: [userId], references: [id])
-  amount        Float
-  paymentMethod String
-  paymentStatus String
-  paymentDate   DateTime @default(now())
-  order         Order    @relation(fields: [orderId], references: [id])
+  id              String        @id @default(uuid())
+  orderId         String        @unique
+  userId          String
+  user            User          @relation(fields: [userId], references: [id])
+  amount          Float
+  paymentMethod   String
+  paymentStatus   PaymentStatus
+  stripePaymentId String?        
+  refundId        String? // Nullable refund identifier
+  paymentDate     DateTime      @default(now())
+  order           Order         @relation(fields: [orderId], references: [id])
+
+  @@index([userId])
+  @@index([stripePaymentId])
+}
+
+enum PaymentStatus {
+  PENDING
+  SUCCEEDED
+  FAILED
+  REFUNDED
 }
 
 model Review {
@@ -219,6 +231,7 @@ enum OrderStatus {
   CONFIRMED
   DELIVERED
   CANCELED
+  INCOMPLETE
 }
 
 enum ProductStatus {

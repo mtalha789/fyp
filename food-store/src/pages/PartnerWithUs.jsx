@@ -1,12 +1,12 @@
-import React from "react";
 import Features from "../components/PartnerData/Feature";
 import StepSection from "../components/PartnerData/StepSection";
 import WhyJoin from "../components/PartnerData/WhyJoin";
-import LoginForm from "../components/forms/LoginForm";
-import SignupForm from "../components/forms/Signup/SignupForm";
-// import { Link } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
+import { Button } from "@nextui-org/react";
 
 function PartnerWithUs() {
+  const navigate = useNavigate();
+
   return (
     <div>
       <section className="bg-gray-100 py-16 bg-hero-pattern bg-cover relative overflow-hidden h-[50vh]">
@@ -20,10 +20,13 @@ function PartnerWithUs() {
           <p className="text-xl mb-8 text-white">
             Join us and grow your business by reaching millions of customers.
           </p>
-          <div className="flex gap-5">
+          <Button color="primary" onClick={()=> navigate("/business/register")}>
+            Register as a Partner
+          </Button>
+          {/* <div className="flex gap-5">
             <LoginForm />
-            {/* <SignupForm /> */}
-          </div>
+            <SignupForm />
+          </div> */}
         </div>
       </section>
       <WhyJoin />

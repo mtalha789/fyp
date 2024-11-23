@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import {
   Button,
   Navbar,
@@ -13,7 +13,7 @@ import { Menu, X, } from "lucide-react";
 
 export default function MyNavbar() {
   const navigate = useNavigate();
-  const { status: authStatus, logout } = useAuthStore();
+  const { status: authStatus, logout, user } = useAuthStore();
   const [isMenuOpen, setIsMenuOpen] = useState(false); // State to track menu open/close status
 
   const handleLogout = () => {
@@ -34,17 +34,27 @@ export default function MyNavbar() {
       {/* Brand Logo */}
       <NavbarBrand>
         <Link to="/">
-          <p className="font-extrabold text-3xl  cursor-pointer font-sans">Mealo</p>
+          <p className="font-extrabold text-3xl  cursor-pointer font-sans">
+            Mealo
+          </p>
         </Link>
       </NavbarBrand>
 
       {/* Desktop Menu Links */}
       <NavbarContent className="hidden md:flex gap-8  md:items-center md justify-center">
-        <NavbarItem isActive>
-          <Link className=" hover:text-gray-500" to="/partner-with-us">
-            Partner with us
-          </Link>
-        </NavbarItem>
+        {user?.role?.toUpperCase() === "SELLER" ? (
+          <NavbarItem isActive>
+            <Link className=" hover:text-gray-500" to="/partner-portal">
+              Go to Portal
+            </Link>
+          </NavbarItem>
+        ) : (
+          <NavbarItem isActive>
+            <Link className=" hover:text-gray-500" to="/partner-with-us">
+              Partner with us
+            </Link>
+          </NavbarItem>
+        )}
         <NavbarItem isActive>
           <Link className=" hover:text-gray-500" to="/Careers">
             Careers

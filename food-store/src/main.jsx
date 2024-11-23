@@ -19,6 +19,7 @@ import {
   ProductDetail,
   ProductCard,
   PartnerWithUs,
+  RegisterRestaurant,
 } from "./pages/index.js";
 
 import {
@@ -67,6 +68,14 @@ const router = createBrowserRouter([
         </>,
       },
       {
+        path: "/business/register",
+        element: (
+          <AuthLayout>
+            <RegisterRestaurant />
+          </AuthLayout>
+        )
+      },
+      {
         path: "/restaurant/:id",
         element: <RestaurantDetails />
       },
@@ -76,15 +85,19 @@ const router = createBrowserRouter([
       },
       {
         path: "/partner-with-us",
-        element: <PartnerWithUs />,
+        element: (
+          <AuthLayout>
+            <PartnerWithUs />
+          </AuthLayout>
+        ),
       },
       {
         path: "/product/:id",
         element: <ProductDetail />,
       },
       {
-        path: "/menu",
-        element: <Menu />,
+        path: "/partner-portal",
+        // element: 
       },
       {
         path: "/login",
