@@ -96,6 +96,10 @@ const router = createBrowserRouter([
         element: <CheckoutPage />
       },
       {
+        path:"/menu",
+        element: <Menu />
+      },
+      {
         path: "/partner-with-us",
         element: (
           <AuthLayout>

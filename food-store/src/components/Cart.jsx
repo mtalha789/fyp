@@ -1,5 +1,5 @@
-import React, { useState } from "react";
-import { ShoppingCart, Trash2 } from "lucide-react";
+import React, { useEffect, useRef } from "react";
+import { ShoppingBag, Trash2, Plus, Minus } from "lucide-react";
 import { useCart } from "../state/Cart";
 import {
   Card,
@@ -7,125 +7,165 @@ import {
   CardBody,
   CardFooter,
   Button,
-  button,
-  CardHeader,
+  useDisclosure,
 } from "@nextui-org/react";
 import { useNavigate } from "react-router-dom";
 
 const Cart = () => {
-  const [isOpen, setIsOpen] = useState(false);
-  // const cart = useCart((state) => state.cart);
-  const {
-    cart,
-    totalPrice,
-    addToCart,
-    removeFromCart,
-    clearCart,
-    incQuantity,
-    decQuantity,
-  } = useCart();
+  const { isOpen, onOpen, onOpenChange } = useDisclosure(); // Using NextUI's hook
+  const cartRef = useRef(null);
+
+  const { cart, totalPrice, clearCart, incQuantity, decQuantity } = useCart();
 
   const navigate = useNavigate();
 
-  const toggleCart = () => {
-    setIsOpen(!isOpen);
-  };
+  // Close cart when clicking outside
+  useEffect(() => {
+    const handleOutsideClick = (e) => {
+      if (isOpen && cartRef.current && !cartRef.current.contains(e.target)) {
+        onOpenChange(false); // Close the cart
+      }
+    };
+    document.addEventListener("click", handleOutsideClick);
+    return () => {
+      document.removeEventListener("click", handleOutsideClick);
+    };
+  }, [isOpen, onOpenChange]);
 
   return (
-    <div className="relative ">
-      <button
-        onClick={toggleCart}
-        className="p-2 rounded-full hover:bg-gray-200 transition-colors "
+    <div className="relative">
+      {/* Shopping Cart Button */}
+      <Button
+        isIconOnly
+        onClick={isOpen ? onOpenChange : onOpen}
+        className="text-black rounded-full hover:bg-gray-200 relative "
+        variant="light"
       >
-        <ShoppingCart className="relative" />
-        <div className="bg-red-500 text-white rounded-full w-5 h-5 absolute">
-          <span>{cart?.length}</span>
-        </div>
-      </button>
+        <ShoppingBag />
+        {/* Quantity Badge */}
+        {cart?.length > 0 && (
+          <div className=" bg-red-500 text-white rounded-full w-4 h-4 absolute  right- translate-x-1/2 -translate-y-1/2 text-center text-xs font-bold flex items-center justify-center">
+            {cart.length}
+          </div>
+        )}
+      </Button>
+
+      {/* Cart Dropdown */}
 
       {isOpen && (
-        <div className="absolute right-0 mt-2 w-96 bg-white shadow-xl rounded-2xl  z-50 px-6 py-4 max-h-[40rem] overflow-y-scroll ">
-          <h3 className="font-bold text-2xl text-inherit"> Cart</h3>
-          <div className="mt-4  flex gap-2 flex-col">
-            {cart?.map((item) => (
-              <div key={item.id} className="flex justify-between items-center  ">
-                <div>
-                  <Card className="w-[20rem]">
-                    <CardBody className="flex flex-row justify-evenly gap-3 items-center">
+        <div
+          ref={cartRef}
+          className="absolute right-0 top-12 mt-2 w-96  bg-white shadow-2xl  rounded-lg z-50 p-3"
+        >
+          <h3 className="font-bold text-2xl text-gray-800">Cart</h3>
+
+          <div
+            className={`max-h-[25rem] w-full p-2 gap-6 ${
+              cart?.length > 3 ? " overflow-y-scroll" : ""
+            }`}
+          >
+            {/* Cart Items */}
+            {cart?.length > 0 ? (
+              cart.map((item) => (
+                <Card
+                  isHoverable
+                  isBlurred
+                  isFooterBlurred
+                  key={item.id}
+                  className="flex justify-between rounded-lg "
+                >
+                  <div className="flex flex-col p-2">
+                    <div className="flex justify-between items-center">
+                      <span className="text-gray-800 font-semibold">
+                        {item.title}
+                      </span>
                       <Image
                         alt={item.title}
-                        height={80}
-                        radius="sm"
+                        width={100}
                         src={item.img}
-                        width={80}
+                        className="rounded-md "
                       />
-                      <div className="w-48 font-semibold">
-                        <p>{item.title}</p>
-                      </div>
-
-                      <div className="bg-gray-100 rounded-full flex w-20 h-8 px-2 gap-2 justify-end">
-                        <button
+                    </div>
+                    <div className="flex items-center justify-between gap-36 ">
+                      <div className="flex items-center rounded-full  ">
+                        <Button
+                          size="sm"
+                          variant="light"
+                          isIconOnly
                           onClick={() => decQuantity(item.id)}
-                          className="rounded-full w-5 h-5 font-bold text-lg text-center"
+                          className="rounded-full"
                         >
-                          -
-                        </button>
-                        <h1 className="rounded-full w-5 h-5 font-normal text-md text-center">
-                          {item.quantity}
-                        </h1>
-                        <button
+                          <Minus size={10} />
+                        </Button>
+                        <span className="px-2 text-sm">{item.quantity}</span>
+                        <Button
+                          size="sm"
+                          variant="light"
+                          isIconOnly
                           onClick={() => incQuantity(item.id)}
-                          className="rounded-full w-5 h-5 font-bold text-lg text-center"
+                          className="rounded-full"
                         >
-                          +
-                        </button>
+                          <Plus size={10} />
+                        </Button>
                       </div>
-                    </CardBody>
+                      <p className="text-gray-700 font-semibold">
+                        Rs. {item.price}
+                      </p>
+                    </div>
+                  </div>
+                </Card>
+              ))
+            ) : (
+              <p className="text-center">No items in cart</p>
+            )}
 
-                    <CardFooter className="flex justify-between">
-                      {/* <p className="text-red-500 line-through">{`Rs. ${item.origiPrice}`}</p> */}
-                      <p className="text-red-500 font-medium">{`Rs. ${item.price}`}</p>
-                    </CardFooter>
-                  </Card>
-                </div>
-              </div>
-            ))}
-              <div className="justify-center flex mt-2">
+            {/* Clear Cart Button */}
             {cart?.length > 0 && (
-              <div className="bg-gray-200 rounded-full flex w-10 h-10 items-center justify-center hover:bg-black hover:text-white">
-                <Trash2 onClick={clearCart} />
+              <div className="flex justify-center mt-2">
+                <Button
+                  isIconOnly
+                  variant="flat"
+                  color="danger"
+                  onClick={clearCart}
+                  className="rounded-full p-2   transition"
+                >
+                  <Trash2 />
+                </Button>
               </div>
             )}
-            </div>
-             <div className="mt-4">
-              <p className="flex justify-between">
-                <span>Subtotal</span>
-                <span>{totalPrice}</span>
-              </p>
-              <p className="flex justify-between text-green-500">
-                <span>Standard delivery</span>
-                <span>Free</span>
-              </p>
-              <p className="flex justify-between font-semibold text-lg">
-                <span>Total (Incl. VAT)</span>
-                <span>{totalPrice}</span>
-              </p>
-            </div>
-
-            <button
-              disabled={cart?.length === 0}
-              onClick={() => {
-                setIsOpen(false);
-                navigate("/checkout");
-              }}
-              className="w-full mt-4 bg-gray-300  p-2 rounded-lg hover:bg-black hover:text-white"
-            >
-              Order Now
-            </button>
-         
           </div>
+
+          {/* Cart Summary */}
+          <div className="mt-4 border-t border-gray-200 pt-4 ">
+            <p className="flex justify-between">
+              <span>Subtotal</span>
+              <span className="font-medium">Rs. {totalPrice}</span>
+            </p>
+            <p className="flex justify-between text-green-500">
+              <span>Standard Delivery</span>
+              <span>Free</span>
+            </p>
+            <p className="flex justify-between font-semibold text-lg">
+              <span>Total (Incl. VAT)</span>
+              <span>Rs. {totalPrice}</span>
+            </p>
+          </div>
+
+          {/* Order Now Button */}
+          <Button
+            disabled={cart?.length === 0}
+            onClick={() => {
+              onOpenChange(false); // Close the cart
+              navigate("/checkout");
+            }}
+            className="w-full mt-4 bg-black text-white hover:bg-gray-800"
+          >
+            Order Now
+          </Button>
         </div>
       )}
+      
+  
     </div>
   );
 };

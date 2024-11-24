@@ -21,6 +21,9 @@ import {
   useDisclosure,
 } from "@nextui-org/modal";
 import { useCart } from "../state/Cart";
+import { Plus, ShoppingBag } from "lucide-react";
+import { motion } from "framer-motion";
+
 
 const productList = [
   {
@@ -98,8 +101,9 @@ export default function ItemCard() {
 
   return (
     <>
-     <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4 px-4 py-6">
+     <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4 px-4 py-6 relative">
   {productList.map((item) => (
+    
     <Card
       className="py-4"
       key={item.id}
@@ -121,15 +125,16 @@ export default function ItemCard() {
           src={item.img}
         />
         <Button
+        isIconOnly
           onClick={() => {
-            console.log("added to cart", item);
             addToCart({ ...item, quantity: 1 });
           }}
           isHoverable
           variant="solid"
-          className="absolute bottom-3 right-5  p-2 z-10 "
+          className="absolute z-10 bottom-3 right-4 rounded-full"
+
         >
-          Add to Cart
+          <Plus/>
         </Button>
       </CardBody>
     </Card>
@@ -208,7 +213,7 @@ export default function ItemCard() {
                 </Button>
               </ModalFooter>
             </>
-          )}
+            )}
         </ModalContent>
       </Modal>
     </>

@@ -57,9 +57,9 @@ function SignupForm() {
     }
 
     return (
-        <div className='text-primary-500'>
-            <p className="font-thin text-3xl text-center text-inherit my-4">
-                SignUp
+        <div className='h-screen'>
+            <p className="font-bold text-3xl text-center text-inherit my-4">
+                Sign Up
             </p>
             <form onSubmit={handleSubmit} className="flex flex-col gap-y-4 justify-center items-center mx-auto w-[90%]">
                 {error?.message && <p className="text-red-500">{error?.message}</p>}
@@ -101,13 +101,13 @@ function SignupForm() {
                     variant='underlined'
                     className="border border-gray-300 max-w-sm sm:min-w-lg rounded-md px-3 py-2"
                     endContent={
-                        <button className="focus:outline-none" type="button" onClick={toggleVisibility} aria-label="toggle password visibility">
+                        <Button isIconOnly variant='light' className="focus:outline-none rounded-full" type="button" onClick={toggleVisibility} aria-label="toggle password visibility">
                             {isVisible ? (
                                 <EyeSlashFilledIcon className="text-2xl text-default-400 pointer-events-none" />
                             ) : (
                                 <EyeFilledIcon className="text-2xl text-default-400 pointer-events-none" />
                             )}
-                        </button>
+                        </Button>
                     }
                     type={isVisible ? "text" : "password"}
                     isInvalid={error?.password}
@@ -149,7 +149,7 @@ function SignupForm() {
                     {loading ? "Registering..." : 'Sign Up'}
                 </Button>
             </form>
-            <p className="text-gray-500 text-center my-2">Already have an account? <Link to="/login" className="text-blue-500">Login</Link></p>
+            <p className="text-gray-500 text-center my-2">Already have an account? <Link to="/login" className="text-blue-500 underline">Login</Link></p>
         </div>
     )
 }

@@ -51,9 +51,9 @@ export default function LoginForm() {
     }
 
   return (
-    <div className='text-primary-500 h-screen flex flex-col justify-center gap-6 items-center'>
-            <p className="font-thin text-3xl text-center text-inherit my-4">
-                SignIn
+    <div className='h-screen flex flex-col justify-center items-center'>
+            <p className=" font-bold text-3xl text-center text-inherit my-4">
+               Log In
             </p>
             <form onSubmit={handleSubmit} className="flex flex-col gap-y-4 justify-center items-center mx-auto w-[90%]">
                 {error?.message && <p className="text-red-500">{error?.message}</p>}
@@ -68,18 +68,22 @@ export default function LoginForm() {
                     className="border border-gray-300 max-w-sm sm:min-w-lg rounded-md px-3 py-2"
                 />
                 <Input
+                
                     label="Password"
                     color='primary'
                     variant='underlined'
                     className="border border-gray-300 max-w-sm sm:min-w-lg rounded-md px-3 py-2"
                     endContent={
-                        <button className="focus:outline-none" type="button" onClick={toggleVisibility} aria-label="toggle password visibility">
+                        <Button 
+                        isIconOnly
+                        className="focus:outline-none rounded-full" 
+                        variant="light"type="button" onClick={toggleVisibility} aria-label="toggle password visibility">
                             {isVisible ? (
                                 <EyeSlashFilledIcon className="text-2xl text-default-400 pointer-events-none" />
                             ) : (
                                 <EyeFilledIcon className="text-2xl text-default-400 pointer-events-none" />
                             )}
-                        </button>
+                        </Button>
                     }
                     type={isVisible ? "text" : "password"}
                     isInvalid={error?.password}
@@ -95,7 +99,7 @@ export default function LoginForm() {
                     {loading ? "Signing In..." : 'Login'}
                 </Button>
             </form>
-            <p className="text-gray-500 text-center my-2">Don't have an account? <Link to='/signup' className="text-blue-500">Create Account</Link> </p>
+            <p className="text-gray-500 text-center my-2">Don't have an account? <Link to='/signup' className="text-blue-500 underline">Create Account</Link> </p>
         </div>
   );
 }

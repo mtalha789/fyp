@@ -55,7 +55,7 @@ export const RestaurantPortalLayout = ({ children, restaurantStatus = true }) =>
                 <LoaderComponent />
             </div> :
                 <div className="flex text-black flex-col md:flex-row h-screen">
-                    <div className="w-full md:w-1/6 bg-gray-100 h-full">
+                    <div className="w-full md:w-1/6 bg-gray-200 h-full">
                         <SideMenu navList={navList} />
                     </div>
                     <div className="w-full md:w-5/6  md:mt-0 mt-3">

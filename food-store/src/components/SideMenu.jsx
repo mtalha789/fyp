@@ -31,7 +31,7 @@ const SideMenu = ({ navList, bgColor, textColor }) => {
                                     <NavLink
                                         to={item.path}
                                         end
-                                        className={({ isActive }) => `flex items-center p-2 hover:bg-${bgColor} hover:text-white text-lg font-medium rounded-l-lg ${isActive && `bg-${bgColor} ${textColor} `}`}
+                                        className={({ isActive }) => `flex items-center p-2  hover:text-white hover:bg-black text-lg font-medium rounded-l-lg ${isActive }`}  
                                     >
                                         <span className="ml-3">{item.name}</span>
                                     </NavLink>
