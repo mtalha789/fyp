@@ -11,20 +11,28 @@ import { Link, useNavigate } from "react-router-dom";
 import { useAuthStore } from "../store/Auth";
 import { Cart } from "./index";
 import { Menu, X, } from "lucide-react";
+import { useRestaurantStore } from "../store/Restaurant";
 
 export default function MyNavbar() {
   const navigate = useNavigate();
   const { status: authStatus, logout, user } = useAuthStore();
+  const { resetAccount } = useRestaurantStore()
   const {isOpen, onOpen, onOpenChange}= useDisclosure()
 
-  const handleLogout = () => {
-    const response = logout();
+  const handleLogout = async () => {
+    const businessAcoount = user?.role?.toUpperCase() === "SELLER";
+    const response = await logout();
 
     if (!response.success) {
       alert("Error logging out...");
       return;
     }
 
+    if (businessAcoount) {
+      resetAccount();
+    }
+
+    navigate("/");
     alert("Logged out successfully...");
   };
 

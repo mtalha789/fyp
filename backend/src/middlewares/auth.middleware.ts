@@ -15,6 +15,7 @@ declare global {
         phone: string | null;
         avatar: string;
         coverImage: string | null;
+        role: string;
       };
     }
   }
@@ -44,9 +45,10 @@ export const verifyJWT = asyncHandler(async (req, _, next) => {
       phone: true,
       avatar: true,
       coverImage: true,
+      role: true
     },
   });
-
+  
   if (!user) {
     throw new ApiError("Invalid access token", 401);
   }

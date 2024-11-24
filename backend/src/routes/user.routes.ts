@@ -1,5 +1,5 @@
 import { Router } from "express";
-import {  changeCurrentPassword, getCurrentUser, loginUser, logoutUser, refereshAccessToken, registerUser, updateAccountDetails, updateAvatar, updateCoverImage } from "../controllers/user.controllers";
+import {  changeCurrentPassword, getCurrentUser, getSellerRestaurants, loginUser, logoutUser, refereshAccessToken, registerUser, updateAccountDetails, updateAvatar, updateCoverImage } from "../controllers/user.controllers";
 import { verifyJWT } from "../middlewares/auth.middleware";
 import { upload } from "../middlewares/multer.middleware";
 
@@ -23,5 +23,7 @@ router.route("/update-account").patch(verifyJWT,updateAccountDetails)
 
 router.route("/avatar").patch(verifyJWT,upload.single("avatar"),updateAvatar);
 router.route("/cover-image").patch(verifyJWT,upload.single("coverImage"),updateCoverImage);
+
+router.route("/restaurants").get(verifyJWT, getSellerRestaurants)
 
 export default router

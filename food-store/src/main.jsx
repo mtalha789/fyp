@@ -35,6 +35,7 @@ import {
   LoginForm,
   CheckoutPage,
   SignupForm,
+  EditRestuarant,
 } from './components/forms/index.js';
 
 
@@ -49,10 +50,12 @@ import {
 
 import {
   AdminPortal,
+  
   Customers,
   Dashboard as AdminDashboard,
   Restaurants,
   Riders,
+  BusinessPartner
 } from "./pages/admin/index.js";
 // import RiderRegistration from "./pages/careers/RiderRegistration.jsx";
 
@@ -67,6 +70,7 @@ const router = createBrowserRouter([
         element: <>
         <Hero/>
         <BrandContainer/>
+        <BusinessPartner />
         <ProductCard />
         </>,
       },
@@ -75,6 +79,14 @@ const router = createBrowserRouter([
         element: (
           <AuthLayout>
             <RegisterRestaurant />
+          </AuthLayout>
+        )
+      },
+      {
+        path: "/business/restaurant/:id/edit",
+        element: (
+          <AuthLayout>
+            <EditRestuarant />
           </AuthLayout>
         )
       },
@@ -117,6 +129,12 @@ const router = createBrowserRouter([
       {
         path: "/partner-portal",
         // element: 
+        path: "/business-portal",
+        element: (
+          <AuthLayout>
+            <BusinessPartner />
+          </AuthLayout>
+        )
       },
       {
         path: "/login",

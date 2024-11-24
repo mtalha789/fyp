@@ -26,22 +26,24 @@ const createRestaurant = asyncHandler(async (req, res) => {
         throw new ApiError('Please provide valid minimum order price', 400)
     }
 
-    const owner = await db.user.update({
-        where: { id: req.user?.id as string },
-        data: {
-            role: 'Seller'
+    if(req.user?.role !== 'Seller'){
+        const owner = await db.user.update({
+            where: { id: req.user?.id as string },
+            data: {
+                role: 'Seller'
+            }
+        })
+    
+        if (owner == null) {
+            throw new ApiError('User does not exist', 400)
+            file?.path && await fs.unlink(file?.path as string)
         }
-    })
-
-    if (owner == null) {
-        throw new ApiError('User does not exist', 400)
-        file?.path && await fs.unlink(file?.path as string)
     }
     const restaurant = await db.restaurant.create({
         data: {
             name: name as string,
             phone: phone as string,
-            owner_id: owner.id,
+            owner_id: req.user?.id as string,
             corporateEmail: email as string,
             imageUrl,
             minimumOrderPrice,

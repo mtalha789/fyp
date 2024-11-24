@@ -7,9 +7,18 @@ import {
   Navbar,
   Footer
 } from './components'
+import { useAuthStore } from './store/Auth'
 
 
 export default function App() {
+  const { accessToken, getCurrentUser, logout } = useAuthStore()
+
+  useEffect(async () => {
+    const response = await getCurrentUser(accessToken)
+    if (!response.success) {
+      await logout()        
+    }
+  }, [accessToken])
   return (
     <QueryClientProvider  client={new QueryClient()}>
       <>

@@ -19,7 +19,6 @@ export const useAuthStore = create(
                     }))
                         .json();
                     console.log(response);
-                    set({ user: response?.data?.user })
                     return {
                         success: true,
                         error: null
@@ -31,7 +30,7 @@ export const useAuthStore = create(
                     }
                 }
             },
-            async login(username, password) {
+            async login(username, password, getUserRestaurants) {
                 try {
                     const response = await (await fetch(`${import.meta.env.VITE_API_URL}/users/login`, {
                         body: JSON.stringify({
@@ -44,7 +43,12 @@ export const useAuthStore = create(
                         }
                     })).json();
                     console.log(response);
-                    set({ status: true, accessToken: response.data?.accessToken, refreshToken: response.data?.refreshToken, });
+                    set({ status: true, accessToken: response.data?.accessToken, refreshToken: response.data?.refreshToken, user: response.data?.user });
+
+                    if (response.data?.role?.toLowerCase() == 'seller') {
+                        getUserRestaurants(response.data?.accessToken);
+                    }
+                    
                     return {
                         success: true,
                         error: null
@@ -78,6 +82,27 @@ export const useAuthStore = create(
                     }
                 }
             },
+            async getCurrentUser(accessToken) {
+                try {
+                    const response = await (await fetch(`${import.meta.env.VITE_API_URL}/users`, {
+                        method: 'GET',
+                        headers: {
+                            'Authorization': `Bearer ${accessToken}`
+                        }
+                    }))
+                        .json();
+                    console.log(response);
+                    return {
+                        success: true,
+                        error: null
+                    }
+                } catch (error) {
+                    return {
+                        success: false,
+                        error
+                    }
+                }
+            }
         })),
         {
             name: 'auth-storage',
