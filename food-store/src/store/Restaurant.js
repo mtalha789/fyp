@@ -119,6 +119,31 @@ export const useRestaurantStore = create(
                         error
                     }
                 }
+            },
+            resetAccount: () => set({businessStatus: false, restaurants: []}),
+            getUserRestaurants: async (accessToken) => {
+                try {
+                    const response = await (await fetch(
+                        `${import.meta.env.VITE_API_URL}/users/restaurants`,
+                        {
+                            headers: accessToken && {
+                                'Authorization': `Bearer ${accessToken}`
+                            }
+                        }
+                    )).json()
+
+                    if(response?.data?.restaurants) set({restaurants: response?.data?.restaurants, businessStatus: true})
+
+                    return {
+                        success: true,
+                        error: null
+                    }
+                } catch (error) {
+                    return {
+                        success: false,
+                        error
+                    }
+                }
             }
         })),
         {

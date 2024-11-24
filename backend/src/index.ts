@@ -16,6 +16,9 @@ const io = new Server(server,{
 app.set('io',io)
 // io.use(verifyUser)
 initializeSocketIo(io)
-server.listen(process.env.PORT || 3001, () => {
+// server.listen(process.env.PORT || 3001, '0.0.0.0', () => {
+//     console.log(`Server started on port ${process.env.PORT || 3001}`)
+// })
+app.listen( 3001, '0.0.0.0', () => {
     console.log(`Server started on port ${process.env.PORT || 3001}`)
 })

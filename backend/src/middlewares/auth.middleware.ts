@@ -15,6 +15,7 @@ declare global {
         phone: string | null;
         avatar: string;
         coverImage: string | null;
+        role: string;
       };
     }
   }
