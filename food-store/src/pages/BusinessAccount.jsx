@@ -1,79 +1,68 @@
 import React, { useState, useEffect } from 'react';
 import { Button, Avatar } from '@nextui-org/react';
 import { Card, CardHeader, CardBody, CardFooter } from "@nextui-org/card";
-import { PlusIcon, EditIcon, DeleteIcon, Verified } from 'lucide-react';
+import { PlusIcon, EditIcon, DeleteIcon, Verified, LoaderIcon } from 'lucide-react';
 import EditRestuarant from '../components/forms/EditRestuarant';
 import { useNavigate } from 'react-router-dom';
-
-// Sample data fetching function (replace with actual API call if needed)
-const fetchRestaurants = async () => {
-    return [
-        {
-            id: '1',
-            name: 'Pasta Palace',
-            imageUrl: 'https://example.com/pasta.jpg',
-            corporateEmail: 'contact@pastapalace.com',
-            phone: '123-456-7890',
-            minimumOrderPrice: 20,
-            approved: true,
-            closed: false,
-        },
-        // Additional restaurants...
-    ];
-};
+import { useRestaurantStore } from '../store/Restaurant';
+import { useAuthStore } from '../store/Auth';
+import { toast } from 'react-hot-toast'
 
 const BusinessPartner = () => {
+    const [ actionLoading, setActionLoading ] = useState(false);
     const navigate = useNavigate();
-    const [restaurants, setRestaurants] = useState([
-        {
-            id: "1",
-            name: "Gourmet Bistro",
-            imageUrl: "https://example.com/images/gourmet-bistro.jpg",
-            corporateEmail: "info@gourmetbistro.com",
-            phone: "+123456789",
-            minimumOrderPrice: 20.5,
-            closed: false,
-            address: [
-                {
-                    id: "a1",
-                    street: "123 Flavor St",
-                    city: "Tastetown",
-                    state: "CA",
-                    zipCode: "90001",
-                    restaurantId: "1",
-                    deleted: false
-                },
-                {
-                    id: "a2",
-                    street: null,
-                    city: "Tastetown",
-                    state: "CA",
-                    zipCode: "90001",
-                    restaurantId: "1",
-                    deleted: true
-                }
-            ]
-        },
-        {
-            id: "2",
-            name: "Pizza Palace",
-            imageUrl: "https://example.com/images/pizza-palace.jpg",
-            corporateEmail: "contact@pizzapalace.com",
-            phone: "+987654321",
-            minimumOrderPrice: 15.0,
-            closed: true,
-            address: [
-                {
-                    id: "b1",
-                    street: "456 Dough Lane",
-                    city: "Crust City",
-                    state: "NY",
-                    zipCode: "10001",
-                    restaurantId: "2",
-                    deleted: false
-                }
-            ]
-        }]);
+    const { accessToken } = useAuthStore();
+    const { restaurants, deleteRestaurant } = useRestaurantStore();
+    // const [restaurants, setRestaurants] = useState([
+    //     {
+    //         id: "1",
+    //         name: "Gourmet Bistro",
+    //         imageUrl: "https://example.com/images/gourmet-bistro.jpg",
+    //         corporateEmail: "info@gourmetbistro.com",
+    //         phone: "+123456789",
+    //         minimumOrderPrice: 20.5,
+    //         closed: false,
+    //         address: [
+    //             {
+    //                 id: "a1",
+    //                 street: "123 Flavor St",
+    //                 city: "Tastetown",
+    //                 state: "CA",
+    //                 zipCode: "90001",
+    //                 restaurantId: "1",
+    //                 deleted: false
+    //             },
+    //             {
+    //                 id: "a2",
+    //                 street: null,
+    //                 city: "Tastetown",
+    //                 state: "CA",
+    //                 zipCode: "90001",
+    //                 restaurantId: "1",
+    //                 deleted: true
+    //             }
+    //         ]
+    //     },
+    //     {
+    //         id: "2",
+    //         name: "Pizza Palace",
+    //         imageUrl: "https://example.com/images/pizza-palace.jpg",
+    //         corporateEmail: "contact@pizzapalace.com",
+    //         phone: "+987654321",
+    //         minimumOrderPrice: 15.0,
+    //         closed: true,
+    //         address: [
+    //             {
+    //                 id: "b1",
+    //                 street: "456 Dough Lane",
+    //                 city: "Crust City",
+    //                 state: "NY",
+    //                 zipCode: "10001",
+    //                 restaurantId: "2",
+    //                 deleted: false
+    //             }
+    //         ]
+    //     }]);
 
     // useEffect(() => {
     //     const loadRestaurants = async () => {
@@ -86,8 +75,15 @@ const BusinessPartner = () => {
     const handleAddRestaurant = () => navigate('/business/register');
 
 
-    const handleDeleteRestaurant = (id) => {
-        // Logic for deleting restaurant
+    const handleDeleteRestaurant = async (id) => {
+        setActionLoading(true)
+        const response = deleteRestaurant(id, accessToken);
+        if(response?.success) {
+            setActionLoading(false);
+            toast.success('Restaurant deleted successfully')
+            return
+        }
+        toast.error(`Error deleting Restaurant`)
     };
 
     return (
@@ -144,8 +140,9 @@ const BusinessPartner = () => {
                                 onClick={() => handleDeleteRestaurant(restaurant.id)} 
                                 color="danger" 
                                 size="sm"
+                                disabled={actionLoading}
                             >
-                                Delete <DeleteIcon className="h-5 w-5" />
+                                {actionLoading?`Deleting ${<LoaderIcon className='h-5 w-5 '  />}`: `Delete ${<DeleteIcon className="h-5 w-5" />}`}
                             </Button>
                         </CardFooter>
                     </Card>
