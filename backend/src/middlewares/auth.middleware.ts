@@ -44,9 +44,10 @@ export const verifyJWT = asyncHandler(async (req, _, next) => {
       phone: true,
       avatar: true,
       coverImage: true,
+      role: true
     },
   });
-
+  
   if (!user) {
     throw new ApiError("Invalid access token", 401);
   }

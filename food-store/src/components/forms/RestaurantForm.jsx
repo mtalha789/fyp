@@ -2,10 +2,13 @@ import React from 'react'
 import { Input, Button } from '@nextui-org/react'
 import { restaurantSchema } from '../../schemas/restaurantSchema';
 import { useRestaurantStore } from '../../store/Restaurant';
+import { useAuthStore } from '../../store/Auth';
 
 export default function RestaurantForm({ setFormState }) {
   const [loading, setLoading] = React.useState(false);
   const [error, setError] = React.useState(null);
+
+  const { accessToken } = useAuthStore()
 
   const { registerRestaurant } = useRestaurantStore();
 
@@ -15,6 +18,7 @@ export default function RestaurantForm({ setFormState }) {
     setError(null);
     //data collection
     const data = new FormData(e.target);
+    console.log(data);
 
     //validation
     const result = restaurantSchema.safeParse(Object.fromEntries(data.entries()));
@@ -24,9 +28,11 @@ export default function RestaurantForm({ setFormState }) {
       console.log(result.error);
       return;
     }
+    console.log(accessToken);
 
-    const response = await registerRestaurant(data);
+    const response = await registerRestaurant(data, accessToken);
 
+    console.log('query');
     if (!response.success) {
       setError(response.error);
       setLoading(false);

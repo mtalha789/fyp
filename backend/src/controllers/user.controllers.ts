@@ -296,7 +296,18 @@ const updateAccountDetails = asyncHandler(async (req, res) => {
         .json(new ApiResponse(200, user, "Account details updated successfully"))
 });
 
-
+const getSellerRestaurants = asyncHandler(async (req, res) => {
+    const restaurants = await db.restaurant.findMany({
+        where : {owner_id : req.user?.id , deleted : false},
+        select : {
+            id : true , name : true , phone : true ,address : true,  imageUrl : true,closed : true,minimumOrderPrice : true,corporateEmail : true
+        }
+    })
+    
+    res
+    .status(200)
+    .json(new ApiResponse(200, restaurants, "Restaurants fetched successfully"))
+})
 
 
 export {

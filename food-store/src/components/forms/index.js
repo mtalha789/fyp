@@ -5,6 +5,7 @@ import RestaurantAddressForm from './AddressForm'
 import RestaurantForm from './RestaurantForm'
 import ProductForm from './ProductForm'
 import CheckoutPage from './CheckoutForm'
+import EditRestuarant from './EditRestuarant'
 
 export {
     LoginForm,
@@ -13,5 +14,6 @@ export {
     RestaurantAddressForm,
     RestaurantForm,
     ProductForm,
+    EditRestuarant,
     CheckoutPage
 }
