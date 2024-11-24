@@ -20,6 +20,8 @@ import {
   ProductCard,
   PartnerWithUs,
   RegisterRestaurant,
+  Careers,
+  RiderRegistration
 } from "./pages/index.js";
 
 import {
@@ -52,6 +54,7 @@ import {
   Restaurants,
   Riders,
 } from "./pages/admin/index.js";
+// import RiderRegistration from "./pages/careers/RiderRegistration.jsx";
 
 const router = createBrowserRouter([
   {
@@ -98,6 +101,18 @@ const router = createBrowserRouter([
       {
         path: "/product/:id",
         element: <ProductDetail />,
+      },
+      {
+        path: "/careers",
+        element: <Careers />,
+      },
+      {
+        path: "/careers/register",
+        element: (
+        <AuthLayout authenticated={false}>
+          <RiderRegistration />
+        </AuthLayout>
+        )
       },
       {
         path: "/partner-portal",

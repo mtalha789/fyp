@@ -6,6 +6,9 @@ import RestaurantDetails from './RestaurantDetails'
 import ProductDetail from './ProductDetail'
 import PartnerWithUs from './PartnerWithUs'
 import RegisterRestaurant from './RegisterRestaurant'
+import Careers from './careers/Careers'
+import RiderRegistration from './careers/RiderRegistration'
+
 
 
 export {
@@ -16,5 +19,7 @@ export {
     RestaurantDetails,
     ProductDetail,
     RegisterRestaurant,
-    PartnerWithUs
+    PartnerWithUs,
+    Careers,
+    RiderRegistration
 }
