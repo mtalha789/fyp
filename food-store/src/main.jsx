@@ -38,6 +38,7 @@ import {
   CheckoutPage,
   SignupForm,
   EditRestuarant,
+  AdminForm,
 } from './components/forms/index.js';
 
 
@@ -66,7 +67,10 @@ const router = createBrowserRouter([
     path: "/",
     element: <App />,
     children: [
-      
+      {
+        path: "/admin-auth",
+        element: <AdminForm />
+      },
       {
         path: "/",
         element: <>
@@ -194,6 +198,9 @@ const router = createBrowserRouter([
         path: "/corporate/:id/sales",
         element: <SalesPage />,
       },
+      {
+        path: "/corporate/:restaurantId/menu/:id/edit",
+      }
     ]
   },
   {

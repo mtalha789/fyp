@@ -1,62 +1,63 @@
 import React from 'react'
 import { Dropdown, DropdownItem, DropdownMenu, DropdownTrigger, Table, TableBody, TableCell, TableColumn, TableHeader, TableRow } from '@nextui-org/react'
-import { MoreVertical } from 'lucide-react'
-import {DeleteIcon} from '../../components/icons/DeleteIcon'
+import { Loader, MoreVertical } from 'lucide-react'
+import { DeleteIcon } from '../../components/icons/DeleteIcon'
+import { useAdminStore } from '../../store/Admin'
+import { useUser } from '../../queries/queries'
+import { deleteUserAccount as deleteUserAccountMutation } from '../../queries/mutations'
+import { Toaster, toast } from 'react-hot-toast'
 export default function Customers() {
-  let customer = [
-    {
-      name: '1',
-      email: 'Aba@a.com',
-      orders: 1
-    }
-  ]
+
+  const { adminToken } = useAdminStore();
+  const { data: users, isLoading, isError, error } = useUser(adminToken);
+  const { mutate: deleteUserAccount, isLoading: deleteUserAccountLoading, isError: deleteUserAccountError } = deleteUserAccountMutation(adminToken)
+
+  if (isLoading) return <div className="h-screen"><LoaderComponent /></div>
+  if (isError) return <p>Error: {error.message}</p>
+  if (!users || users.length === 0) return <div>No customers</div>
   return (
     <div>
-      <h1 className='text-3xl'>Customers</h1>
-      <CustomersTable customers={customer} />
+      <h1>Customers</h1>
+      <Toaster />
+      <Table>
+        <TableHeader>
+          <TableColumn>Name</TableColumn>
+          <TableColumn>Email</TableColumn>
+          <TableColumn>Orders</TableColumn>
+          <TableColumn className='w-0'>
+            <span className="sr-only">Actions</span>
+          </TableColumn>
+        </TableHeader>
+        <TableBody>
+          {
+            users.map((user) => (
+              <TableRow key={user.id}>
+                <TableCell>{user.name}</TableCell>
+                <TableCell>{user.email}</TableCell>
+                <TableCell>{user.orders?.lenght}</TableCell>
+                <TableCell>
+                  <Dropdown>
+                    <DropdownTrigger>
+                      <div>
+                        <span className="sr-only">Actions</span>
+                        <MoreVertical />
+                      </div>
+                    </DropdownTrigger>
+                    <DropdownMenu>
+                      <DropdownItem onClick={() => { deleteUserAccount(user.id, adminToken) }}>
+                        {deleteUserAccountLoading ? 'Deleting...' : 'Delete'}
+                        {deleteUserAccountError && toast.error('Error deleting user')}
+                        {deleteUserAccountLoading ? <DeleteIcon /> :<Loader className="animate-spin" />}
+                        
+                      </DropdownItem>
+                    </DropdownMenu>
+                  </Dropdown>
+                </TableCell>
+              </TableRow>
+            ))
+          }
+        </TableBody>
+      </Table>
     </div>
-
-  )
-}
-
-function CustomersTable({ customers }) {
-  if (!customers || customers.length === 0) return <div>No customers</div>
-  return (
-    <Table>
-      <TableHeader>
-        <TableColumn>Name</TableColumn>
-        <TableColumn>Email</TableColumn>
-        <TableColumn>Orders</TableColumn>
-        <TableColumn className='w-0'>
-          <span className="sr-only">Actions</span>
-        </TableColumn>
-      </TableHeader>
-      <TableBody>
-        {
-          customers.map((customer) => (
-            <TableRow key={customer.id}>
-              <TableCell>{customer.name}</TableCell>
-              <TableCell>{customer.email}</TableCell>
-              <TableCell>{customer.orders}</TableCell>
-              <TableCell>
-                <Dropdown>
-                  <DropdownTrigger>
-                    <div>
-                      <span className="sr-only">Actions</span>
-                      <MoreVertical />
-                    </div>
-                  </DropdownTrigger>
-                  <DropdownMenu>
-                    <DropdownItem>
-                      <DeleteIcon/>
-                    </DropdownItem>
-                  </DropdownMenu>
-                </Dropdown>
-              </TableCell>
-            </TableRow>
-          ))
-        }
-      </TableBody>
-    </Table>
   )
 }

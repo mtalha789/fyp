@@ -1,8 +1,10 @@
 import React from 'react'
 import { useAdminStore } from '../../store/Admin';
+import { useNavigate } from 'react-router-dom';
 
 export default function AdminForm() {
     const [error, setError] = React.useState(null);
+    const navigate = useNavigate()
     const [loading, setLoading] = React.useState(false);
     const { authenticateAdmin } = useAdminStore()
 
@@ -32,13 +34,14 @@ export default function AdminForm() {
 
         console.log(response);
         setLoading(false);
+        navigate('/admin')
     }
     
     return (
         <form onSubmit={handleSubmit}>
-            <p className="font-extrabold text-3xl text-inherit m-4 justify-center flex">
+            <h1 className="font-extrabold text-3xl text-inherit m-4 justify-center flex">
                 Admin Authentication
-            </p>
+            </h1>
             {error?.message && <p className="text-red-500">{error?.message}</p>}
             <div className="flex flex-col gap-2 container mx-auto max-w-[80%]">
                 <div className="space-y-2">    

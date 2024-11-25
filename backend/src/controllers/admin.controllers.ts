@@ -29,7 +29,7 @@ const getUnApprovedRestaurants = asyncHandler(async (req, res) => {
 
     res
         .status(200)
-        .json(new ApiResponse(200, unApprovedRestaurants, 'success'))
+        .json(new ApiResponse(200, { unApprovedRestaurants }, 'success'))
 })
 
 const approveRestaurant = asyncHandler(async (req, res) => {
@@ -66,9 +66,67 @@ const rejectRestaurant = asyncHandler(async (req, res) => {
         .json(new ApiResponse(200, rejectedRestaurant, 'Restaurant rejected'))
 })
 
+const getUsers = asyncHandler(async (req, res) => {
+    const users = await db.user.findMany({
+        include: { orders: true }
+    })
+
+    res
+        .status(200)
+        .json(new ApiResponse(200, { users }, 'success'))
+})
+
+const deleteUser = asyncHandler(async (req, res) => {
+    const { id } = req.params
+
+    const deletedUser = await db.user.update({
+        where: { id },
+        data: { deleted: true }
+    })
+
+    if (!deletedUser) {
+        throw new ApiError('User not found', 404)
+    }
+
+    res
+        .status(200)
+        .json(new ApiResponse(200, {}, 'User deleted'))
+})
+
+const getOrders = asyncHandler(async (req, res) => {
+    const orders = await db.order.findMany({
+        include: { subOrder: true },
+        orderBy: { createdAt: 'desc' }
+    })
+
+    res
+        .status(200)
+        .json(new ApiResponse(200, { orders }, 'success'))  
+})
+
+const getRiders = asyncHandler(async (req, res) => {
+    const riders = await db.user.findMany({
+        where: {
+            role: 'Rider',
+            deleted: false
+        },
+        include: {
+            orders: true,
+            reviews: true
+        }
+    })
+    res
+        .status(200)
+        .json(new ApiResponse(200, riders, "Riders fetched successfully"))
+})
+
 export {
     authenticateAdmin,
     getUnApprovedRestaurants,
     approveRestaurant,
-    rejectRestaurant
+    rejectRestaurant,
+    getUsers,
+    deleteUser,
+    getOrders,
+    getRiders
 }

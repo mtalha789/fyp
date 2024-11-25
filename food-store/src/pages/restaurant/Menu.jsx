@@ -74,7 +74,7 @@ function ProductTable({ products }) {
                     <Button onClick={() => console.log(`Toggle availability for ${product.id}`)}>Toggle Availability</Button>
                   </DropdownItem>
                   <DropdownItem asChild>
-                    <Link to={`/corporate/${product.restaurantId}/menu/${product.id}`}>Edit</Link>
+                    <Link to={`/corporate/${product.restaurantId}/menu/${product.id}/edit`}>Edit</Link>
                   </DropdownItem>
                 </DropdownMenu>
               </Dropdown>
