@@ -21,7 +21,9 @@ import {
   PartnerWithUs,
   RegisterRestaurant,
   Careers,
-  RiderRegistration
+  RiderRegistration,
+  AddressPage,
+  AddTimeSlots
 } from "./pages/index.js";
 
 import {
@@ -127,12 +129,26 @@ const router = createBrowserRouter([
         )
       },
       {
-        path: "/partner-portal",
-        // element: 
         path: "/business-portal",
         element: (
           <AuthLayout>
             <BusinessPartner />
+          </AuthLayout>
+        )
+      },
+      {
+        path: "/business/restaurant/:id/address",
+        element: (
+          <AuthLayout>
+            <AddressPage />
+          </AuthLayout>
+        )
+      },
+      {
+        path: "/business/restaurant/:id/timeslots",
+        element: (
+          <AuthLayout>
+            <AddTimeSlots />
           </AuthLayout>
         )
       },
@@ -155,27 +171,27 @@ const router = createBrowserRouter([
     ]
   },
   {
-    path: "/corporate",
+    path: "/corporate/:id",
     element: <RestaurantPortal />,
     children: [
       {
-        path: "/corporate/",
-        element: <Dashboard />,
+        path: "/corporate/:id",
+        element: <SalesPage />,
       },
       {
-        path: "/corporate/menu",
+        path: "/corporate/:id/menu",
         element: <MenuPage />,
       },
       {
-        path: "/corporate/menu/add-item",
+        path: "/corporate/:id/menu/add-item",
         element: <AddItemPage />,
       },
       {
-        path: "/corporate/orders",
+        path: "/corporate/:id/orders",
         element: <OrdersPage />,
       },
       {
-        path: "/corporate/sales",
+        path: "/corporate/:id/sales",
         element: <SalesPage />,
       },
     ]

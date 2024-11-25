@@ -9,6 +9,7 @@ import { useAuthStore } from "../../store/Auth";
 import { loginSchema } from "../../schemas/signupSchema";
 import { EyeFilledIcon, EyeSlashFilledIcon } from "../icons";
 import { useRestaurantStore } from "../../store/Restaurant";
+import toast from "react-hot-toast";
 
 export default function LoginForm() {
   const [error, setError] = React.useState(null);
@@ -46,6 +47,8 @@ export default function LoginForm() {
             setLoading(false);
             return;
         }
+
+        toast.success('Logged in successfully')
 
         navigate('/')
 

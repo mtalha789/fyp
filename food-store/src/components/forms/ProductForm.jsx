@@ -1,14 +1,17 @@
 import React from 'react'
 import { Input, Button, Dropdown, DropdownTrigger, DropdownMenu, DropdownItem } from '@nextui-org/react'
 import { productSchema } from '../../schemas/productSchema'
-import { useQuery } from '@tanstack/react-query'
 import useCategories from '../../queries/queries';
-import { Loader2 } from 'lucide-react';
+import LoaderComponent from '../Loader';
+import { addProduct } from '../../queries/mutations';
+import { useAuthStore } from '../../store/Auth';
 
 export default function ProductForm({ mutationFunction}) {
     const [loading, setLoading] = React.useState(false);
     const [error, setError] = React.useState(null);
     const { data: categories, isError, isLoading, error: fetchError } = useCategories()
+    const { mutate: addProduct, isLoading: addProductLoading, isError: isAddProductError, error: addProductError } = addProduct();
+    const { accessToken } = useAuthStore()
 
     const handleSubmit = async (e) => {
         e.preventDefault();
@@ -30,11 +33,11 @@ export default function ProductForm({ mutationFunction}) {
         setError(null);
         
         //send data to backend
-        mutationFunction.mutate(data);
+        addProduct(data, accessToken)
     }
 
     if (isLoading) {
-        return <Loader />
+        return <LoaderComponent />
     }
     if (isError) {
         return <p className="text-red-500">{fetchError.message}</p>
@@ -43,7 +46,7 @@ export default function ProductForm({ mutationFunction}) {
     return (
         <form onSubmit={handleSubmit}>
             {error?.message && <p className="text-red-500">{error?.message}</p>}
-            {mutationFunction.isError && <p className="text-red-500">{JSON.stringify(mutationFunction.error)}</p>}
+            {isAddProductError && <p className="text-red-500">{JSON.stringify(addProductError)}</p>}
             <div className="flex flex-col gap-2 container mx-auto max-w-[80%]">
                 <div className="space-y-2">
                     <Input
@@ -91,10 +94,10 @@ export default function ProductForm({ mutationFunction}) {
                 <Button
                     type="submit"
                     className="bg-blue-500 w-[50%] mx-auto hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
-                    disabled={loading || mutationFunction.isLoading}
+                    disabled={loading || addProductLoading}
                     variant='shadow'
                 >
-                    {loading || mutationFunction.isLoading ? <Loader2 color='white' className='animate-spin' /> : 'Save'}
+                    {loading || addProductLoading ? <Loader2 color='white' className='animate-spin' /> : 'Save'}
                 </Button>
             </div>
         </form>

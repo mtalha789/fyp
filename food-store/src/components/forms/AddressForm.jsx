@@ -4,7 +4,7 @@ import { restaurantAddressSchema } from '../../schemas/restaurantSchema';
 import { useRestaurantStore } from '../../store/Restaurant';
 import { useAuthStore } from '../../store/Auth';
 
-export default function RestaurantAddressForm({ setFormState, formState }) {
+export default function RestaurantAddressForm({ setFormState, formState, resId }) {
   const [loading, setLoading] = React.useState(false);
   const [error, setError] = React.useState(null);
   const { accessToken } = useAuthStore()
@@ -27,7 +27,7 @@ export default function RestaurantAddressForm({ setFormState, formState }) {
       return;
     }
 
-    const response = await addRestaurantAddress(data,accessToken);
+    const response = await addRestaurantAddress(data,accessToken, resId);
 
     if (!response.success) {
       setError(response.error);
@@ -37,7 +37,7 @@ export default function RestaurantAddressForm({ setFormState, formState }) {
 
     setError(null);
     setLoading(false);
-    setFormState({ ...formState, addressSubmitted: true})
+    setFormState && setFormState({ ...formState, addressSubmitted: true})
   }
 
 
@@ -46,6 +46,7 @@ export default function RestaurantAddressForm({ setFormState, formState }) {
       className="flex flex-col gap-y-4 justify-center items-center mx-auto w-[90%]"
       onSubmit={handleSubmit}
     >
+      <h1 className="text-3xl font-semibold">Enter Restaurant Address</h1>
       {error?.message && <p className="text-red-500">{error.message}</p>}
 
       <Input

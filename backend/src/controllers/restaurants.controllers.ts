@@ -299,6 +299,41 @@ const getRestaurantMenuItems = asyncHandler(async (req, res) => {
         .json(new ApiResponse(200, { restaurantMenu }, 'Fetched Menu Items Successfully'))
 })
 
+const getRestaurantMenu = asyncHandler(async (req, res) => {
+    const { id } = req.params
+    const restaurantMenu = await db.product.findMany({
+        where: {
+            deleted: false,
+            restaurant: {
+                deleted: false,
+                id: id as string,
+                approved: true,
+                owner_id: req.user?.id
+            }
+        },
+        select: {
+            id: true,
+            name: true,
+            price: true,
+            category: {
+                select: {
+                    id: true,
+                    name: true
+                }
+            },
+            description: true,
+            isAvailable: true,
+            reviews: {
+                select: {
+                    rating: true,
+                    createdAt: true
+                }
+            },
+            imagePath: true,
+        }
+    })
+})
+
 const updateProfileImage = asyncHandler(async (req, res) => {
     const file = req.file
     const id = req.params.id
@@ -446,15 +481,21 @@ const restaurantSalesReport = asyncHandler(async (req, res) => {
         where: {
             restaurantId: id,
             restaurant: {
-                owner_id: req.user?.id
+                owner_id: req.user?.id,
+                orders: {
+                    some: {status: 'DELIVERED'}
+                }
             }
         },
         _count: true,
+        _sum: {
+            amount: true
+        },
     })
 
     res
         .status(200)
-        .json(new ApiResponse(200, { totalOrders: orderStats._count }, 'Sales report fetched successfully'))
+        .json(new ApiResponse(200, { totalOrders: orderStats._count,totalAmount: orderStats._sum.amount }, 'Sales report fetched successfully'))
 })
 
 const getRestaurantOrders = asyncHandler(async (req, res) => {
@@ -505,5 +546,6 @@ export {
     addRestaurantAddress,
     restaurantSalesReport,
     getRestaurantOrders,
-    addTimeSlot
+    addTimeSlot,
+    getRestaurantMenu
 }

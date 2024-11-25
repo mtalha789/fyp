@@ -18,7 +18,6 @@ export const useAuthStore = create(
                         method: 'POST',
                     }))
                         .json();
-                    console.log(response);
                     return {
                         success: true,
                         error: null
@@ -42,10 +41,10 @@ export const useAuthStore = create(
                             'Content-Type': 'application/json'
                         }
                     })).json();
-                    console.log(response);
                     set({ status: true, accessToken: response.data?.accessToken, refreshToken: response.data?.refreshToken, user: response.data?.user });
 
-                    if (response.data?.role?.toLowerCase() == 'seller') {
+                    if (response.data?.user?.role?.toLowerCase() == 'seller') {
+                        
                         getUserRestaurants(response.data?.accessToken);
                     }
                     

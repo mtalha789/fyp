@@ -36,14 +36,14 @@ export const deleteProduct = async () =>{
     })
 }
 
-export const addProduct = async () =>{
+export const addProduct = () =>{
     return useMutation({
-        mutationFn: (postData) => {
+        mutationFn: (postData, accessToken) => {
         return fetch(`${import.meta.env.VITE_API_URL}/products`, {
             method:'POST',
             body: postData,
             headers: {
-                'Authorization': `Bearer ${useAuthStore(state => state.accessToken)}`
+                'Authorization': `Bearer ${accessToken}`
             }
         })
         .then((res) => res.json())
@@ -84,5 +84,22 @@ export const updateProductImage = () =>{
     },
     mutationKey: ['menu',updateData.id],
     onSuccess: () => queryClient.invalidateQueries(['menu',updateData.id]),
+    })
+}
+
+export const updateOrder = (restaurantId) =>{
+    return useMutation({
+        mutationFn: (id, orderStatus, accessToken) => {
+        return fetch(`${import.meta.env.VITE_API_URL}/orders/${id}/accept`, {
+            method:'PUT',
+            headers: {
+                'Authorization': `Bearer ${accessToken}`
+            },
+            body: JSON.stringify({orderStatus})
+        })
+        .then((res) => res.json())
+    },
+    mutationKey: ['restaurant-orders',restaurantId],
+    onSuccess: () => queryClient.invalidateQueries(['restaurant-orders',restaurantId])
     })
 }

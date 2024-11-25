@@ -1,99 +1,27 @@
 import { Card, CardHeader, CardBody, CardFooter } from "@nextui-org/card";
 import { Button } from "@nextui-org/react";
+import { useParams } from "react-router-dom";
+import { useAuthStore } from "../../store/Auth";
+import { useRestaurantOrders } from "../../queries/queries";
+import LoaderComponent from "../../components/Loader";
+import { updateOrder } from "../../queries/mutations";
 const OrdersPage = () => {
-  const orders = [
-    {
-      id: "1",
-      amount: 120,
-      createdAt: new Date(),
-      orderItems: [
-        {
-          id: "1",
-          subOrderId: "1",
-          productId: "1",
-          quantity: 2,
-          totalAmount: 60,
-          priceAtOrder: 30,
-          createdAt: new Date(),
-          updatedAt: new Date(),
-          deleted: false,
-        },
-        {
-          id: "2",
-          subOrderId: "1",
-          productId: "2",
-          quantity: 1,
-          totalAmount: 30,
-          priceAtOrder: 30,
-          createdAt: new Date(),
-          updatedAt: new Date(),
-          deleted: false,
-        },
-      ],
-      order: {
-        userId: "1",
-        totalAmount: 150,
-        orderStatus: "PENDING",
-        deleted: false,
-        user: {
-          id: "1",
-          name: "John Doe",
-          createdAt: new Date(),
-          updatedAt: new Date(),
-          deleted: false,
-        }
-      },
-    },
-    {
-      id: "2",
-      amount: 120,
-      createdAt: new Date(),
-      orderItems: [
-        {
-          id: "1",
-          subOrderId: "1",
-          productId: "1",
-          quantity: 2,
-          totalAmount: 60,
-          priceAtOrder: 30,
-          createdAt: new Date(),
-          updatedAt: new Date(),
-          deleted: false,
-        },
-        {
-          id: "2",
-          subOrderId: "1",
-          productId: "2",
-          quantity: 1,
-          totalAmount: 30,
-          priceAtOrder: 30,
-          createdAt: new Date(),
-          updatedAt: new Date(),
-          deleted: false,
-        },
-      ],
-      order: {
-        userId: "1",
-        totalAmount: 150,
-        orderStatus: "PENDING",
-        deleted: false,
-        user: {
-          id: "1",
-          name: "John Doe",
-          createdAt: new Date(),
-          updatedAt: new Date(),
-          deleted: false,
-        }
-      },
-    },
-  ];
+  const { id } = useParams();
+  const { accessToken } = useAuthStore();
+  const { data: orders, isLoading, isError, error } = useRestaurantOrders(id, accessToken)
+
+  const {error: updateError, isError: updateIsError, isLoading: updateIsLoading, mutate: updateOrder} = updateOrder(id)
+
+  if (isLoading) return <div className="h-screen"><LoaderComponent /></div>
+  if (isError) return <p>Error: {error.message}</p>
+
   return (
     <div className="container mx-auto px-4 py-8 sm:px-6 lg:px-8">
       <h1 className="text-2xl font-bold mb-4">New Orders</h1>
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 sm:gap-6 lg:gap-8">
         {orders.map((order, index) => (
           order.order.orderStatus === "PENDING" && (
-            <Card key={order.id} className="w-full mb-4">
+            <Card key={order.id} className={`w-full mb-4` }>
               <CardHeader>
                 <h3 className="text-lg font-medium">Order {index + 1}</h3>
               </CardHeader>
@@ -109,11 +37,11 @@ const OrdersPage = () => {
               </CardBody>
               <CardFooter>
                 <div className="flex gap-2">
-                  <Button color="default" auto>
-                    Accept
+                  <Button disabled={updateIsLoading} onClick={() => updateOrder(order.id, "ACCEPTED", accessToken)} color="default" auto>
+                    {updateIsLoading ? "Accepting..." : "Accept"}
                   </Button>
-                  <Button color="danger" variant="flat" auto>
-                    Reject
+                  <Button disabled={updateIsLoading} onClick={() => updateOrder(order.id, "REJECTED", accessToken)} color="danger" variant="flat" auto>
+                    {updateIsLoading ? "Rejecting..." : "Reject"}
                   </Button>
                 </div>
               </CardFooter>

@@ -303,10 +303,11 @@ const getSellerRestaurants = asyncHandler(async (req, res) => {
             id : true , name : true , phone : true ,address : true,  imageUrl : true,closed : true,minimumOrderPrice : true,corporateEmail : true,approved : true
         }
     })
+    console.log('ok');
     
     res
     .status(200)
-    .json(new ApiResponse(200, restaurants, "Restaurants fetched successfully"))
+    .json(new ApiResponse(200, {restaurants}, "Restaurants fetched successfully"))
 })
 
 
