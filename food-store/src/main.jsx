@@ -175,7 +175,7 @@ const router = createBrowserRouter([
     ]
   },
   {
-    path: "/corporate/:id",
+    path: "/corporate",
     element: <RestaurantPortal />,
     children: [
       {

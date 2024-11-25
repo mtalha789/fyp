@@ -1,6 +1,6 @@
 import React from "react";
 import { useAdminStore } from "../../store/Admin"
-import { useOrders } from '../queries/queries'
+import { useOrders } from '../../queries/queries'
 
 export default function Dashboard() {
   const { adminToken } = useAdminStore()

@@ -1,7 +1,7 @@
 import React from 'react';
 import { useRiders } from '../../queries/queries';
 import { useAdminStore } from "../../store/Admin";
-import LoaderComponent from "../components/LoaderComponent";
+import LoaderComponent from "../../components/Loader";
 
 export default function Riders() {
   const { adminToken } = useAdminStore();
