@@ -1,6 +1,6 @@
 import { useQuery } from "@tanstack/react-query"
 
-const useCategories = () => {  
+export const useCategories = () => {  
     return useQuery({
         queryKey:['categories'],
         queryFn: () => {
@@ -42,6 +42,15 @@ export const useRestaurantMenu = (id) => {
         }
     })
 }
+
+export const useRestaurantSellerMenu = (id, accessToken) => {
+    return useQuery({
+        queryKey: ['restaurant-seller-menu', id],
+        queryFn: () => {
+            return fetch(`${import.meta.env.VITE_API_URL}/restaurants/${id}/seller-menu`,{headers: {'Authorization': `Bearer ${accessToken}`}}).then(res => res.json())
+        }
+    })
+}
 export const useRestaurantReviews = (id) => {
     return useQuery({
         queryKey: ['restaurant-reviews', id],
@@ -50,27 +59,29 @@ export const useRestaurantReviews = (id) => {
         }
     })
 }
-export const useRestaurantSalesReport = (id) => {
+export const useRestaurantSalesReport = (id, accessToken) => {
     return useQuery({
         queryKey: ['restaurant-sales', id],
         queryFn: () => {
-            return fetch(`${import.meta.env.VITE_API_URL}/restaurants/${id}/sales`).then(res => res.json())
+            return fetch(`${import.meta.env.VITE_API_URL}/restaurants/${id}/sales`,{
+                headers: {'Authorization': `Bearer ${accessToken}`}
+            }).then(res => res.json())
         }
     })
 }
 
-export const useRestaurantOrders = (id) => {
+export const useRestaurantOrders = (id, accessToken) => {
     return useQuery({
         queryKey: ['restaurant-orders', id],
         queryFn: () => {
-            return fetch(`${import.meta.env.VITE_API_URL}/restaurants/${id}/orders`).then(res => res.json())
+            return fetch(`${import.meta.env.VITE_API_URL}/restaurants/${id}/orders`,{headers: {'Authorization': `Bearer ${accessToken}`} }).then(res => res.json())
         }
     })
 }
 
 export const useRestaurantTimeslots = (id) => {
     return useQuery({
-        queryKey: ['restaurant-orders', id],
+        queryKey: ['restaurant-timeslots', id],
         queryFn: () => {
             return fetch(`${import.meta.env.VITE_API_URL}/restaurants/${id}/timeslots`).then(res => res.json())
         }
@@ -87,6 +98,40 @@ export const useMenuItem = (id) => {
     })
 }
 
+export const useUser = (adminToken) => {
+    return useQuery({
+        queryKey: ['users'],
+        queryFn: () => {
+        return fetch(`${import.meta.env.VITE_API_URL}/admin/user`,{headers: {'Authorization': `Bearer ${adminToken}`} }).then(response => response.json())
+        }
+    })
+}
 
+export const useUnapprovedRestaurants = (adminToken) => {
+    return useQuery({
+        queryKey: ['unapproved-restaurants'],
+        queryFn: () => {
+        return fetch(`${import.meta.env.VITE_API_URL}/admin/unapproved-restaurants`,{headers: {'Authorization': `Bearer ${adminToken}`} }).then(response => response.json())
+        }
+    })
+}
+
+export const useRiders = (adminToken) => {
+    return useQuery({
+        queryKey: ['riders'],
+        queryFn: () => {
+        return fetch(`${import.meta.env.VITE_API_URL}/riders`,{headers: {'Authorization': `Bearer ${adminToken}`} }).then(response => response.json())
+        }
+    })
+}
+
+export const useOrders = (adminToken) => {
+    return useQuery({
+        queryKey: ['orders'],
+        queryFn: () => {
+        return fetch(`${import.meta.env.VITE_API_URL}/orders`,{headers: {'Authorization': `Bearer ${adminToken}`} }).then(response => response.json())
+        }
+    })
+}
 
 export default useCategories

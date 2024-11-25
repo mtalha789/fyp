@@ -13,96 +13,104 @@ import {
   TableHeader,
   TableRow
 } from "@nextui-org/react";
+import { useParams } from 'react-router-dom';
+import { useAuthStore } from '../../store/Auth';
+import { useRestaurantOrders } from '../../queries/queries';
+import LoaderComponent from '../../components/Loader';
 
 const Sales = () => {
+  const { id } = useParams();
+  const { accessToken } = useAuthStore();
+  const { data: orders, isLoading, isError, error } = useRestaurantOrders(id, accessToken)
+  const { data: sales, isLoading: salesLoading, isError: salesIsError, error: salesError } = useRestaurantSalesReport(id, accessToken);
   const [lastMonthSales, setlastMonthSales] = React.useState(null);
   const [thisMonthSales, setthisMonthSales] = React.useState(null);
-  const [orders, setOrders] = React.useState([
-    {
-      id: "1",
-      amount: 120,
-      createdAt: new Date(),
-      orderItems: [
-        {
-          id: "1",
-          subOrderId: "1",
-          productId: "1",
-          quantity: 2,
-          totalAmount: 60,
-          priceAtOrder: 30,
-          createdAt: new Date(),
-          updatedAt: new Date(),
-          deleted: false,
-        },
-        {
-          id: "2",
-          subOrderId: "1",
-          productId: "2",
-          quantity: 1,
-          totalAmount: 30,
-          priceAtOrder: 30,
-          createdAt: new Date(),
-          updatedAt: new Date(),
-          deleted: false,
-        },
-      ],
-      order: {
-        userId: "1",
-        totalAmount: 150,
-        orderStatus: "PENDING",
-        deleted: false,
-        user: {
-          id: "1",
-          name: "John Doe",
-          createdAt: new Date(),
-          updatedAt: new Date(),
-          deleted: false,
-        }
-      },
-    },
-    {
-      id: "2",
-      amount: 120,
-      createdAt: new Date(),
-      orderItems: [
-        {
-          id: "1",
-          subOrderId: "1",
-          productId: "1",
-          quantity: 2,
-          totalAmount: 60,
-          priceAtOrder: 30,
-          createdAt: new Date(),
-          updatedAt: new Date(),
-          deleted: false,
-        },
-        {
-          id: "2",
-          subOrderId: "1",
-          productId: "2",
-          quantity: 1,
-          totalAmount: 30,
-          priceAtOrder: 30,
-          createdAt: new Date(),
-          updatedAt: new Date(),
-          deleted: false,
-        },
-      ],
-      order: {
-        userId: "1",
-        totalAmount: 150,
-        orderStatus: "PENDING",
-        deleted: false,
-        user: {
-          id: "1",
-          name: "John Doe",
-          createdAt: new Date(),
-          updatedAt: new Date(),
-          deleted: false,
-        }
-      },
-    },
-  ]);
+  // const [orders, setOrders] = React.useState([
+  //   {
+  //     id: "1",
+  //     amount: 120,
+  //     createdAt: new Date(),
+  //     orderItems: [
+  //       {
+  //         id: "1",
+  //         subOrderId: "1",
+  //         productId: "1",
+  //         quantity: 2,
+  //         totalAmount: 60,
+  //         priceAtOrder: 30,
+  //         createdAt: new Date(),
+  //         updatedAt: new Date(),
+  //         deleted: false,
+  //       },
+  //       {
+  //         id: "2",
+  //         subOrderId: "1",
+  //         productId: "2",
+  //         quantity: 1,
+  //         totalAmount: 30,
+  //         priceAtOrder: 30,
+  //         createdAt: new Date(),
+  //         updatedAt: new Date(),
+  //         deleted: false,
+  //       },
+  //     ],
+  //     order: {
+  //       userId: "1",
+  //       totalAmount: 150,
+  //       orderStatus: "PENDING",
+  //       deleted: false,
+  //       user: {
+  //         id: "1",
+  //         name: "John Doe",
+  //         createdAt: new Date(),
+  //         updatedAt: new Date(),
+  //         deleted: false,
+  //       }
+  //     },
+  //   },
+  //   {
+  //     id: "2",
+  //     amount: 120,
+  //     createdAt: new Date(),
+  //     orderItems: [
+  //       {
+  //         id: "1",
+  //         subOrderId: "1",
+  //         productId: "1",
+  //         quantity: 2,
+  //         totalAmount: 60,
+  //         priceAtOrder: 30,
+  //         createdAt: new Date(),
+  //         updatedAt: new Date(),
+  //         deleted: false,
+  //       },
+  //       {
+  //         id: "2",
+  //         subOrderId: "1",
+  //         productId: "2",
+  //         quantity: 1,
+  //         totalAmount: 30,
+  //         priceAtOrder: 30,
+  //         createdAt: new Date(),
+  //         updatedAt: new Date(),
+  //         deleted: false,
+  //       },
+  //     ],
+  //     order: {
+  //       userId: "1",
+  //       totalAmount: 150,
+  //       orderStatus: "PENDING",
+  //       deleted: false,
+  //       user: {
+  //         id: "1",
+  //         name: "John Doe",
+  //         createdAt: new Date(),
+  //         updatedAt: new Date(),
+  //         deleted: false,
+  //       }
+  //     },
+  //   },
+  // ]);
 
   const setLastMonthSales = () => {
     if (orders.length === 0) {
@@ -143,11 +151,24 @@ const Sales = () => {
     setLastMonthSales();
     setThisMonthSales();
   }, [orders]);
+
+  if(isLoading || updateIsLoading) return <LoaderComponent />
+
+  if(isError) return <p>Error: {error.message}</p>
+
+  if(updateIsError) return <p>Error: {updateError.message}</p>
+
   return (
     <div className="flex flex-col">
       <h1 className="text-3xl font-bold mb-4">Sales</h1>
       <Card className="w-full">
         <CardHeader>
+          <h1 className="font-bold text-3xl">Sales</h1>
+          <div>
+
+          <h3 className="font-bold text-xl">Total Orders: ${sales?.totalOrders}</h3>
+          <h3 className="font-bold text-xl">Total Amount: ${sales?.totalAmount}</h3>
+          </div>
           <div className="">
             <div>
               <h2 className="text-xl font-semibold">Last Month</h2>

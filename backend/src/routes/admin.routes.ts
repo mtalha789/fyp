@@ -1,23 +1,36 @@
 import { Router } from "express"
-import { approveRestaurant, authenticateAdmin, getUnApprovedRestaurants, rejectRestaurant } from "../controllers/admin.controllers"
+import { approveRestaurant, authenticateAdmin, deleteUser, getOrders, getRiders, getUnApprovedRestaurants, getUsers, rejectRestaurant } from "../controllers/admin.controllers"
 import { verifyAdmin } from "../middlewares/adminAuth.middleware"
 
 const router = Router()
 
-router.use(verifyAdmin)
-
 router
     .route('/restaurants/unapproved')
-    .get(getUnApprovedRestaurants)
+    .get(verifyAdmin, getUnApprovedRestaurants)
+
+router
+    .route('/users')
+    .get(verifyAdmin, getUsers)
+
+router
+    .route('/orders')
+    .get(verifyAdmin, getOrders)
+
+router
+    .route('/user/:id')
+    .delete(verifyAdmin, deleteUser)
 
 router
     .route('/restaurant/:id/approve')
-    .put(approveRestaurant)
+    .put(verifyAdmin, approveRestaurant)
 
 router
     .route('/restaurant/:id/reject')
-    .put(rejectRestaurant)
+    .put(verifyAdmin, rejectRestaurant)
 
+router
+    .route('/riders')
+    .get(verifyAdmin, getRiders)
 
 router
     .route('/auth')

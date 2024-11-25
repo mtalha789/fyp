@@ -18,7 +18,7 @@ import paymentRouter from './routes/payment.routes';
 const app = express()
 
 app.use(cors({
-    origin:'http://localhost:5173',
+    origin: ['http://localhost:5173', 'http://192.168.1.18:5173'] ,
     credentials : true
 }))
 
@@ -39,5 +39,8 @@ app.use('/api/productreviews',productReviewRouter)
 app.use('/api/deliveries',deliveryRouter)
 app.use('/api/riders',riderRouter)
 app.use('/api/payments',paymentRouter)
+app.use('/api/test',(req,res)=>{
+    res.send('test')
+})
 
 export default app

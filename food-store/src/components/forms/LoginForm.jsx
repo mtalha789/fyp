@@ -8,6 +8,8 @@ import { Link, useNavigate } from "react-router-dom";
 import { useAuthStore } from "../../store/Auth";
 import { loginSchema } from "../../schemas/signupSchema";
 import { EyeFilledIcon, EyeSlashFilledIcon } from "../icons";
+import { useRestaurantStore } from "../../store/Restaurant";
+import toast from "react-hot-toast";
 
 export default function LoginForm() {
   const [error, setError] = React.useState(null);
@@ -16,6 +18,7 @@ export default function LoginForm() {
     const navigate = useNavigate()
 
     const { login } = useAuthStore();
+    const { getUserRestaurants } = useRestaurantStore();
 
     const toggleVisibility = () => setIsVisible(!isVisible);
 
@@ -37,13 +40,15 @@ export default function LoginForm() {
         //reset form
         e.target.reset();
         
-        const response = await login(username, password);
+        const response = await login(username, password, getUserRestaurants);
 
         if (response.error) {
             setError(response.error);
             setLoading(false);
             return;
         }
+
+        toast.success('Logged in successfully')
 
         navigate('/')
 

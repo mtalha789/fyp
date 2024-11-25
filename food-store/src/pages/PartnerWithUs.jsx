@@ -10,6 +10,8 @@ function PartnerWithUs() {
   return (
     <div>
       <section className="bg-gray-100 py-16 bg-hero-pattern bg-cover relative overflow-hidden h-[50vh]">
+      <div className="absolute inset-0 bg-black opacity-40"></div>
+
         <div className="container mx-auto flex flex-col items-center text-center px-4">
           <h2 className="text-4xl font-bold mb-4 text-white">
             Mealo For Business

@@ -2,9 +2,10 @@ import React from 'react'
 import SideMenu from '../../components/SideMenu'
 import { Outlet, useNavigate } from 'react-router-dom'
 import LoaderComponent from '../../components/Loader'
+import { useAdminStore } from '../../store/Admin'
 
 const AdminPortal = () => {
-    const status = true
+    const {adminStatus} = useAdminStore()
     const [loader, setLoader] = React.useState(false)
     const navigate = useNavigate()
     
@@ -16,6 +17,14 @@ const AdminPortal = () => {
         { name: 'Restaurants', path: '/admin/restaurants' }
     ]
 
+    React.useEffect(() => {
+        if (!adminStatus) {
+            navigate('/admin-auth')
+        }
+        else {
+            setLoader(true)
+        }
+    }, [adminStatus])
     return (
         <>
             {loader ? <div className="w-full h-screen flex items-center justify-center">

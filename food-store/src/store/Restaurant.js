@@ -48,15 +48,18 @@ export const useRestaurantStore = create(
                     const response = await (await fetch(
                         `${import.meta.env.VITE_API_URL}/restaurants/${restaurantId}/address`,
                         {
-                            body: addressData,
+                            body: JSON.stringify(addressData),
                             method: 'POST',
                             headers: accessToken && {
                                 'Authorization': `Bearer ${accessToken}`
                             }
                         }
                     )).json()
-                    set({address: response?.data})
 
+                    set({restaurants: useRestaurantStore?.getState()?.restaurants.map((r) => r.id === restaurantId ? (
+                        r.address ? r.address?.push(response?.data?.updatedRestaurant) : r.address = [response?.data?.updatedRestaurant]
+                    ) : r)})
+                    
                     return {
                         success: true,
                         error: null
@@ -108,6 +111,31 @@ export const useRestaurantStore = create(
                     )).json()
 
                     set({restaurants: useRestaurantStore?.getState()?.restaurants.map((r) => r.id === id ? response?.data : r)})
+
+                    return {
+                        success: true,
+                        error: null
+                    }
+                } catch (error) {
+                    return {
+                        success: false,
+                        error
+                    }
+                }
+            },
+            resetAccount: () => set({businessStatus: false, restaurants: []}),
+            getUserRestaurants: async (accessToken) => {
+                try {
+                    const response = await (await fetch(
+                        `${import.meta.env.VITE_API_URL}/users/restaurants`,
+                        {
+                            headers: accessToken && {
+                                'Authorization': `Bearer ${accessToken}`
+                            }
+                        }
+                    )).json()
+
+                    if(response?.data?.restaurants) set({restaurants: response?.data?.restaurants, businessStatus: true})
 
                     return {
                         success: true,

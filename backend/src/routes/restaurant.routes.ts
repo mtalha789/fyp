@@ -9,6 +9,7 @@ import {
     deleteRestaurant,
     getAllRestaurants,
     getRestaurantById,
+    getRestaurantMenu,
     getRestaurantMenuItems,
     getRestaurantOrders,
     getRestaurantReviews,
@@ -39,6 +40,10 @@ router
     .route('/:id/menu')
     .post(verifyJWT, upload.single('productImage'), addRestaurantMenuItem)
     .get(getRestaurantMenuItems)
+
+router
+    .route('/:id/seller-menu')
+    .get(verifyJWT, getRestaurantMenu)
 
 router
     .route('/:id/reviews')

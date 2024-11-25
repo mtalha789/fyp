@@ -2,87 +2,142 @@ import { useMutation, QueryClient } from "@tanstack/react-query"
 import { useAuthStore } from "../store/Auth"
 
 const queryClient = new QueryClient()
-export const toggleProductAvailability = async () =>{
+export const toggleProductAvailability = async (id, accessToken) => {
     return useMutation({
-        mutationFn: (id) => {
-        return fetch(`${import.meta.env.VITE_API_URL}/products/${id}/toggle-unavailable`, {
-            method:'PUT',
-            headers: {
-                'Content-Type': 'application/json',
-                'Authorization': `Bearer ${useAuthStore(state=> state.accessToken)}`
-            }
-        })
-        .then((res) => res.json())
-    },
-    mutationKey: ['menu',id],
-    onSuccess: () => queryClient.invalidateQueries(['menu',id]),
+        mutationFn: () => {
+            return fetch(`${import.meta.env.VITE_API_URL}/products/${id}/toggle-unavailable`, {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${accessToken}`
+                }
+            })
+                .then((res) => res.json())
+        },
+        mutationKey: ['menu', id],
+        onSuccess: () => queryClient.invalidateQueries(['menu', id]),
     })
 }
 
-export const deleteProduct = async () =>{
+export const deleteProduct = async (id, accessToken) => {
     return useMutation({
-        mutationFn: (id) => {
-        return fetch(`${import.meta.env.VITE_API_URL}/products/${id}`, {
-            method:'DELETE',
-            headers: {
-                'Content-Type': 'application/json',
-                'Authorization': `Bearer ${useAuthStore(state => state.accessToken)}`
-            }
-        })
-        .then((res) => res.json())
-    },
-    mutationKey: ['menu'],
-    onSuccess: () => queryClient.invalidateQueries(['menu']),
+        mutationFn: () => {
+            return fetch(`${import.meta.env.VITE_API_URL}/products/${id}`, {
+                method: 'DELETE',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${accessToken}`
+                }
+            })
+                .then((res) => res.json())
+        },
+        mutationKey: ['menu', id],
+        onSuccess: () => queryClient.invalidateQueries(['menu', id]),
     })
 }
 
-export const addProduct = async () =>{
+export const addProduct = () => {
     return useMutation({
-        mutationFn: (postData) => {
-        return fetch(`${import.meta.env.VITE_API_URL}/products`, {
-            method:'POST',
-            body: postData,
-            headers: {
-                'Authorization': `Bearer ${useAuthStore(state => state.accessToken)}`
-            }
-        })
-        .then((res) => res.json())
-    },
-    mutationKey: ['menu'],
-    onSuccess: () => queryClient.invalidateQueries(['menu']),
+        mutationFn: (postData, accessToken) => {
+            return fetch(`${import.meta.env.VITE_API_URL}/products`, {
+                method: 'POST',
+                body: postData,
+                headers: {
+                    'Authorization': `Bearer ${accessToken}`
+                }
+            })
+                .then((res) => res.json())
+        },
+        mutationKey: ['menu'],
+        onSuccess: () => queryClient.invalidateQueries(['menu']),
     })
 }
 
-export const updateProduct = () =>{
+export const updateProduct = (id) => {
     return useMutation({
-        mutationFn: (updateData) => {
-        return fetch(`${import.meta.env.VITE_API_URL}/products/${updateData.id}`, {
-            method:'PUT',
-            body: updateData,
-            headers: {
-                'Authorization': `Bearer ${useAuthStore(state => state.accessToken)}`
-            }
-        })
-        .then((res) => res.json())
-    },
-    mutationKey: ['menu',updateData.id],
-    onSuccess: () => queryClient.invalidateQueries(['menu',updateData.id]),
+        mutationFn: (updateData, accessToken) => {
+            return fetch(`${import.meta.env.VITE_API_URL}/products/${id}`, {
+                method: 'PUT',
+                body: JSON.stringify(updateData),
+                headers: {
+                    'Authorization': `Bearer ${accessToken}`
+                }
+            })
+                .then((res) => res.json())
+        },
+        mutationKey: ['menu', id],
+        onSuccess: () => queryClient.invalidateQueries(['menu', id]),
     })
 }
 
-export const updateProductImage = () =>{
+export const updateProductImage = (id) => {
     return useMutation({
-        mutationFn: (updateData) => {
-        return fetch(`${import.meta.env.VITE_API_URL}/products/${updateData.id}/product-image`, {
-            method:'PUT',
-            body: updateData.fileData,
-            headers: {
-                'Authorization': `Bearer ${useAuthStore(state => state.accessToken)}`
-            }
-        })
-        .then((res) => res.json())
-    },
-    mutationKey: ['menu',updateData.id],
-    onSuccess: () => queryClient.invalidateQueries(['menu',updateData.id]),
+        mutationFn: (fileData, accessToken) => {
+            return fetch(`${import.meta.env.VITE_API_URL}/products/${id}/product-image`, {
+                method: 'PUT',
+                body: fileData,
+                headers: {
+                    'Authorization': `Bearer ${accessToken}`
+                }
+            })
+                .then((res) => res.json())
+        },
+        mutationKey: ['menu', id],
+        onSuccess: () => queryClient.invalidateQueries(['menu', id]),
+    })
+}
+
+export const updateOrder = (restaurantId) => {
+    return useMutation({
+        mutationFn: (id, orderStatus, accessToken) => {
+            return fetch(`${import.meta.env.VITE_API_URL}/orders/${id}/accept`, {
+                method: 'PUT',
+                headers: {
+                    'Authorization': `Bearer ${accessToken}`
+                },
+                body: JSON.stringify({ orderStatus })
+            })
+                .then((res) => res.json())
+        },
+        mutationKey: ['restaurant-orders', restaurantId],
+        onSuccess: () => queryClient.invalidateQueries(['restaurant-orders', restaurantId])
+    })
+}
+
+export const deleteUserAccount = () => {
+    return useMutation({
+        mutationFn: (id, adminToken) => {
+            return fetch(`${import.meta.env.VITE_API_URL}/admin/user/${id}`, {
+                headers: { 'Authorization': `Bearer ${adminToken}` }, method: 'DELETE'
+            }).then(response => response.json())
+
+        },
+        mutationKey: ['users'],
+        onSuccess: () => queryClient.invalidateQueries(['users'])
+    })
+}
+export const approveRestaurant = () => {
+    return useMutation({
+        mutationFn: (id, adminToken) => {
+            return fetch(`${import.meta.env.VITE_API_URL}/admin/restaurant/${id}/approve`, {
+                headers: { 'Authorization': `Bearer ${adminToken}` },
+                method: 'PUT'
+            }).then(response => response.json())
+        },
+        mutationKey: ['unapproved-restaurants'],
+        onSuccess: () => queryClient.invalidateQueries(['unapproved-restaurants'])
+    })
+}
+
+export const rejectRestaurant = () => {
+    return useMutation({
+        mutationFn: (id, adminToken) => {
+            return fetch(`${import.meta.env.VITE_API_URL}/admin/restaurant/${id}/reject`, {
+                headers: { 'Authorization': `Bearer ${adminToken}` },
+                method: 'PUT'
+            }).then(response => response.json())
+        },
+        mutationKey: ['unapproved-restaurants'],
+        onSuccess: () => queryClient.invalidateQueries(['unapproved-restaurants'])
     })
 }

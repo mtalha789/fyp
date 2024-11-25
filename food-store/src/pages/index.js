@@ -6,15 +6,23 @@ import RestaurantDetails from './RestaurantDetails'
 import ProductDetail from './ProductDetail'
 import PartnerWithUs from './PartnerWithUs'
 import RegisterRestaurant from './RegisterRestaurant'
+import Careers from './careers/Careers'
+import RiderRegistration from './careers/RiderRegistration'
+import AddressPage from './AddressPage'
+import AddTimeSlots from './AddTimeSlots'
 
 
 export {
     MyNavbar,
+    AddTimeSlots,
     LoginForm,
     ProductCard,
     Footer,
     RestaurantDetails,
     ProductDetail,
     RegisterRestaurant,
-    PartnerWithUs
+    PartnerWithUs,
+    Careers,
+    RiderRegistration,
+    AddressPage
 }

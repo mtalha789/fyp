@@ -1,21 +1,25 @@
 import { DropdownMenu, DropdownItem, Table, TableBody, TableCell, TableHeader, TableRow, DropdownTrigger, Dropdown, TableColumn, Button } from "@nextui-org/react";
 import { MoreVertical, CheckCircle2, XCircle } from 'lucide-react';
 import { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
+import { useRestaurantSellerMenu } from "../../queries/queries";
+import { useAuthStore } from "../../store/Auth";
+import LoaderComponent from "../../components/Loader";
 
 export default function MenuPage() {
-  const [menu, setMenu] = useState([
-    {id: 1, name: 'Product 1', price: 10, isAvailableForPurchase: true},
-    {id: 2, name: 'Product 2', price: 20, isAvailableForPurchase: false},
-    {id: 3, name: 'Product 3', price: 30, isAvailableForPurchase: true},
-  ]);
+  const { id } = useParams();
+  const { accessToken } = useAuthStore();
+  const { data: menu, isLoading, isError, error } = useRestaurantSellerMenu(id, accessToken)
+  
+  if (isLoading) return <div className="h-screen"><LoaderComponent /></div>
+  if (isError) return <p>Error: {error.message}</p>
 
   return (
     <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
       <h1 className="text-3xl mb-4">Menu</h1>
       <div className="flex justify-between">
         <Button asChild variant="shadow" color="default">
-          <Link to="/corporate/menu/add-item" className="text-sm">Add New Item</Link>
+          <Link to={`/corporate/${id}/menu/add-item`} className="text-sm">Add New Item</Link>
         </Button>
       </div>
       <ProductTable className="mt-8" products={menu} />
@@ -70,7 +74,7 @@ function ProductTable({ products }) {
                     <Button onClick={() => console.log(`Toggle availability for ${product.id}`)}>Toggle Availability</Button>
                   </DropdownItem>
                   <DropdownItem asChild>
-                    <Link to={`/restaurant/edit-product/${product.id}`}>Edit</Link>
+                    <Link to={`/corporate/${product.restaurantId}/menu/${product.id}/edit`}>Edit</Link>
                   </DropdownItem>
                 </DropdownMenu>
               </Dropdown>

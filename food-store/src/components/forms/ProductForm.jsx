@@ -1,14 +1,18 @@
 import React from 'react'
 import { Input, Button, Dropdown, DropdownTrigger, DropdownMenu, DropdownItem } from '@nextui-org/react'
 import { productSchema } from '../../schemas/productSchema'
-import { useQuery } from '@tanstack/react-query'
 import useCategories from '../../queries/queries';
-import { Loader2 } from 'lucide-react';
+import LoaderComponent from '../Loader';
+import { addProduct as addProductMutation } from '../../queries/mutations';
+import { useAuthStore } from '../../store/Auth';
+import {Loader } from 'lucide-react'
 
-export default function ProductForm({ mutationFunction}) {
+export default function ProductForm() {
     const [loading, setLoading] = React.useState(false);
     const [error, setError] = React.useState(null);
     const { data: categories, isError, isLoading, error: fetchError } = useCategories()
+    const { mutate: addProduct, isLoading: addProductLoading, isError: isAddProductError, error: addProductError } = addProductMutation();
+    const { accessToken } = useAuthStore()
 
     const handleSubmit = async (e) => {
         e.preventDefault();
@@ -28,75 +32,88 @@ export default function ProductForm({ mutationFunction}) {
 
         setLoading(false);
         setError(null);
-        
+
         //send data to backend
-        mutationFunction.mutate(data);
+        addProduct(data, accessToken)
     }
 
     if (isLoading) {
-        return <Loader />
+        return <LoaderComponent />
     }
     if (isError) {
         return <p className="text-red-500">{fetchError.message}</p>
     }
-    
-    return (
-        <form onSubmit={handleSubmit}>
-            {error?.message && <p className="text-red-500">{error?.message}</p>}
-            {mutationFunction.isError && <p className="text-red-500">{JSON.stringify(mutationFunction.error)}</p>}
-            <div className="flex flex-col gap-2 container mx-auto max-w-[80%]">
-                <div className="space-y-2">
-                    <Input
-                        type="text"
-                        placeholder="name"
-                        name='name'
-                        label="Enter Product Name"
-                        className="border border-gray-300 rounded-md px-3 py-2"
-                    />
-                    {error?.fullname && <p className="text-red-500">{error?.fullname}</p>}
-                </div>
-                <div className="space-y-2">
-                    <Input
-                        type="number"
-                        placeholder="price"
-                        label="Enter Price"
-                        name='price'
-                        className="border border-gray-300 rounded-md px-3 py-2"
-                    />
-                    {error?.price && <p className="text-red-500">{error?.price}</p>}
-                </div>
-                <div className="space-y-2">
-                    <Dropdown>
-                        <DropdownTrigger>
-                            <Button color="secondary">Select Category</Button>
-                        </DropdownTrigger>
-                        <DropdownMenu>
-                            {categories.data.map((category) => (
-                                <DropdownItem key={category.id} value={category.id}>{category.name}</DropdownItem>
-                            ))}
-                        </DropdownMenu>
-                    </Dropdown>
-                </div>
-                <div className="space-y-2">
-                    <label htmlFor="productImage">Upload Product Image</label>
-                    <Input
-                        type="file"
-                        name='productImage'
-                        id='productImage'
-                        className="border border-gray-300 rounded-md px-3 py-2"
-                    />
 
-                    {error?.productImage && <p className="text-red-500">{error?.productImage}</p>}
-                </div>
+    return (
+        <div>
+            <h1>Edit Product Details</h1>
+            {error?.message && <p className="text-center text-red-500 mt-2">{error.message}</p>}
+            {isAddProductError && <p className="text-center text-red-500 mt-2">{JSON.stringify(addProductError)}</p>}
+
+            <form onSubmit={handleSubmit}>
+                <Input
+                    label="Product Name"
+                    type="text"
+                    id="name"
+                    name="name"
+                    errorMessage={error?.name}
+                    isInvalid={error?.name}
+                    required
+                    variant="bordered"
+                />
+                <Input
+                    label="Price"
+                    type="number"
+                    id="price"
+                    name="price"
+                    errorMessage={error?.price}
+                    isInvalid={error?.price}
+                    required
+                    variant="bordered"
+                />
+                <Textarea
+                    label="Product Description"
+                    id="description"
+                    name="description"
+                    errorMessage={error?.description}
+                    isInvalid={error?.description}
+                    required
+                    variant="bordered"
+                />
+                <Select
+                    label="Select Product Category"
+                    name="category_id"
+                    className="max-w-xs"
+                    errorMessage={error?.category_id}
+                    isInvalid={error?.category_id}
+                    required
+                >
+                    {categories?.data.map((category) => (
+                        <SelectItem value={category.id} key={category.id}>
+                            {category.name}
+                        </SelectItem>
+                    ))}
+                </Select>
+                <Input
+                    label="Upload Product Image"
+                    type="file"
+                    name="productImage"
+                    id="productImage"
+                    accept='image/*'
+                    errorMessage={error?.productImage}
+                    isInvalid={error?.productImage}
+                    required
+                    variant="bordered"
+                />
                 <Button
                     type="submit"
-                    className="bg-blue-500 w-[50%] mx-auto hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
-                    disabled={loading || mutationFunction.isLoading}
-                    variant='shadow'
+                    disabled={loading || addProductLoading}
+                    className="mt-4"
                 >
-                    {loading || mutationFunction.isLoading ? <Loader2 color='white' className='animate-spin' /> : 'Save'}
+                    {loading || addProductLoading ? <Loader color="white " /> : 'Save'}
                 </Button>
-            </div>
-        </form>
+            </form>
+        </div>
+
     )
 }

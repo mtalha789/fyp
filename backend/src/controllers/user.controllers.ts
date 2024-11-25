@@ -109,7 +109,7 @@ const loginUser = asyncHandler(async (req : Request, res : Response) => {
 
     const loggedInUser = await db.user.findFirst({
         where:{id:user.id},
-        select : { id : true , username : true , email : true , fullname : true , phone : true}
+        select : { id : true , username : true , email : true , fullname : true , phone : true, role : true, avatar : true, coverImage : true }
     });
 
     res
@@ -300,13 +300,14 @@ const getSellerRestaurants = asyncHandler(async (req, res) => {
     const restaurants = await db.restaurant.findMany({
         where : {owner_id : req.user?.id , deleted : false},
         select : {
-            id : true , name : true , phone : true ,address : true,  imageUrl : true,closed : true,minimumOrderPrice : true,corporateEmail : true
+            id : true , name : true , phone : true ,address : true,  imageUrl : true,closed : true,minimumOrderPrice : true,corporateEmail : true,approved : true
         }
     })
+    console.log('ok');
     
     res
     .status(200)
-    .json(new ApiResponse(200, restaurants, "Restaurants fetched successfully"))
+    .json(new ApiResponse(200, {restaurants}, "Restaurants fetched successfully"))
 })
 
 
@@ -320,4 +321,5 @@ export {
     updateCoverImage,
     getCurrentUser,
     changeCurrentPassword,
+    getSellerRestaurants
 };

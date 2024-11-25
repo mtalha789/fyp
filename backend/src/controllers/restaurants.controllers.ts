@@ -26,22 +26,24 @@ const createRestaurant = asyncHandler(async (req, res) => {
         throw new ApiError('Please provide valid minimum order price', 400)
     }
 
-    const owner = await db.user.update({
-        where: { id: req.user?.id as string },
-        data: {
-            role: 'Seller'
+    if(req.user?.role !== 'Seller'){
+        const owner = await db.user.update({
+            where: { id: req.user?.id as string },
+            data: {
+                role: 'Seller'
+            }
+        })
+    
+        if (owner == null) {
+            throw new ApiError('User does not exist', 400)
+            file?.path && await fs.unlink(file?.path as string)
         }
-    })
-
-    if (owner == null) {
-        throw new ApiError('User does not exist', 400)
-        file?.path && await fs.unlink(file?.path as string)
     }
     const restaurant = await db.restaurant.create({
         data: {
             name: name as string,
             phone: phone as string,
-            owner_id: owner.id,
+            owner_id: req.user?.id as string,
             corporateEmail: email as string,
             imageUrl,
             minimumOrderPrice,
@@ -297,6 +299,41 @@ const getRestaurantMenuItems = asyncHandler(async (req, res) => {
         .json(new ApiResponse(200, { restaurantMenu }, 'Fetched Menu Items Successfully'))
 })
 
+const getRestaurantMenu = asyncHandler(async (req, res) => {
+    const { id } = req.params
+    const restaurantMenu = await db.product.findMany({
+        where: {
+            deleted: false,
+            restaurant: {
+                deleted: false,
+                id: id as string,
+                approved: true,
+                owner_id: req.user?.id
+            }
+        },
+        select: {
+            id: true,
+            name: true,
+            price: true,
+            category: {
+                select: {
+                    id: true,
+                    name: true
+                }
+            },
+            description: true,
+            isAvailable: true,
+            reviews: {
+                select: {
+                    rating: true,
+                    createdAt: true
+                }
+            },
+            imagePath: true,
+        }
+    })
+})
+
 const updateProfileImage = asyncHandler(async (req, res) => {
     const file = req.file
     const id = req.params.id
@@ -444,15 +481,21 @@ const restaurantSalesReport = asyncHandler(async (req, res) => {
         where: {
             restaurantId: id,
             restaurant: {
-                owner_id: req.user?.id
+                owner_id: req.user?.id,
+                orders: {
+                    some: {status: 'DELIVERED'}
+                }
             }
         },
         _count: true,
+        _sum: {
+            amount: true
+        },
     })
 
     res
         .status(200)
-        .json(new ApiResponse(200, { totalOrders: orderStats._count }, 'Sales report fetched successfully'))
+        .json(new ApiResponse(200, { totalOrders: orderStats._count,totalAmount: orderStats._sum.amount }, 'Sales report fetched successfully'))
 })
 
 const getRestaurantOrders = asyncHandler(async (req, res) => {
@@ -503,5 +546,6 @@ export {
     addRestaurantAddress,
     restaurantSalesReport,
     getRestaurantOrders,
-    addTimeSlot
+    addTimeSlot,
+    getRestaurantMenu
 }

@@ -11,27 +11,37 @@ import { Link, useNavigate } from "react-router-dom";
 import { useAuthStore } from "../store/Auth";
 import { Cart } from "./index";
 import { Menu, X, } from "lucide-react";
+import { useRestaurantStore } from "../store/Restaurant";
+import toast, {Toaster} from "react-hot-toast";
 
 export default function MyNavbar() {
   const navigate = useNavigate();
   const { status: authStatus, logout, user } = useAuthStore();
+  const { resetAccount } = useRestaurantStore()
   const {isOpen, onOpen, onOpenChange}= useDisclosure()
 
-  const handleLogout = () => {
-    const response = logout();
+  const handleLogout = async () => {
+    const businessAcoount = user?.role?.toUpperCase() === "SELLER";
+    const response = await logout();
 
-    if (!response.success) {
-      alert("Error logging out...");
+    if (response.success === false) {
+      toast.error("Error logging out...");
       return;
     }
 
-    alert("Logged out successfully...");
+    if (businessAcoount) {
+      resetAccount();
+    }
+
+    navigate("/");
+    toast.success("Logged out successfully...");
   };
 
   const toggleMenu = () => onOpenChange(false);
 
   return (
     <Navbar isBordered className="flex items-center justify-evenly px-4 py-1">
+      {/* <Toaster /> */}
       {/* Brand Logo */}
       <NavbarBrand>
         <Link to="/">
@@ -45,7 +55,7 @@ export default function MyNavbar() {
       <NavbarContent className="hidden md:flex gap-8  md:items-center md justify-center">
         {user?.role?.toUpperCase() === "SELLER" ? (
           <NavbarItem isActive>
-            <Link className=" hover:text-gray-500" to="/partner-portal">
+            <Link className=" hover:text-gray-500" to="/business-portal">
               Go to Portal
             </Link>
           </NavbarItem>

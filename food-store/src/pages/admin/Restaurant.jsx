@@ -13,70 +13,33 @@ import {
 } from '@nextui-org/react';
 import { MoreVertical } from 'lucide-react';
 import { Link } from 'react-router-dom';
+import { useUnapprovedRestaurants } from '../../queries/queries';
+import { useAdminStore } from '../../store/Admin';
+import { approveRestaurant as approveRestaurantMutation, rejectRestaurant as rejectRestaurantMutation } from '../../queries/mutations'
 
 export default function Restaurant() {
-  const restaurants = [
-    {
-      id: '1',
-      name: 'Restaurant 1',
-      approved: false,
-      rejected: false,
-      imageUrl: 'https://example.com/image1.jpg',
-      corporateEmail: 'restaurant1@example.com',
-      phone: '1234567890',
-      minimumOrderPrice: 100,
-      owner_id: '1',
-      closed: false,
-      createdAt: new Date(),
-      updatedAt: new Date(),
-      deleted: false
-    },
-    {
-      id: '2',
-      name: 'Restaurant 2',
-      approved: true,
-      rejected: false,
-      imageUrl: 'https://example.com/image2.jpg',
-      corporateEmail: 'restaurant2@example.com',
-      phone: '0987654321',
-      minimumOrderPrice: 200,
-      owner_id: '2',
-      closed: false,
-      createdAt: new Date(),
-      updatedAt: new Date(),
-      deleted: false
-    },
-    {
-      id: '3',
-      name: 'Restaurant 3',
-      approved: false,
-      rejected: true,
-      imageUrl: 'https://example.com/image3.jpg',
-      corporateEmail: 'restaurant3@example.com',
-      phone: '5551234567',
-      minimumOrderPrice: 300,
-      owner_id: '3',
-      closed: false,
-      createdAt: new Date(),
-      updatedAt: new Date(),
-      deleted: false
-    }
-  ]
+  const { adminToken } = useAdminStore()
+  const { data: restaurants, isLoading, isError } = useUnapprovedRestaurants()
+  const { mutate: approveRestaurant, isLoading: approveRestaurantLoading, isError: approveRestaurantError } = approveRestaurantMutation()
+  const { mutate: rejectRestaurant, isLoading: rejectRestaurantLoading, isError: rejectRestaurantError } = rejectRestaurantMutation(adminToken)
+
   return (
     <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
       <div className="flex flex-col justify-between shadow-lg">
         <h2 className='p-2 text-2xl font-semibold'>Un Approved Restaurants</h2>
-        <RestaurantsTable restaurants={restaurants.filter(restaurant => !restaurant.approved)} />
+        <RestaurantsTable adminToken={adminToken} restaurants={restaurants.filter(restaurant => !restaurant.approved)} />
       </div>
-      <div className="flex flex-col justify-between shadow-lg mt-8">
+      {/* <div className="flex flex-col justify-between shadow-lg mt-8">
         <h1 className='p-2 text-2xl font-semibold'>Approved Restaurants</h1>
         <RestaurantsTable restaurants={restaurants.filter(restaurant => restaurant.approved)} />
-      </div>
+      </div> */}
     </div>
   )
 }
 
-const RestaurantsTable = ({ restaurants }) => {
+const RestaurantsTable = ({ restaurants, adminToken }) => {
+  const { mutate: approveRestaurant, isLoading: approveRestaurantLoading, isError: approveRestaurantError } = approveRestaurantMutation()
+  const { mutate: rejectRestaurant, isLoading: rejectRestaurantLoading, isError: rejectRestaurantError } = rejectRestaurantMutation(adminToken)
   if (restaurants.length === 0) {
     return <p className='mt-3 font-bold'>No unapproved restaurants</p>
   }
@@ -107,10 +70,11 @@ const RestaurantsTable = ({ restaurants }) => {
                   </div>
                 </DropdownTrigger>
                 <DropdownMenu>
-                  <DropdownItem>
-                    <Link to={`/admin/restaurants/${restaurant.id}/edit`}>
-                      Edit
-                    </Link>
+                  <DropdownItem >
+                    <Button onClick={()=> approveRestaurant(restaurant.id, adminToken)} disabled={approveRestaurantLoading || rejectRestaurantLoading}>Approve</Button>
+                  </DropdownItem>
+                  <DropdownItem onClick={()=> rejectRestaurant(restaurant.id, adminToken)} >
+                  <Button onClick={()=> rejectRestaurant(restaurant.id, adminToken)} disabled={rejectRestaurantLoading || approveRestaurantLoading}>Reject</Button>
                   </DropdownItem>
                 </DropdownMenu>
               </Dropdown>
