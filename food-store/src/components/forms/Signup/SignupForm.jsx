@@ -40,7 +40,7 @@ function SignupForm() {
 
         const response = await register(data);
 
-        if (response.error) {
+        if (!response.success) {
             setError(response.error);
             setLoading(false);
             return;

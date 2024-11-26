@@ -12,13 +12,13 @@ import { useAuthStore } from "../store/Auth";
 import { Cart } from "./index";
 import { Menu, X, } from "lucide-react";
 import { useRestaurantStore } from "../store/Restaurant";
-import toast, {Toaster} from "react-hot-toast";
+import toast, { Toaster } from "react-hot-toast";
 
 export default function MyNavbar() {
   const navigate = useNavigate();
   const { status: authStatus, logout, user } = useAuthStore();
   const { resetAccount } = useRestaurantStore()
-  const {isOpen, onOpen, onOpenChange}= useDisclosure()
+  const { isOpen, onOpen, onOpenChange } = useDisclosure()
 
   const handleLogout = async () => {
     const businessAcoount = user?.role?.toUpperCase() === "SELLER";
@@ -106,28 +106,38 @@ export default function MyNavbar() {
       </Button>
 
       {/* Mobile Menu Links */}
-      {isOpen &&(
+      {isOpen && (
 
-      <div
-        className={`md:hidden flex flex-col md:static space-y-4 md:justify-center md:content-center md:bg-black bg-white px-5 items-center  p-4 absolute top-16 left-0 w-full z-10  duration-500  ${
-          isOpen ? "block" : "hidden"
-        }`}
-      >
-        <Link
-          className="w-full  hover:text-gray-500"
-          to="/partner-with-us"
-          onClick={toggleMenu}
+        <div
+          className={`md:hidden flex flex-col md:static space-y-4 md:justify-center md:content-center md:bg-black bg-white px-5 items-center  p-4 absolute top-16 left-0 w-full z-10  duration-500  ${isOpen ? "block" : "hidden"
+            }`}
         >
-          Partner with us
-        </Link>
-        <Link
-          className="w-full  hover:text-gray-500"
-          to="/Careers"
-          onClick={toggleMenu}
-        >
-          Careers
-        </Link>
-      </div>
+          {
+            user?.role?.toUpperCase() !== "SELLER" ?
+              <Link
+                className="w-full  hover:text-gray-500"
+                to="/partner-with-us"
+                onClick={toggleMenu}
+              >
+                Partner with us
+              </Link>
+              :
+              <Link
+                className="w-full  hover:text-gray-500"
+                to="/business-portal"
+                onClick={toggleMenu}
+              >
+
+              </Link>
+          }
+          <Link
+            className="w-full  hover:text-gray-500"
+            to="/Careers"
+            onClick={toggleMenu}
+          >
+            Careers
+          </Link>
+        </div>
       )}
     </Navbar>
   );

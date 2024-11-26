@@ -19,7 +19,7 @@ export const useAuthStore = create(
               method: "POST",
             })
           ).json();
-          if (response?.data && response.data?.success === false) {
+          if (!response?.data || !response.data?.success) {
             throw new Error(response.message);
           }
 

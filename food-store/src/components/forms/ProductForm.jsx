@@ -80,7 +80,7 @@ export default function ProductForm() {
                     required
                     variant="bordered"
                 />
-                <Select
+                { Array.isArray(categories) && categories.length > 0 && <Select
                     label="Select Product Category"
                     name="category_id"
                     className="max-w-xs"
@@ -94,6 +94,9 @@ export default function ProductForm() {
                         </SelectItem>
                     ))}
                 </Select>
+                }
+                {Array.isArray(categories) && categories.length === 0 && <p>Add some categories</p>}
+                <Button >Add category</Button>
                 <Input
                     label="Upload Product Image"
                     type="file"
