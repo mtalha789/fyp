@@ -11,7 +11,9 @@ const authenticateAdmin = asyncHandler(async (req, res) => {
     if (username !== process.env.ADMIN_USERNAME || await comparePasswords(password, process.env.ADMIN_PASSWORD as string) === false) {
         throw new ApiError('Invalid credentials', 401)
     }
-    const adminToken = generateAdminToken(username)
+
+    const adminToken = await generateAdminToken(username)
+
     res
         .status(200)
         .json(new ApiResponse(200, { token: adminToken }, 'success'))
@@ -46,7 +48,7 @@ const approveRestaurant = asyncHandler(async (req, res) => {
 
     res
         .status(200)
-        .json(new ApiResponse(200, approvedRestaurant, 'Restaurant approved'))
+        .json(new ApiResponse(200, {approvedRestaurant}, 'Restaurant approved'))
 })
 
 const rejectRestaurant = asyncHandler(async (req, res) => {
@@ -73,7 +75,7 @@ const getUsers = asyncHandler(async (req, res) => {
 
     res
         .status(200)
-        .json(new ApiResponse(200, { users }, 'success'))
+        .json(new ApiResponse(200, { users, success: true }, 'success'))
 })
 
 const deleteUser = asyncHandler(async (req, res) => {
@@ -90,7 +92,7 @@ const deleteUser = asyncHandler(async (req, res) => {
 
     res
         .status(200)
-        .json(new ApiResponse(200, {}, 'User deleted'))
+        .json(new ApiResponse(200, {success: true}, 'User deleted'))
 })
 
 const getOrders = asyncHandler(async (req, res) => {
@@ -117,7 +119,7 @@ const getRiders = asyncHandler(async (req, res) => {
     })
     res
         .status(200)
-        .json(new ApiResponse(200, riders, "Riders fetched successfully"))
+        .json(new ApiResponse(200, { riders}, "Riders fetched successfully"))
 })
 
 export {

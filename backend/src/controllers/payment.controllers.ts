@@ -15,18 +15,18 @@ const createPayment = asyncHandler(async (req, res) => {
             amount: parseFloat(amount),
             orderId: orderId as string,
             paymentMethod: paymentMethod as string,
-            paymentStatus: 'success',
+            paymentStatus: 'SUCCEEDED',
             userId: req.user?.id as string
         }
     })
 
-    res.status(201).json(new ApiResponse(201, { payment }, 'Payment created successfully'))
+    res.status(201).json(new ApiResponse(201, { payment, success: true  }, 'Payment created successfully'))
 })
 
 const getPayments = asyncHandler(async (req, res) => {
     const payments = await db.payment.findMany()
 
-    res.status(200).json(new ApiResponse(200, { payments }, 'Payments retrieved successfully'))
+    res.status(200).json(new ApiResponse(200, { payments, success: true  }, 'Payments retrieved successfully'))
 })
 
 const getPaymentById = asyncHandler(async (req, res) => {
@@ -40,7 +40,7 @@ const getPaymentById = asyncHandler(async (req, res) => {
         throw new ApiError('Payment not found', 404)
     }
 
-    res.status(200).json(new ApiResponse(200, { payment }, 'Payment retrieved successfully'))
+    res.status(200).json(new ApiResponse(200, { payment, success: true  }, 'Payment retrieved successfully'))
 })
 
 const refundPayment = asyncHandler(async (req, res) => {
@@ -49,7 +49,7 @@ const refundPayment = asyncHandler(async (req, res) => {
             id: req.params.id
         },
         data: {
-            paymentStatus: 'refunded'
+            paymentStatus: 'REFUNDED'
         }
     })
 
@@ -57,7 +57,7 @@ const refundPayment = asyncHandler(async (req, res) => {
         throw new ApiError('Payment not found', 404)
     }
 
-    res.status(200).json(new ApiResponse(200, { refundedPayment }, 'Payment refunded successfully'))
+    res.status(200).json(new ApiResponse(200, { refundedPayment, success: true  }, 'Payment refunded successfully'))
 })
 
 const updatePayment = asyncHandler(async (req, res) => {
@@ -71,7 +71,7 @@ const updatePayment = asyncHandler(async (req, res) => {
         data: req.body
     })
 
-    res.status(200).json(new ApiResponse(200, { payment }, 'Payment updated successfully'))
+    res.status(200).json(new ApiResponse(200, { payment, success: true  }, 'Payment updated successfully'))
 })
 
 export {

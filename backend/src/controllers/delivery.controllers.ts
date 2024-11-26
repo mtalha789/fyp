@@ -17,7 +17,7 @@ const addDelivery = asyncHandler(async (req, res) => {
     })
     res
         .status(201)
-        .json(new ApiResponse(201, delivery, "Delivery created successfully"))
+        .json(new ApiResponse(201, {delivery, success: true }, "Delivery created successfully"))
 })
 
 const updateDeliveryStatus = asyncHandler(async (req, res) => {
@@ -37,7 +37,7 @@ const updateDeliveryStatus = asyncHandler(async (req, res) => {
     })
     res
         .status(201)
-        .json(new ApiResponse(201, delivery, "Delivery fulfilled successfully"))
+        .json(new ApiResponse(201, {delivery, success: true }, "Delivery fulfilled successfully"))
 })
 
 export {

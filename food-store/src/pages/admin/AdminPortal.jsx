@@ -3,16 +3,18 @@ import SideMenu from '../../components/SideMenu'
 import { Outlet, useNavigate } from 'react-router-dom'
 import LoaderComponent from '../../components/Loader'
 import { useAdminStore } from '../../store/Admin'
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
+import { RestaurantPortalLayout } from '../restaurant'
 
 const AdminPortal = () => {
-    const {adminStatus} = useAdminStore()
+    const { adminStatus } = useAdminStore()
     const [loader, setLoader] = React.useState(false)
     const navigate = useNavigate()
-    
+
     const navList = [
         { name: 'Dashboard', path: '/admin' },
         { name: 'Riders', path: '/admin/riders' },
-        { name: 'Products', path: '/admin/products' },
+        // { name: 'Products', path: '/admin/products' },
         { name: 'Customers', path: '/admin/customers' },
         { name: 'Restaurants', path: '/admin/restaurants' }
     ]
@@ -20,9 +22,10 @@ const AdminPortal = () => {
     React.useEffect(() => {
         if (!adminStatus) {
             navigate('/admin-auth')
+            setLoader(false)
         }
         else {
-            setLoader(true)
+            setLoader(false)
         }
     }, [adminStatus])
     return (
@@ -35,7 +38,11 @@ const AdminPortal = () => {
                         <SideMenu textColor={'text-emerald-300'} bgColor={'blue-500'} navList={navList} />
                     </div>
                     <div className="w-full md:w-5/6  md:mt-0 mt-3">
-                        <Outlet />
+
+                        <QueryClientProvider client={new QueryClient()}>
+                            <Outlet />
+                        </QueryClientProvider>
+
                     </div>
                 </div>
             }

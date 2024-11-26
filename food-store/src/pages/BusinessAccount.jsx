@@ -12,7 +12,7 @@ const BusinessPartner = () => {
     const [ actionLoading, setActionLoading ] = useState(false);
     const navigate = useNavigate();
     const { accessToken } = useAuthStore();
-    const { restaurants, deleteRestaurant } = useRestaurantStore();
+    const { restaurants, deleteRestaurant, getRestaurants } = useRestaurantStore();
     
 
     const handleAddRestaurant = () => navigate('/business/register');

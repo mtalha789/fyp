@@ -27,7 +27,7 @@ const getAllOrders = asyncHandler(async (req, res) => {
 
     res
         .status(200)
-        .json(new ApiResponse(200, orders, "Orders fetched successfully"))
+        .json(new ApiResponse(200, {orders, success: true }, "Orders fetched successfully"))
 })
 
 const createOrder = asyncHandler(async (req, res) => {
@@ -114,7 +114,7 @@ const createOrder = asyncHandler(async (req, res) => {
 
     res
         .status(201)
-        .json(new ApiResponse(201, newOrder, "Order created successfully"))
+        .json(new ApiResponse(201, {newOrder, success: true }, "Order created successfully"))
 })
 
 const getOrderById = asyncHandler(async (req, res) => {
@@ -128,7 +128,7 @@ const getOrderById = asyncHandler(async (req, res) => {
     }
     res
         .status(200)
-        .json(new ApiResponse(200, order, "Order fetched successfully"))
+        .json(new ApiResponse(200, {order, success: true }, "Order fetched successfully"))
 })
 
 const updateOrderStatus = asyncHandler(async (req, res) => {
@@ -148,7 +148,7 @@ const updateOrderStatus = asyncHandler(async (req, res) => {
     }
     res
         .status(200)
-        .json(new ApiResponse(200, order, "Order updated successfully"))
+        .json(new ApiResponse(200, {order, success: true }, "Order updated successfully"))
 })
 
 const deleteOrder = asyncHandler(async (req, res) => {
@@ -162,7 +162,7 @@ const deleteOrder = asyncHandler(async (req, res) => {
     }
     res
         .status(200)
-        .json(new ApiResponse(200, order, "Order deleted successfully"))
+        .json(new ApiResponse(200, {order, success: true }, "Order deleted successfully"))
 })
 
 const getAllRestaurantOrders = asyncHandler(async (req, res) => {
@@ -190,7 +190,7 @@ const getAllRestaurantOrders = asyncHandler(async (req, res) => {
 
     res
         .status(200)
-        .json(new ApiResponse(200, restaurantOrders, "Orders fetched successfully"))
+        .json(new ApiResponse(200, {restaurantOrders, success: true }, "Orders fetched successfully"))
 
 })
 
@@ -257,7 +257,7 @@ const editOrder = asyncHandler(async (req, res) => {
     // Update the parent Order status based on subOrders' new states
     await updateParentOrderStatus(order.orderId);
 
-    return res.status(200).json({ message: 'Order updated', editedOrder });
+    return res.status(200).json(new ApiResponse(200, { editedOrder, success: true }, 'Order edited successfully'));
 });
 
 // Function to cancel an order
@@ -279,7 +279,7 @@ const cancelOrder = asyncHandler(async (req, res) => {
     // Update the parent Order status based on subOrders' new states
     await updateParentOrderStatus(order.orderId);
 
-    return res.status(200).json({ message: 'Order canceled', canceledOrder });
+    return res.status(200).json(new ApiResponse(200, { canceledOrder, success: true }, 'Order canceled successfully'));
 });
 
 const orderPayment = asyncHandler(async (req, res) => {
@@ -314,7 +314,7 @@ const orderPayment = asyncHandler(async (req, res) => {
 
         res
             .status(200)
-            .json(new ApiResponse(200, { clientSecret: paymentIntent.client_secret}, "Order payment intent created successfully"))
+            .json(new ApiResponse(200, { clientSecret: paymentIntent.client_secret, success: true}, "Order payment intent created successfully"))
     }
     else if(paymentMethod?.toLowerCase() === 'cod') {
         const payment = await db.payment.create({
@@ -329,7 +329,7 @@ const orderPayment = asyncHandler(async (req, res) => {
 
         res
             .status(200)
-            .json(new ApiResponse(200, {}, "Order payment intent created successfully"))
+            .json(new ApiResponse(200, {success: true }, "Order payment intent created successfully"))
     }
 })  
 

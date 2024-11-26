@@ -76,7 +76,7 @@ const router = createBrowserRouter([
         element: <>
         <Hero/>
         <BrandContainer/>
-        <BusinessPartner />
+        {/* <BusinessPartner /> */}
         <ProductCard />
         </>,
       },
@@ -220,7 +220,7 @@ const router = createBrowserRouter([
         element: <Restaurants />,
       },
       {
-        path: "/admin/rider",
+        path: "/admin/riders",
         element: <Riders />,
       },
     ]
@@ -229,9 +229,7 @@ const router = createBrowserRouter([
 ]);
 
 ReactDOM.createRoot(document.getElementById("root")).render(
-  <React.StrictMode>
     <NextUIProvider>
       <RouterProvider  router={router} />
     </NextUIProvider>
-  </React.StrictMode>
 );

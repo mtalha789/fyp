@@ -41,7 +41,7 @@ export default function MyNavbar() {
 
   return (
     <Navbar isBordered className="flex items-center justify-evenly px-4 py-1">
-      {/* <Toaster /> */}
+      <Toaster />
       {/* Brand Logo */}
       <NavbarBrand>
         <Link to="/">

@@ -1,20 +1,26 @@
 import React from "react";
 import { useAdminStore } from "../../store/Admin"
 import { useOrders } from '../../queries/queries'
+import LoaderComponent from "../../components/Loader";
+import { updateProduct } from "../../queries/mutations";
+import { Card, CardBody, CardHeader, TableBody, TableCell, TableColumn, TableHeader } from "@nextui-org/react";
+import { Table } from "lucide-react";
 
 export default function Dashboard() {
   const { adminToken } = useAdminStore()
   const { data: orders, isLoading, isError, error } = useOrders(adminToken);
 
+  const { mutate: updateOrder, isLoading: updateIsLoading, isError: updateIsError, error: updateError } = updateProduct();
+
   const [lastMonthSales, setlastMonthSales] = React.useState(null);
   const [thisMonthSales, setthisMonthSales] = React.useState(null);
  
   const setLastMonthSales = () => {
-    if (orders.length === 0) {
+    if (orders == null || Array.isArray(orders) && orders.length === 0) {
       return;
     }
 
-    const lastMonthOrders = orders.filter((order) => {
+    const lastMonthOrders = Array.isArray(orders) && orders.filter((order) => {
       const orderDate = new Date(order.createdAt);
       const lastMonth = new Date();
       lastMonth.setMonth(lastMonth.getMonth() - 1);
@@ -22,25 +28,25 @@ export default function Dashboard() {
     });
 
     setlastMonthSales({
-      amount: lastMonthOrders.length === 0 ? 0 : lastMonthOrders.reduce((total, order) => total + order.amount, 0),
-      orders: lastMonthOrders.length,
+      amount: lastMonthOrders == null && Array.isArray(lastMonthOrders) && lastMonthOrders.length === 0 ? 0 : Array.isArray(lastMonthOrders) && lastMonthOrders.reduce((total, order) => total + order.amount, 0),
+      orders: lastMonthOrders == null && Array.isArray(lastMonthOrders) && lastMonthOrders.length,
     });
   }
 
   const setThisMonthSales = () => {
-    if (orders.length === 0) {
+    if (Array.isArray(orders) && orders.length === 0) {
       return;
     }
 
-    const thisMonthOrders = orders.filter((order) => {
+    const thisMonthOrders = Array.isArray(orders) && orders.filter((order) => {
       const orderDate = new Date(order.createdAt);
       const thisMonth = new Date();
       return orderDate >= thisMonth;
     });
 
     setthisMonthSales({
-      amount: thisMonthOrders.length === 0 ? 0 : thisMonthOrders.reduce((total, order) => total + order.amount, 0),
-      orders: thisMonthOrders.length,
+      amount: Array.isArray(thisMonthOrders) && thisMonthOrders.length === 0 ? 0 : Array.isArray(thisMonthOrders) && thisMonthOrders.reduce((total, order) => total + order.amount, 0),
+      orders:  Array.isArray(thisMonthOrders) && thisMonthOrders.length,
     });
   }
 
@@ -56,7 +62,9 @@ export default function Dashboard() {
   if (updateIsError) return <p>Error: {updateError.message}</p>
 
   return (
+  
     <div className="flex flex-col">
+  { console.log(orders) }
       <h1 className="text-3xl font-bold mb-4">Sales</h1>
       <Card className="w-full">
         <CardHeader>
@@ -96,7 +104,7 @@ export default function Dashboard() {
               <TableColumn>Amount</TableColumn>
             </TableHeader>
             <TableBody>
-              {orders.map((order) => (
+              {Array.isArray(orders) && orders.map((order) => (
                 <TableRow key={order.id}>
                   <TableCell className="text-left">{order.order.user.name}</TableCell>
                   <TableCell className="text-left">

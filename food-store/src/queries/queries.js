@@ -101,8 +101,11 @@ export const useMenuItem = (id) => {
 export const useUser = (adminToken) => {
     return useQuery({
         queryKey: ['users'],
-        queryFn: () => {
-        return fetch(`${import.meta.env.VITE_API_URL}/admin/user`,{headers: {'Authorization': `Bearer ${adminToken}`} }).then(response => response.json())
+        queryFn: async () => {
+        const res= await ( (await fetch(`${import.meta.env.VITE_API_URL}/admin/users`,{headers: {'AdminAuthorization': `Bearer ${adminToken}`} }))).json()
+        console.log('res',res);
+        
+            return res.data.users
         }
     })
 }
@@ -110,8 +113,15 @@ export const useUser = (adminToken) => {
 export const useUnapprovedRestaurants = (adminToken) => {
     return useQuery({
         queryKey: ['unapproved-restaurants'],
-        queryFn: () => {
-        return fetch(`${import.meta.env.VITE_API_URL}/admin/unapproved-restaurants`,{headers: {'Authorization': `Bearer ${adminToken}`} }).then(response => response.json())
+        queryFn: async () => {
+            const response = await fetch(`${import.meta.env.VITE_API_URL}/admin/restaurants/unapproved`, {
+                headers: { 'AdminAuthorization': `Bearer ${adminToken}` },
+            });
+            const result = await response.json();
+
+            console.log('ress',result);
+                          
+            return result.data.unApprovedRestaurants;
         }
     })
 }
@@ -119,19 +129,39 @@ export const useUnapprovedRestaurants = (adminToken) => {
 export const useRiders = (adminToken) => {
     return useQuery({
         queryKey: ['riders'],
-        queryFn: () => {
-        return fetch(`${import.meta.env.VITE_API_URL}/riders`,{headers: {'Authorization': `Bearer ${adminToken}`} }).then(response => response.json())
+        queryFn: async () => {
+            const response = await fetch(`${import.meta.env.VITE_API_URL}/admin/riders`, {
+                headers: { 'AdminAuthorization': `Bearer ${adminToken}` },
+            });
+            const result = await response.json();
+            
+            return result.data.riders;
         }
     })
 }
 
+// export const useOrders = (adminToken) => {
+//     return useQuery({
+//         queryKey: ['orders'],
+//         queryFn: () => {
+//         return fetch(`${import.meta.env.VITE_API_URL}/admin/orders`,{headers: {'AdminAuthorization': `Bearer ${adminToken}`} }).then(response =>response.json())
+//         }
+//     })
+// }
+
 export const useOrders = (adminToken) => {
     return useQuery({
         queryKey: ['orders'],
-        queryFn: () => {
-        return fetch(`${import.meta.env.VITE_API_URL}/orders`,{headers: {'Authorization': `Bearer ${adminToken}`} }).then(response => response.json())
-        }
-    })
-}
+        queryFn: async () => {
+            const response = await fetch(`${import.meta.env.VITE_API_URL}/admin/orders`, {
+                headers: { 'AdminAuthorization': `Bearer ${adminToken}` },
+            });
+            const result = await response.json();
+            
+            return result.data.orders;
+        }        
+    });
+};
+
 
 export default useCategories

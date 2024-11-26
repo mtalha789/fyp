@@ -57,7 +57,7 @@ const createRestaurant = asyncHandler(async (req, res) => {
 
     res
         .status(200)
-        .json(new ApiResponse(200, { restaurant }, 'Created Restaurant Successfully'))
+        .json(new ApiResponse(200, { restaurant, success: true  }, 'Created Restaurant Successfully'))
 })
 
 const addTimeSlot = asyncHandler(async (req, res) => {
@@ -87,7 +87,7 @@ const addTimeSlot = asyncHandler(async (req, res) => {
     }
     res
         .status(200)
-        .json(new ApiResponse(200, { timeSlot }, 'Created Time Slot Successfully'))
+        .json(new ApiResponse(200, { timeSlot,success: true  }, 'Created Time Slot Successfully'))
 })
 
 const getAllRestaurants = asyncHandler(async (req, res) => {
@@ -125,7 +125,7 @@ const getAllRestaurants = asyncHandler(async (req, res) => {
     }
     res
         .status(200)
-        .json(new ApiResponse(200, { restaurants }, 'Fetched Restaurants Successfully'))
+        .json(new ApiResponse(200, { restaurants, success: true  }, 'Fetched Restaurants Successfully'))
 })
 
 const getRestaurantById = asyncHandler(async (req, res) => {
@@ -175,7 +175,7 @@ const getRestaurantById = asyncHandler(async (req, res) => {
     }
     res
         .status(200)
-        .json(new ApiResponse(200, { restaurant }, 'Fetched Restaurant Successfully'))
+        .json(new ApiResponse(200, { restaurant, success: true  }, 'Fetched Restaurant Successfully'))
 })
 
 const updateRestaurant = asyncHandler(async (req, res) => {
@@ -194,7 +194,7 @@ const updateRestaurant = asyncHandler(async (req, res) => {
     }
     res
         .status(200)
-        .json(new ApiResponse(200, { updatedRestaurant }, 'Updated Restaurant Successfully'))
+        .json(new ApiResponse(200, { updatedRestaurant, success: true  }, 'Updated Restaurant Successfully'))
 })
 
 const deleteRestaurant = asyncHandler(async (req, res) => {
@@ -211,7 +211,7 @@ const deleteRestaurant = asyncHandler(async (req, res) => {
     }
     res
         .status(200)
-        .json(new ApiResponse(200, {}, 'Deleted Restaurant Successfully'))
+        .json(new ApiResponse(200, {success: true }, 'Deleted Restaurant Successfully'))
 })
 
 const addRestaurantMenuItem = asyncHandler(async (req, res) => {
@@ -262,7 +262,7 @@ const addRestaurantMenuItem = asyncHandler(async (req, res) => {
     }
     res
         .status(200)
-        .json(new ApiResponse(200, { newMenuItem }, 'Created Menu Item Successfully'))
+        .json(new ApiResponse(200, { newMenuItem, success: true  }, 'Created Menu Item Successfully'))
 })
 
 const getRestaurantMenuItems = asyncHandler(async (req, res) => {
@@ -296,7 +296,7 @@ const getRestaurantMenuItems = asyncHandler(async (req, res) => {
     }
     res
         .status(200)
-        .json(new ApiResponse(200, { restaurantMenu }, 'Fetched Menu Items Successfully'))
+        .json(new ApiResponse(200, { restaurantMenu, success: true  }, 'Fetched Menu Items Successfully'))
 })
 
 const getRestaurantMenu = asyncHandler(async (req, res) => {
@@ -371,14 +371,13 @@ const updateProfileImage = asyncHandler(async (req, res) => {
     })
     res
         .status(200)
-        .json(new ApiResponse(200, { updatedRestaurant, imageUrl }, 'Profile Image Updated Successfully'))
+        .json(new ApiResponse(200, { updatedRestaurant, imageUrl, success: true  }, 'Profile Image Updated Successfully'))
 })
 
 
 const getRestaurantReviews = asyncHandler(async (req, res) => {
     const restaurantId = req.params.id
 
-    console.log(restaurantId);
 
     if (restaurantId == null) {
         throw new ApiError('Restaurant id is required', 400)
@@ -387,7 +386,6 @@ const getRestaurantReviews = asyncHandler(async (req, res) => {
     const restaurantReviews = await db.review.findMany({
         where: { restaurantId, deleted: false, restaurant: { deleted: false, approved: true } },
     })
-    console.log(restaurantReviews);
 
 
     if (restaurantReviews == null) {
@@ -400,7 +398,7 @@ const getRestaurantReviews = asyncHandler(async (req, res) => {
 
     res
         .status(200)
-        .json(new ApiResponse(200, { totalRating, restaurantReviews }, 'Reviews fetched successfully'))
+        .json(new ApiResponse(200, { totalRating, restaurantReviews, success: true  }, 'Reviews fetched successfully'))
 })
 
 const addRestaurantReview = asyncHandler(async (req, res) => {
@@ -435,7 +433,7 @@ const addRestaurantReview = asyncHandler(async (req, res) => {
     })
     res
         .status(200)
-        .json(new ApiResponse(200, { newReview }, 'Review added successfully'))
+        .json(new ApiResponse(200, { newReview, success: true  }, 'Review added successfully'))
 })
 
 const addRestaurantAddress = asyncHandler(async (req, res) => {
@@ -471,7 +469,7 @@ const addRestaurantAddress = asyncHandler(async (req, res) => {
     }
     res
         .status(200)
-        .json(new ApiResponse(200, { updatedRestaurant }, 'Updated Restaurant Successfully'))
+        .json(new ApiResponse(200, { updatedRestaurant, success: true  }, 'Updated Restaurant Successfully'))
 })
 
 const restaurantSalesReport = asyncHandler(async (req, res) => {
@@ -495,7 +493,7 @@ const restaurantSalesReport = asyncHandler(async (req, res) => {
 
     res
         .status(200)
-        .json(new ApiResponse(200, { totalOrders: orderStats._count,totalAmount: orderStats._sum.amount }, 'Sales report fetched successfully'))
+        .json(new ApiResponse(200, { totalOrders: orderStats._count,totalAmount: orderStats._sum.amount, success: true  }, 'Sales report fetched successfully'))
 })
 
 const getRestaurantOrders = asyncHandler(async (req, res) => {
@@ -530,7 +528,7 @@ const getRestaurantOrders = asyncHandler(async (req, res) => {
 
     res
         .status(200)
-        .json(new ApiResponse(200, { orders }, 'Orders fetched successfully'))
+        .json(new ApiResponse(200, { orders, success: true  }, 'Orders fetched successfully'))
 })
 export {
     createRestaurant,

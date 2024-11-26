@@ -7,15 +7,15 @@ export const useCartStore = create(
         immer((set) => ({
             cart: [],
             hydrated: false,
-            setHydrated: () => set({hydrated: true}),
-            addCart: (productId, quantity) => set({cart: [...cart, {productId, quantity}]}),
-            removeCart: (productId) => set({cart: cart.filter((item) => item.productId !== productId)}),
-            clearCart: () => set({cart: []}),
+            setHydrated: () => set({ hydrated: true }),
+            addCart: (productId, quantity) => set({ cart: [...cart, { productId, quantity }] }),
+            removeCart: (productId) => set({ cart: cart.filter((item) => item.productId !== productId) }),
+            clearCart: () => set({ cart: [] }),
         })),
         {
             name: "cart",
-            onRehydrateStorage: () => (state,error) => {
-                if(!error) state.setHydrated();
+            onRehydrateStorage: () => (state, error) => {
+                if (!error) state.setHydrated();
             }
         }
     )

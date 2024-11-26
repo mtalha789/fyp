@@ -23,7 +23,7 @@ const getAllProducts = asyncHandler(async (req, res) => {
 
     res
         .status(200)
-        .json(new ApiResponse(200, products ,"Products retrieved successfully"));
+        .json(new ApiResponse(200, {products, success: true } ,"Products retrieved successfully"));
 })
 
 const getProductById = asyncHandler(async (req, res) => {
@@ -54,7 +54,7 @@ const getProductById = asyncHandler(async (req, res) => {
     }
     res
     .status(200)
-    .json(new ApiResponse(200, {product}, "Product retrieved successfully"));
+    .json(new ApiResponse(200, {product, success: true }, "Product retrieved successfully"));
 })
 
 
@@ -95,7 +95,7 @@ const updateProduct = asyncHandler(async (req, res) => {
     
     res
         .status(200)
-        .json(new ApiResponse(200, updatedProduct, "Product updated successfully"));
+        .json(new ApiResponse(200, {updatedProduct, success: true }, "Product updated successfully"));
 })
 
 const deleteProduct = asyncHandler(async (req, res) => {
@@ -114,7 +114,7 @@ const deleteProduct = asyncHandler(async (req, res) => {
     }
     res
         .status(200)
-        .json(new ApiResponse(200, deletedProduct, "Product deleted successfully"));
+        .json(new ApiResponse(200, {deletedProduct, success: true }, "Product deleted successfully"));
 })
 
 const toggleProductUnavailability = asyncHandler(async (req, res) => {
@@ -151,7 +151,7 @@ const toggleProductUnavailability = asyncHandler(async (req, res) => {
     }
     res
         .status(200)
-        .json(new ApiResponse(200, unavailableProduct, product.isAvailable?"Product set unavailable successfully":'Product set available successfully'));
+        .json(new ApiResponse(200, {unavailableProduct, success: true }, product.isAvailable?"Product set unavailable successfully":'Product set available successfully'));
 })
 
 const updateProductImage = asyncHandler(async (req, res) => {
@@ -190,7 +190,7 @@ const updateProductImage = asyncHandler(async (req, res) => {
 
     res
         .status(200)
-        .json(new ApiResponse(200, updatedProduct, "Product image updated successfully"));
+        .json(new ApiResponse(200, {updatedProduct, success: true }, "Product image updated successfully"));
 })
 
 
@@ -211,7 +211,7 @@ const getProductReviews = asyncHandler(async (req,res)=>{
 
     res
         .status(200)
-        .json(new ApiResponse(200,{productReviews},'Reviews fetched successfully'))
+        .json(new ApiResponse(200,{productReviews, success: true },'Reviews fetched successfully'))
 })
 const addProductReview = asyncHandler(async (req,res)=>{
     const { id : productId } = req.params
@@ -246,7 +246,7 @@ const addProductReview = asyncHandler(async (req,res)=>{
 
     res
         .status(200)
-        .json(new ApiResponse(200,{newReview },'Review added successfully'))
+        .json(new ApiResponse(200,{newReview, success: true  },'Review added successfully'))
 })
 export {
     getAllProducts,

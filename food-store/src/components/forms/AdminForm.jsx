@@ -1,6 +1,8 @@
 import React from 'react'
 import { useAdminStore } from '../../store/Admin';
 import { useNavigate } from 'react-router-dom';
+import { Input, Button } from '@nextui-org/react';
+import { adminSchema } from '../../schemas/adminSchema';
 
 export default function AdminForm() {
     const [error, setError] = React.useState(null);
@@ -16,7 +18,7 @@ export default function AdminForm() {
         const data = new FormData(e.target);
 
         //validation
-        const result = signupSchema.safeParse(Object.fromEntries(data.entries()));
+        const result = adminSchema.safeParse(Object.fromEntries(data.entries()));
         if(!result.success) {
             setError(result.error.formErrors.fieldErrors);
             setLoading(false);
@@ -24,7 +26,7 @@ export default function AdminForm() {
             return;
         }
 
-        const response = await authenticateAdmin(data);
+        const response = await authenticateAdmin(data.get('username'), data.get('password'));
 
         if(response.error) {
             setError(response.error);

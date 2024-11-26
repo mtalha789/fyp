@@ -116,11 +116,13 @@ export const deleteUserAccount = () => {
         onSuccess: () => queryClient.invalidateQueries(['users'])
     })
 }
-export const approveRestaurant = () => {
+export const approveRestaurant = (adminToken) => {
     return useMutation({
-        mutationFn: (id, adminToken) => {
+        mutationFn: (id ) => {
+            console.log(id, adminToken);
+            
             return fetch(`${import.meta.env.VITE_API_URL}/admin/restaurant/${id}/approve`, {
-                headers: { 'Authorization': `Bearer ${adminToken}` },
+                headers: { 'AdminAuthorization': `Bearer ${adminToken}` },
                 method: 'PUT'
             }).then(response => response.json())
         },
@@ -132,8 +134,10 @@ export const approveRestaurant = () => {
 export const rejectRestaurant = () => {
     return useMutation({
         mutationFn: (id, adminToken) => {
+            console.log(id, adminToken);
+            
             return fetch(`${import.meta.env.VITE_API_URL}/admin/restaurant/${id}/reject`, {
-                headers: { 'Authorization': `Bearer ${adminToken}` },
+                headers: { 'AdminAuthorization': `Bearer ${adminToken}` },
                 method: 'PUT'
             }).then(response => response.json())
         },

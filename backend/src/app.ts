@@ -14,6 +14,7 @@ import productReviewRouter from './routes/productReview.router'
 import deliveryRouter from './routes/delivery.routes';
 import riderRouter from './routes/rider.routes';
 import paymentRouter from './routes/payment.routes';
+import adminRouter from './routes/admin.routes';
 
 const app = express()
 
@@ -39,6 +40,7 @@ app.use('/api/productreviews',productReviewRouter)
 app.use('/api/deliveries',deliveryRouter)
 app.use('/api/riders',riderRouter)
 app.use('/api/payments',paymentRouter)
+app.use('/api/admin',adminRouter)
 app.use('/api/test',(req,res)=>{
     res.send('test')
 })
