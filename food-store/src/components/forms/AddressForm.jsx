@@ -43,7 +43,7 @@ export default function RestaurantAddressForm({ setFormState, formState, resId }
 
   return (
     <form
-      className="flex flex-col gap-y-4 justify-center items-center mx-auto w-[90%]"
+      className="flex flex-col gap-y-4 h-screen justify-center items-center mx-auto w-[90%]"
       onSubmit={handleSubmit}
     >
       <h1 className="text-3xl font-semibold">Enter Restaurant Address</h1>
@@ -95,7 +95,7 @@ export default function RestaurantAddressForm({ setFormState, formState, resId }
 
       <Button
         variant="flat"
-        className='bg-black text-white '
+        className='bg-black w-[23rem] text-white '
         type="submit"
         disabled={loading}
       >
