@@ -16,7 +16,7 @@ const authenticateAdmin = asyncHandler(async (req, res) => {
 
     res
         .status(200)
-        .json(new ApiResponse(200, { token: adminToken }, 'success'))
+        .json(new ApiResponse(200, { token: adminToken, success: true }, 'success'))
         .cookie('adminToken', adminToken, {
             httpOnly: true,
             secure: true,
