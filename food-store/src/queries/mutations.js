@@ -87,6 +87,28 @@ export const updateProductImage = (id) => {
     })
 }
 
+export const addCategory = () => {
+    return useMutation({
+        mutationFn: (categoryData, accessToken) => {
+            fetch(`${import.meta.env.VITE_API_URL}/categories`, {
+                method: 'POST',
+                body: JSON.stringify(categoryData),
+                headers: {
+                    'Authorization': `Bearer ${accessToken}`
+                }
+            })
+                .then((res) => res.json()).then(res => {
+                    console.log('res',res);
+                    
+                    return res.success
+                    
+                })
+        },
+        mutationKey: ['menu'],
+        onSuccess: () => queryClient.invalidateQueries(['menu']),
+    })
+}
+
 export const updateOrder = (restaurantId) => {
     return useMutation({
         mutationFn: (id, orderStatus, accessToken) => {
@@ -116,11 +138,13 @@ export const deleteUserAccount = () => {
         onSuccess: () => queryClient.invalidateQueries(['users'])
     })
 }
-export const approveRestaurant = () => {
+export const approveRestaurant = (adminToken) => {
     return useMutation({
-        mutationFn: (id, adminToken) => {
+        mutationFn: (id ) => {
+            console.log(id, adminToken);
+            
             return fetch(`${import.meta.env.VITE_API_URL}/admin/restaurant/${id}/approve`, {
-                headers: { 'Authorization': `Bearer ${adminToken}` },
+                headers: { 'AdminAuthorization': `Bearer ${adminToken}` },
                 method: 'PUT'
             }).then(response => response.json())
         },
@@ -132,8 +156,10 @@ export const approveRestaurant = () => {
 export const rejectRestaurant = () => {
     return useMutation({
         mutationFn: (id, adminToken) => {
+            console.log(id, adminToken);
+            
             return fetch(`${import.meta.env.VITE_API_URL}/admin/restaurant/${id}/reject`, {
-                headers: { 'Authorization': `Bearer ${adminToken}` },
+                headers: { 'AdminAuthorization': `Bearer ${adminToken}` },
                 method: 'PUT'
             }).then(response => response.json())
         },

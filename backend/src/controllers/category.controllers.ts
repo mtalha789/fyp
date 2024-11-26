@@ -13,11 +13,13 @@ const getAllCategories = asyncHandler( async (req,res) => {
 
     res
         .status(200)
-        .json(new ApiResponse(200,categories,'categories retrieved successfully'))
+        .json(new ApiResponse(200,{categories, success: true},'categories retrieved successfully'))
 })
 
 const createCategory = asyncHandler( async (req,res) => {
     const { name } = req.body
+    console.log(name);
+    
 
     if (name == null) {
         throw new ApiError("Please provide category name",400)
@@ -32,7 +34,7 @@ const createCategory = asyncHandler( async (req,res) => {
 
     res
         .status(201)
-        .json(new ApiResponse(200,category,'category created successfully'))
+        .json(new ApiResponse(200,{category, success: true},'category created successfully'))
 })
 
 const getProductsByCategory = asyncHandler( async (req,res) => {
@@ -48,7 +50,7 @@ const getProductsByCategory = asyncHandler( async (req,res) => {
 
     res
         .status(200)
-        .json(new ApiResponse(200,products,'products retrieved successfully'))
+        .json(new ApiResponse(200,{products, success: true},'products retrieved successfully'))
 })
 
 export { 

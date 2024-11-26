@@ -79,7 +79,7 @@ const registerUser = asyncHandler(async(req : Request,res : Response)=>{
         throw new ApiError('Error creating user' , 400)
     }
 
-    return res.status(201).json(new ApiResponse(201 , {user : newUser} ,'User created successfully' ))
+    return res.status(201).json(new ApiResponse(201 , {user : newUser, success : true} ,'User created successfully' ))
 })
 
 const loginUser = asyncHandler(async (req : Request, res : Response) => {
@@ -119,7 +119,7 @@ const loginUser = asyncHandler(async (req : Request, res : Response) => {
         .json(
             new ApiResponse(
                 200,
-                { user: loggedInUser, refreshToken, accessToken},
+                { user: loggedInUser, refreshToken, accessToken, success: true },
                 "User Logged In Successfully"
             )
         )
@@ -143,7 +143,7 @@ const logoutUser = asyncHandler(async (req, res) => {
         .json(
             new ApiResponse(
                 200,
-                {},
+                {success: true },
                 "Logged out successfully"
             )
         )
@@ -177,7 +177,7 @@ const refereshAccessToken = asyncHandler(async (req, res) => {
         .json(
             new ApiResponse(
                 200,
-                { refreshToken },
+                { refreshToken, success: true },
                 "Refreshed Access Token Successfully"
             )
         )
@@ -190,7 +190,8 @@ const getCurrentUser = asyncHandler(async (req, res) => {
         new ApiResponse(
             200,
             {
-                user: req.user
+                user: req.user,
+                success: true 
             },
             "current user fetched"
         )
@@ -218,7 +219,7 @@ const changeCurrentPassword = asyncHandler(async (req, res) => {
         .json(
             new ApiResponse(
                 200,
-                {},
+                {success: true },
                 "password changed successfully"
             )
         )
@@ -247,7 +248,7 @@ const updateAvatar = asyncHandler(async (req, res) => {
         }
     })
 
-    res.status(200).json(new ApiResponse(200, updatedUser, "Avatar updated successfully"));
+    res.status(200).json(new ApiResponse(200, {updatedUser,success: true }, "Avatar updated successfully"));
 });
 
 const updateCoverImage = asyncHandler(async (req, res) => {
@@ -276,7 +277,7 @@ const updateCoverImage = asyncHandler(async (req, res) => {
         select : { id : true , username : true , email : true , fullname : true , phone : true , avatar : true , coverImage : true}
     })
 
-    res.status(200).json(new ApiResponse(200, user, "Cover image updated successfully"));
+    res.status(200).json(new ApiResponse(200, {user,success: true }, "Cover image updated successfully"));
 });
 
 const updateAccountDetails = asyncHandler(async (req, res) => {
@@ -293,7 +294,7 @@ const updateAccountDetails = asyncHandler(async (req, res) => {
 
     res
         .status(200)
-        .json(new ApiResponse(200, user, "Account details updated successfully"))
+        .json(new ApiResponse(200, {user, success: true }, "Account details updated successfully"))
 });
 
 const getSellerRestaurants = asyncHandler(async (req, res) => {
@@ -302,12 +303,11 @@ const getSellerRestaurants = asyncHandler(async (req, res) => {
         select : {
             id : true , name : true , phone : true ,address : true,  imageUrl : true,closed : true,minimumOrderPrice : true,corporateEmail : true,approved : true
         }
-    })
-    console.log('ok');
+    });
     
     res
     .status(200)
-    .json(new ApiResponse(200, {restaurants}, "Restaurants fetched successfully"))
+    .json(new ApiResponse(200, {restaurants, success: true }, "Restaurants fetched successfully"))
 })
 
 

@@ -23,7 +23,7 @@ const addRider = asyncHandler(async (req, res) => {
 
     res
         .status(201)
-        .json(new ApiResponse(201, rider, "Rider added successfully"))
+        .json(new ApiResponse(201, {rider, success: true }, "Rider added successfully"))
 })
 
 const applyAsRider = asyncHandler(async (req, res) => {
@@ -55,7 +55,7 @@ const applyAsRider = asyncHandler(async (req, res) => {
 
     res
         .status(201)
-        .json(new ApiResponse(201, updatedUser, "Rider applied successfully"))
+        .json(new ApiResponse(201, {updatedUser, success: true }, "Rider applied successfully"))
 })
 
 const assignArea = asyncHandler(async (req, res) => {
@@ -83,12 +83,12 @@ const getRiders = asyncHandler(async (req, res) => {
         where: {
             role: 'Rider',
             addresses: {some : {state: state as string, city: city as string}},
-            riderVehicle: {contains: riderVehicle as string} || riderVehicle as string
+            // riderVehicle: {contains: riderVehicle as string} || riderVehicle as string
         }
     })
     res
         .status(200)
-        .json(new ApiResponse(200, riders, "Riders fetched successfully"))
+        .json(new ApiResponse(200, {riders, success: true }, "Riders fetched successfully"))
 })
 
 const getRiderStats = asyncHandler(async (req, res) => {
@@ -113,7 +113,7 @@ const getRiderStats = asyncHandler(async (req, res) => {
     }
     res
         .status(200)
-        .json(new ApiResponse(200, riders, "Riders fetched successfully"))
+        .json(new ApiResponse(200, {riders, success: true }, "Riders fetched successfully"))
 })
 
 export {

@@ -1,12 +1,13 @@
 import { DropdownMenu, DropdownItem, Table, TableBody, TableCell, TableHeader, TableRow, DropdownTrigger, Dropdown, TableColumn, Button } from "@nextui-org/react";
 import { MoreVertical, CheckCircle2, XCircle } from 'lucide-react';
 import { useState } from "react";
-import { Link, useParams } from "react-router-dom";
+import { Link, useNavigate, useParams } from "react-router-dom";
 import { useRestaurantSellerMenu } from "../../queries/queries";
 import { useAuthStore } from "../../store/Auth";
 import LoaderComponent from "../../components/Loader";
 
 export default function MenuPage() {
+  const navigate = useNavigate();
   const { id } = useParams();
   const { accessToken } = useAuthStore();
   const { data: menu, isLoading, isError, error } = useRestaurantSellerMenu(id, accessToken)
@@ -16,13 +17,14 @@ export default function MenuPage() {
 
   return (
     <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-      <h1 className="text-3xl mb-4">Menu</h1>
       <div className="flex justify-between">
-        <Button asChild variant="shadow" color="default">
-          <Link to={`/corporate/${id}/menu/add-item`} className="text-sm">Add New Item</Link>
+        <h1 className="text-3xl mb-4">Menu</h1>
+        <Button asChild variant="shadow" color="default" onClick={() => {navigate(`/corporate/${id}/menu/add-item`)}}>
+          Add New Item
         </Button>
       </div>
-      <ProductTable className="mt-8" products={menu} />
+      {
+        menu && Array.isArray(menu) && menu.length > 0  ? <ProductTable className="mt-8" products={menu} /> : <p>No Item</p> }
     </div>
   );
 }

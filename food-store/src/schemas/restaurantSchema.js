@@ -12,5 +12,5 @@ export const restaurantAddressSchema = z.object({
     city: z.string().min(3,'City must be at least 3 characters').max(20,'City must be at most 20 characters'),
     state: z.string().min(3,'State must be at least 3 characters').max(20,'State must be at most 20 characters'),
     zipCode: z.string().min(3,'Zip Code must be at least 3 characters').max(20,'Zip Code must be at most 20 characters'),
-    street: z.string().min(3,'Street must be at least 3 characters').max(20,'Street must be at most 20 characters'),
+    street: z.string().min(3,'Street must be at least 3 characters').max(100,'Street must be at most 100 characters'),
 })

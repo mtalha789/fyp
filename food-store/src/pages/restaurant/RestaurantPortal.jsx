@@ -1,4 +1,4 @@
-import { Link, useNavigate, Outlet, NavLink } from 'react-router-dom'
+import { Link, useNavigate, Outlet, NavLink, useParams } from 'react-router-dom'
 import React from 'react'
 import { useRestaurantStore } from '../../store/Restaurant'
 import SideMenu from '../../components/SideMenu'
@@ -16,25 +16,26 @@ export default function RestaurantPortal() {
 }
 
 export const RestaurantPortalLayout = ({ children, restaurantStatus = true }) => {
+    const {id}= useParams()
     const status = true
     const [loader, setLoader] = React.useState(true)
     const navigate = useNavigate()
     const  navList = [
         {
             name: 'Dashboard',
-            path: '/corporate'
+            path: '/corporate/'+id
         },
         {
             name: 'Orders',
-            path: '/corporate/orders'
+            path: '/corporate/'+id+'/orders'
         },
         {
             name: 'Sales',
-            path: '/corporate/sales'
+            path: '/corporate/'+id+'/sales'
         },
         {
             name: 'Menu',
-            path: '/corporate/menu'
+            path: '/corporate/'+id+'/menu'
         }
     ]
 

@@ -26,7 +26,7 @@ export const generateAccessToken = async function(userId :string,email : string)
 }
 
 export const generateAdminToken = async function(username : string){
-    return jwt.sign(
+    return await jwt.sign(
         {
             username: username
         },

@@ -3,8 +3,12 @@ import { useQuery } from "@tanstack/react-query"
 export const useCategories = () => {  
     return useQuery({
         queryKey:['categories'],
-        queryFn: () => {
-        return fetch(`${import.meta.env.VITE_API_URL}/categories`).then(response => response.json())
+        queryFn:  () => {
+        const response = fetch(`${import.meta.env.VITE_API_URL}/categories`).then(response => response.json()).then(res => {
+            console.log('res',res.data.categories);
+            
+            return res.data.categories
+        })
         }
     })
 }
@@ -34,11 +38,14 @@ export const useRestaurant = (id) => {
         }
     })
 }
-export const useRestaurantMenu = (id) => {
+export const useRestaurantMenu =(id) => {
     return useQuery({
-        queryKey: ['restaurant-menu', id],
-        queryFn: () => {
-            return fetch(`${import.meta.env.VITE_API_URL}/restaurants/${id}/menu`).then(res => res.json())
+        queryKey: ['restaurant-menu'],
+        queryFn: async () => {
+            const response = await( fetch(`${import.meta.env.VITE_API_URL}/restaurants/${id}/menu`).then(res => res.json()))
+            console.log('ress',response);
+            
+            return response.data.restaurantMenu
         }
     })
 }
@@ -46,8 +53,11 @@ export const useRestaurantMenu = (id) => {
 export const useRestaurantSellerMenu = (id, accessToken) => {
     return useQuery({
         queryKey: ['restaurant-seller-menu', id],
-        queryFn: () => {
-            return fetch(`${import.meta.env.VITE_API_URL}/restaurants/${id}/seller-menu`,{headers: {'Authorization': `Bearer ${accessToken}`}}).then(res => res.json())
+        queryFn: async() => {
+            const response = await (await fetch(`${import.meta.env.VITE_API_URL}/restaurants/${id}/seller-menu`,{headers: {'Authorization': `Bearer ${accessToken}`}})).json()
+            console.log('ress',response);
+            
+            return response.data.restaurantMenu
         }
     })
 }
@@ -62,10 +72,14 @@ export const useRestaurantReviews = (id) => {
 export const useRestaurantSalesReport = (id, accessToken) => {
     return useQuery({
         queryKey: ['restaurant-sales', id],
-        queryFn: () => {
-            return fetch(`${import.meta.env.VITE_API_URL}/restaurants/${id}/sales`,{
+        queryFn: async() => {
+            const response =  await (await fetch(`${import.meta.env.VITE_API_URL}/restaurants/${id}/sales`,{
                 headers: {'Authorization': `Bearer ${accessToken}`}
-            }).then(res => res.json())
+            })).json()
+
+            if(response?.data && response.data?.success){
+                return response.data
+            }
         }
     })
 }
@@ -73,8 +87,9 @@ export const useRestaurantSalesReport = (id, accessToken) => {
 export const useRestaurantOrders = (id, accessToken) => {
     return useQuery({
         queryKey: ['restaurant-orders', id],
-        queryFn: () => {
-            return fetch(`${import.meta.env.VITE_API_URL}/restaurants/${id}/orders`,{headers: {'Authorization': `Bearer ${accessToken}`} }).then(res => res.json())
+        queryFn: async () => {
+            const response =  await (await fetch(`${import.meta.env.VITE_API_URL}/restaurants/${id}/orders`,{headers: {'Authorization': `Bearer ${accessToken}`} })).json()
+            return response.data.orders
         }
     })
 }
@@ -101,8 +116,11 @@ export const useMenuItem = (id) => {
 export const useUser = (adminToken) => {
     return useQuery({
         queryKey: ['users'],
-        queryFn: () => {
-        return fetch(`${import.meta.env.VITE_API_URL}/admin/user`,{headers: {'Authorization': `Bearer ${adminToken}`} }).then(response => response.json())
+        queryFn: async () => {
+        const res= await ( (await fetch(`${import.meta.env.VITE_API_URL}/admin/users`,{headers: {'AdminAuthorization': `Bearer ${adminToken}`} }))).json()
+        console.log('res',res);
+        
+            return res.data.users
         }
     })
 }
@@ -110,8 +128,15 @@ export const useUser = (adminToken) => {
 export const useUnapprovedRestaurants = (adminToken) => {
     return useQuery({
         queryKey: ['unapproved-restaurants'],
-        queryFn: () => {
-        return fetch(`${import.meta.env.VITE_API_URL}/admin/unapproved-restaurants`,{headers: {'Authorization': `Bearer ${adminToken}`} }).then(response => response.json())
+        queryFn: async () => {
+            const response = await fetch(`${import.meta.env.VITE_API_URL}/admin/restaurants/unapproved`, {
+                headers: { 'AdminAuthorization': `Bearer ${adminToken}` },
+            });
+            const result = await response.json();
+
+            console.log('ress',result);
+                          
+            return result.data.unApprovedRestaurants;
         }
     })
 }
@@ -119,19 +144,39 @@ export const useUnapprovedRestaurants = (adminToken) => {
 export const useRiders = (adminToken) => {
     return useQuery({
         queryKey: ['riders'],
-        queryFn: () => {
-        return fetch(`${import.meta.env.VITE_API_URL}/riders`,{headers: {'Authorization': `Bearer ${adminToken}`} }).then(response => response.json())
+        queryFn: async () => {
+            const response = await fetch(`${import.meta.env.VITE_API_URL}/admin/riders`, {
+                headers: { 'AdminAuthorization': `Bearer ${adminToken}` },
+            });
+            const result = await response.json();
+            
+            return result.data.riders;
         }
     })
 }
 
+// export const useOrders = (adminToken) => {
+//     return useQuery({
+//         queryKey: ['orders'],
+//         queryFn: () => {
+//         return fetch(`${import.meta.env.VITE_API_URL}/admin/orders`,{headers: {'AdminAuthorization': `Bearer ${adminToken}`} }).then(response =>response.json())
+//         }
+//     })
+// }
+
 export const useOrders = (adminToken) => {
     return useQuery({
         queryKey: ['orders'],
-        queryFn: () => {
-        return fetch(`${import.meta.env.VITE_API_URL}/orders`,{headers: {'Authorization': `Bearer ${adminToken}`} }).then(response => response.json())
-        }
-    })
-}
+        queryFn: async () => {
+            const response = await fetch(`${import.meta.env.VITE_API_URL}/admin/orders`, {
+                headers: { 'AdminAuthorization': `Bearer ${adminToken}` },
+            });
+            const result = await response.json();
+            
+            return result.data.orders;
+        }        
+    });
+};
+
 
 export default useCategories

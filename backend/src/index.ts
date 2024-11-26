@@ -8,7 +8,7 @@ const server = createServer(app)
 
 const io = new Server(server,{
     cors : {
-        origin : 'http://localhost:3000',
+        origin : 'http://localhost:5713',
         credentials : true,
     }
 })
@@ -16,9 +16,9 @@ const io = new Server(server,{
 app.set('io',io)
 // io.use(verifyUser)
 initializeSocketIo(io)
-// server.listen(process.env.PORT || 3001, '0.0.0.0', () => {
-//     console.log(`Server started on port ${process.env.PORT || 3001}`)
-// })
-app.listen( 3001, '0.0.0.0', () => {
-    console.log(`Server started on port ${process.env.PORT || 3001}`)
+server.listen(process.env.PORT || 3000, () => {
+    console.log(`Server started on port ${process.env.PORT || 3000}`)
 })
+// app.listen( 3000, '0.0.0.0', () => {
+//     console.log(`Server started on port ${process.env.PORT || 3000}`)
+// })

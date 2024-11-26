@@ -9,8 +9,9 @@ function PartnerWithUs() {
 
   return (
     <div>
-      <section className="bg-gray-100 py-16 bg-hero-pattern bg-cover relative overflow-hidden h-[50vh]">
+      <section className="bg-gray-100 py-16 bg-hero-pattern bg-cover relative overflow-hidden h-[65vh]">
       <div className="absolute inset-0 bg-black opacity-40"></div>
+      <div className="relative z-10 text-white px-4 md:px-8">
 
         <div className="container mx-auto flex flex-col items-center text-center px-4">
           <h2 className="text-4xl font-bold mb-4 text-white">
@@ -30,11 +31,13 @@ function PartnerWithUs() {
             <SignupForm />
           </div> */}
         </div>
+        </div>
       </section>
       <WhyJoin />
 
       <Features />
       <StepSection />
+      
     </div>
   );
 }

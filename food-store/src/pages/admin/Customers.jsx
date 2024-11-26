@@ -6,6 +6,7 @@ import { useAdminStore } from '../../store/Admin'
 import { useUser } from '../../queries/queries'
 import { deleteUserAccount as deleteUserAccountMutation } from '../../queries/mutations'
 import { Toaster, toast } from 'react-hot-toast'
+import LoaderComponent from '../../components/Loader'
 export default function Customers() {
 
   const { adminToken } = useAdminStore();
@@ -14,7 +15,7 @@ export default function Customers() {
 
   if (isLoading) return <div className="h-screen"><LoaderComponent /></div>
   if (isError) return <p>Error: {error.message}</p>
-  if (!users || users.length === 0) return <div>No customers</div>
+  // if (!users || users.length === 0) return <div>No customers</div>
   return (
     <div>
       <h1>Customers</h1>
@@ -32,9 +33,9 @@ export default function Customers() {
           {
             users.map((user) => (
               <TableRow key={user.id}>
-                <TableCell>{user.name}</TableCell>
+                <TableCell>{user.fullname}</TableCell>
                 <TableCell>{user.email}</TableCell>
-                <TableCell>{user.orders?.lenght}</TableCell>
+                <TableCell>{user.orders?.length}</TableCell>
                 <TableCell>
                   <Dropdown>
                     <DropdownTrigger>

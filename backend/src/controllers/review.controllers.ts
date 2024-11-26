@@ -16,7 +16,7 @@ const getReviewById = asyncHandler(async (req,res)=>{
 
     res
         .status(200)
-        .json(new ApiResponse(200,{restaurantReview},'Reviews fetched successfully'))
+        .json(new ApiResponse(200,{restaurantReview, success: true },'Reviews fetched successfully'))
 })
 const updateReview = asyncHandler(async (req,res)=>{
     const { id } = req.params
@@ -46,7 +46,7 @@ const updateReview = asyncHandler(async (req,res)=>{
 
     res
         .status(200)
-        .json(new ApiResponse(200,{review },'Review updated successfully'))
+        .json(new ApiResponse(200,{review, success: true  },'Review updated successfully'))
 })
 
 const deleteReview = asyncHandler(async (req,res)=>{
@@ -64,7 +64,7 @@ const deleteReview = asyncHandler(async (req,res)=>{
 
     res
         .status(200)
-        .json(new ApiResponse(200,{review },'Review deleted successfully'))
+        .json(new ApiResponse(200,{review, success: true  },'Review deleted successfully'))
 })
 export {
     getReviewById,

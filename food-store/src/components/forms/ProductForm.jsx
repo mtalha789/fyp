@@ -1,5 +1,5 @@
 import React from 'react'
-import { Input, Button, Dropdown, DropdownTrigger, DropdownMenu, DropdownItem } from '@nextui-org/react'
+import { Input, Button, Dropdown, DropdownTrigger, DropdownMenu, DropdownItem, Textarea, Select, SelectItem } from '@nextui-org/react'
 import { productSchema } from '../../schemas/productSchema'
 import useCategories from '../../queries/queries';
 import LoaderComponent from '../Loader';
@@ -88,7 +88,7 @@ export default function ProductForm() {
                     isInvalid={error?.category_id}
                     required
                 >
-                    {categories?.data.map((category) => (
+                    {categories?.map((category) => (
                         <SelectItem value={category.id} key={category.id}>
                             {category.name}
                         </SelectItem>
