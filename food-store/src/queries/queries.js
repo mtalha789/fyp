@@ -3,8 +3,12 @@ import { useQuery } from "@tanstack/react-query"
 export const useCategories = () => {  
     return useQuery({
         queryKey:['categories'],
-        queryFn: () => {
-        return fetch(`${import.meta.env.VITE_API_URL}/categories`).then(response => response.json())
+        queryFn:  () => {
+        const response = fetch(`${import.meta.env.VITE_API_URL}/categories`).then(response => response.json()).then(res => {
+            console.log('res',res.data.categories);
+            
+            return res.data.categories
+        })
         }
     })
 }
@@ -34,11 +38,14 @@ export const useRestaurant = (id) => {
         }
     })
 }
-export const useRestaurantMenu = (id) => {
+export const useRestaurantMenu =(id) => {
     return useQuery({
-        queryKey: ['restaurant-menu', id],
-        queryFn: () => {
-            return fetch(`${import.meta.env.VITE_API_URL}/restaurants/${id}/menu`).then(res => res.json())
+        queryKey: ['restaurant-menu'],
+        queryFn: async () => {
+            const response = await( fetch(`${import.meta.env.VITE_API_URL}/restaurants/${id}/menu`).then(res => res.json()))
+            console.log('ress',response);
+            
+            return response.data.restaurantMenu
         }
     })
 }
@@ -46,8 +53,11 @@ export const useRestaurantMenu = (id) => {
 export const useRestaurantSellerMenu = (id, accessToken) => {
     return useQuery({
         queryKey: ['restaurant-seller-menu', id],
-        queryFn: () => {
-            return fetch(`${import.meta.env.VITE_API_URL}/restaurants/${id}/seller-menu`,{headers: {'Authorization': `Bearer ${accessToken}`}}).then(res => res.json())
+        queryFn: async() => {
+            const response = await (await fetch(`${import.meta.env.VITE_API_URL}/restaurants/${id}/seller-menu`,{headers: {'Authorization': `Bearer ${accessToken}`}})).json()
+            console.log('ress',response);
+            
+            return response.data.restaurantMenu
         }
     })
 }
@@ -62,10 +72,14 @@ export const useRestaurantReviews = (id) => {
 export const useRestaurantSalesReport = (id, accessToken) => {
     return useQuery({
         queryKey: ['restaurant-sales', id],
-        queryFn: () => {
-            return fetch(`${import.meta.env.VITE_API_URL}/restaurants/${id}/sales`,{
+        queryFn: async() => {
+            const response =  await (await fetch(`${import.meta.env.VITE_API_URL}/restaurants/${id}/sales`,{
                 headers: {'Authorization': `Bearer ${accessToken}`}
-            }).then(res => res.json())
+            })).json()
+
+            if(response?.data && response.data?.success){
+                return response.data
+            }
         }
     })
 }
@@ -73,8 +87,9 @@ export const useRestaurantSalesReport = (id, accessToken) => {
 export const useRestaurantOrders = (id, accessToken) => {
     return useQuery({
         queryKey: ['restaurant-orders', id],
-        queryFn: () => {
-            return fetch(`${import.meta.env.VITE_API_URL}/restaurants/${id}/orders`,{headers: {'Authorization': `Bearer ${accessToken}`} }).then(res => res.json())
+        queryFn: async () => {
+            const response =  await (await fetch(`${import.meta.env.VITE_API_URL}/restaurants/${id}/orders`,{headers: {'Authorization': `Bearer ${accessToken}`} })).json()
+            return response.data.orders
         }
     })
 }

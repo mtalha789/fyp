@@ -15,7 +15,7 @@ import {
 } from "@nextui-org/react";
 import { useParams } from 'react-router-dom';
 import { useAuthStore } from '../../store/Auth';
-import { useRestaurantOrders } from '../../queries/queries';
+import { useRestaurantOrders, useRestaurantSalesReport } from '../../queries/queries';
 import LoaderComponent from '../../components/Loader';
 
 const Sales = () => {
@@ -113,10 +113,11 @@ const Sales = () => {
   // ]);
 
   const setLastMonthSales = () => {
-    if (orders.length === 0) {
+    if (Array.isArray(orders) && orders.length === 0) {
       return;
     }
 
+    console.log('orders', orders);
     const lastMonthOrders = orders.filter((order) => {
       const orderDate = new Date(order.createdAt);
       const lastMonth = new Date();
@@ -148,26 +149,26 @@ const Sales = () => {
   }
 
   React.useEffect(() => {
+    if (isLoading || salesLoading) return
     setLastMonthSales();
     setThisMonthSales();
-  }, [orders]);
+  }, [orders, isLoading, salesLoading]);
 
-  if(isLoading || updateIsLoading) return <LoaderComponent />
+  if (isLoading || salesLoading) return <LoaderComponent />
 
-  if(isError) return <p>Error: {error.message}</p>
+  if (isError) return <p>Error: {error.message}</p>
 
-  if(updateIsError) return <p>Error: {updateError.message}</p>
+  if (salesIsError) return <p>Error: {salesError.message}</p>
 
   return (
     <div className="flex flex-col">
       <h1 className="text-3xl font-bold mb-4">Sales</h1>
       <Card className="w-full">
-        <CardHeader>
-          <h1 className="font-bold text-3xl">Sales</h1>
+        <CardBody className="flex flex-col m-4">
           <div>
 
-          <h3 className="font-bold text-xl">Total Orders: ${sales?.totalOrders}</h3>
-          <h3 className="font-bold text-xl">Total Amount: ${sales?.totalAmount}</h3>
+            <h3 className="font-bold text-xl">Total Orders: ${sales?.totalOrders}</h3>
+            <h3 className="font-bold text-xl">Total Amount: ${sales?.totalAmount}</h3>
           </div>
           <div className="">
             <div>
@@ -194,9 +195,7 @@ const Sales = () => {
               }
             </div>
           </div>
-        </CardHeader>
-        <CardBody>
-          <Table>
+          {/* <Table>
             <TableHeader>
               <TableColumn>Name</TableColumn>
               <TableColumn>Date</TableColumn>
@@ -213,15 +212,8 @@ const Sales = () => {
                 </TableRow>
               ))}
             </TableBody>
-          </Table>
+          </Table> */}
         </CardBody>
-        <CardFooter>
-          <div className="flex justify-end">
-            <Button color="success" variant='flat' auto>
-              Download
-            </Button>
-          </div>
-        </CardFooter>
       </Card>
     </div>
   );

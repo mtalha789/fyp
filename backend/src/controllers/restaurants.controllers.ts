@@ -291,9 +291,7 @@ const getRestaurantMenuItems = asyncHandler(async (req, res) => {
             imagePath: true,
         }
     })
-    if (restaurantMenu == null || restaurantMenu.length == 0) {
-        throw new ApiError('Restaurant menu not found', 404)
-    }
+    
     res
         .status(200)
         .json(new ApiResponse(200, { restaurantMenu, success: true  }, 'Fetched Menu Items Successfully'))
@@ -332,6 +330,10 @@ const getRestaurantMenu = asyncHandler(async (req, res) => {
             imagePath: true,
         }
     })
+
+    res
+        .status(200)
+        .json(new ApiResponse(200, { restaurantMenu, success: true  }, 'Fetched Menu Successfully'))
 })
 
 const updateProfileImage = asyncHandler(async (req, res) => {
@@ -493,7 +495,7 @@ const restaurantSalesReport = asyncHandler(async (req, res) => {
 
     res
         .status(200)
-        .json(new ApiResponse(200, { totalOrders: orderStats._count,totalAmount: orderStats._sum.amount, success: true  }, 'Sales report fetched successfully'))
+        .json(new ApiResponse(200, { totalOrders: orderStats._count,totalAmount: orderStats._sum.amount? orderStats._sum.amount : 0, success: true  }, 'Sales report fetched successfully'))
 })
 
 const getRestaurantOrders = asyncHandler(async (req, res) => {
@@ -514,11 +516,14 @@ const getRestaurantOrders = asyncHandler(async (req, res) => {
             order: {
                 select: {
                     id: true,
-                    orderStatus: true
+                    orderStatus: true,
+                    user: {
+                        select: {
+                            fullname: true,
+                            email: true
+                        }
+                    }
                 },
-                include: {
-                    user: true,
-                }
             }
         },
         orderBy: {

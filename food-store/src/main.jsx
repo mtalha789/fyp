@@ -175,12 +175,12 @@ const router = createBrowserRouter([
     ]
   },
   {
-    path: "/corporate",
+    path: "/corporate/:id",
     element: <RestaurantPortal />,
     children: [
       {
         path: "/corporate/:id",
-        element: <SalesPage />,
+        element: <Dashboard />,
       },
       {
         path: "/corporate/:id/menu",
@@ -199,7 +199,7 @@ const router = createBrowserRouter([
         element: <SalesPage />,
       },
       {
-        path: "/corporate/:restaurantId/menu/:id/edit",
+        // path: "/corporate/:restaurantId/menu/:id/edit",
       }
     ]
   },

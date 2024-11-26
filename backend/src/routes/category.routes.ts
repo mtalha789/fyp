@@ -8,7 +8,7 @@ const router = Router();
 router
     .route("/")
     .get(getAllCategories)
-    .post(verifyUser,createCategory)
+    .post(createCategory)
 
 router
     .route("/:id/products")

@@ -18,6 +18,8 @@ const getAllCategories = asyncHandler( async (req,res) => {
 
 const createCategory = asyncHandler( async (req,res) => {
     const { name } = req.body
+    console.log(name);
+    
 
     if (name == null) {
         throw new ApiError("Please provide category name",400)
