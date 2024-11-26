@@ -87,6 +87,28 @@ export const updateProductImage = (id) => {
     })
 }
 
+export const addCategory = () => {
+    return useMutation({
+        mutationFn: (categoryData, accessToken) => {
+            fetch(`${import.meta.env.VITE_API_URL}/categories`, {
+                method: 'POST',
+                body: JSON.stringify(categoryData),
+                headers: {
+                    'Authorization': `Bearer ${accessToken}`
+                }
+            })
+                .then((res) => res.json()).then(res => {
+                    console.log('res',res);
+                    
+                    return res.success
+                    
+                })
+        },
+        mutationKey: ['menu'],
+        onSuccess: () => queryClient.invalidateQueries(['menu']),
+    })
+}
+
 export const updateOrder = (restaurantId) => {
     return useMutation({
         mutationFn: (id, orderStatus, accessToken) => {
