@@ -3,7 +3,7 @@ import {
   Button,
   Input,
 } from "@nextui-org/react";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useNavigate, useLocation } from "react-router-dom";
 
 import { useAuthStore } from "../../store/Auth";
 import { loginSchema } from "../../schemas/signupSchema";
@@ -21,6 +21,11 @@ export default function LoginForm() {
     const { getUserRestaurants } = useRestaurantStore();
 
     const toggleVisibility = () => setIsVisible(!isVisible);
+    const {pathName}= useLocation
+
+    React.useEffect(()=>{
+        window.scrollTo(0,0)
+      },[pathName])
 
     const handleSubmit = async (e) => {
         e.preventDefault();
