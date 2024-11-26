@@ -29,10 +29,10 @@ export default function Restaurant() {
   if(isLoading) return <div className="h-screen"><LoaderComponent /></div>
   if(isError) return <p>Error: {error.message}</p>
   return (
-    <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+    <div className="w-full mx-auto  sm:px-6 lg:px-8 py-4">
       
-      <div className="flex flex-col justify-between shadow-lg">
-        <h2 className='p-2 text-2xl font-semibold'>Un Approved Restaurants</h2>
+      <div className="flex flex-col justify-between shadow-lg ">
+        <h2 className='p-2 text-3xl font-bold'>Un Approved Restaurants</h2>
         <Toaster position="top-center" reverseOrder={false} />
         
         <RestaurantsTable adminToken={adminToken} restaurants={restaurants.filter(restaurant => !restaurant.approved)} />
@@ -49,7 +49,12 @@ const RestaurantsTable = ({ restaurants, adminToken }) => {
   const { mutate: approveRestaurant, isSuccess : isApproveRestaurantSuccess , isLoading: approveRestaurantLoading, isError: approveRestaurantError } = approveRestaurantMutation(adminToken)
   const { mutate: rejectRestaurant, isSuccess : isRejectRestaurantSuccess, isLoading: rejectRestaurantLoading, isError: rejectRestaurantError } = rejectRestaurantMutation()
   if (restaurants.length === 0) {
-    return <p className='mt-3 font-bold'>No unapproved restaurants</p>
+    return<>
+    <div className='m-4'>
+    <p className='mt-3 text-lg font-bold'>No unapproved restaurants</p>
+    </div>
+
+    </> 
   }
   return (
     <Table>

@@ -56,9 +56,9 @@ export default function RestaurantForm({ setFormState }) {
         label="Enter Restaurant Name"
         isInvalid={error?.name}
         errorMessage={error?.name}
-        color='primary'
-        variant='underlined'
-        className="border border-gray-300 max-w-sm sm:min-w-lg rounded-md px-3 py-2"
+
+        variant='flat'
+        className=" max-w-sm sm:min-w-lg rounded-md px-3 py-2"
       />
       <Input
         type="email"
@@ -67,9 +67,9 @@ export default function RestaurantForm({ setFormState }) {
         errorMessage={error?.email}
         isRequired
         name='email'
-        color='primary'
-        variant='underlined'
-        className="border border-gray-300 max-w-sm sm:min-w-lg rounded-md px-3 py-2"
+
+        variant='flat'
+        className=" max-w-sm sm:min-w-lg rounded-md px-3 py-2"
       />
       <Input
         type="number"
@@ -78,9 +78,9 @@ export default function RestaurantForm({ setFormState }) {
         errorMessage={error?.minOrderPrice}
         isRequired
         name='minOrderPrice'
-        color='primary'
-        variant='underlined'
-        className="border border-gray-300 max-w-sm sm:min-w-lg rounded-md px-3 py-2"
+
+        variant='flat'
+        className=" max-w-sm sm:min-w-lg rounded-md px-3 py-2"
       />
       <Input
         type="tel"
@@ -89,9 +89,9 @@ export default function RestaurantForm({ setFormState }) {
         errorMessage={error?.phone}
         isRequired
         name='phone'
-        color='primary'
-        variant='underlined'
-        className="border border-gray-300 max-w-sm sm:min-w-lg rounded-md px-3 py-2"
+
+        variant='flat'
+        className=" max-w-sm sm:min-w-lg rounded-md px-3 py-2"
       />
       <Input
         type="file"
@@ -101,13 +101,18 @@ export default function RestaurantForm({ setFormState }) {
         isRequired
         labelPlacement='outside-left'
         name='profileImage'
-        color='primary'
+
         accept='image/*'
-        variant='underlined'
-        className="border border-gray-300 max-w-sm sm:min-w-lg rounded-md px-3 py-2"
+        variant='flat'
+        className=" max-w-sm sm:min-w-lg rounded-md px-3 py-2"
       />
 
-      <Button disabled={loading} variant="light" color="primary" className='bg-blue-500 focus:outline max-w-xl mx-auto hover:bg-blue-700 text-white font-bold py-2 px-4 rounded'  type="submit">{loading ? 'Registering...' : 'Register'}</Button>
+      <Button 
+      disabled={loading} 
+      variant="flat"
+      className='bg-black w-[23rem]   mx-auto  text-white font-bold py-2 px-4 rounded'  
+      type="submit">{loading ? 'Registering...' : 'Register'}
+      </Button>
     </form>
   )
 }
