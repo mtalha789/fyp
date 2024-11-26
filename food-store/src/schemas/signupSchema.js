@@ -3,11 +3,13 @@ import { z} from 'zod'
 export const signupSchema = z.object({
     fullname: z
         .string()
+        .trim()
         .min(3, 'Fullname should be at least 3 characters long')
         .max(20, 'Fullname should be at most 20 characters long')
         .regex(/^[a-zA-Z ]+$/, 'Fullname should only contain letters and spaces'),
     username: z
         .string()
+        .trim()
         .min(3, 'Username should be at least 3 characters long')
         .max(20, 'Username should be at most 20 characters long')
         .regex(/^[a-zA-Z0-9]+$/, 'Username should only contain letters and numbers'),
@@ -16,6 +18,7 @@ export const signupSchema = z.object({
         .email('Invalid email'),
     password: z
         .string()
+        .trim()
         .min(8, 'Password should be at least 8 characters long'),
     avatar: z
         .instanceof(File, {message: 'Avatar is required'})
@@ -30,8 +33,10 @@ export const coverImageSchema = z
 export const loginSchema = z.object({
     username: z
         .string('Username is required')
+        .trim()
         .min(3, 'Username should be at least 3 characters long'),
     password: z
         .string('Password is required')
+        .trim()
         .min(8, 'Password should be at least 8 characters long')
 })
