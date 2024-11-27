@@ -9,8 +9,8 @@ export const imageSchema = z.object({
 export const productSchema = z.object({
   name: z.string().trim().min(1, { message: "Name is required" }),
   price: z.coerce.number().min(300, { message: "Price must be greater than 300" }),
-  cacategory_id: z.string().trim().min(1, { message: "Category is required" }),
-  productImage: z.instanceof(File,'Product Image is required').refine((file) => file.size <= 5 * 1024 * 1024 || file.type.startsWith('image/'), 'Product Image size should be less than 5MB'),
+  cacategory_id: z.coerce.string().uuid().min(1, { message: "Category is required" }),
+  productImage: z.instanceof(File,'Product Image is required').refine((file) => file.size <= 1 * 1024 * 1024 || file.type.startsWith('image/'), 'Product Image size should be less than 1MB'),
 })
 
 export const updateProductSchema = z.object({

@@ -20,6 +20,7 @@ export default function ProductForm() {
         setError(null);
         //data collection
         const data = new FormData(e.target);
+        console.log(Object.fromEntries(data.entries()));
 
         //validation
         const result = productSchema.safeParse(Object.fromEntries(data.entries()));
