@@ -5,7 +5,7 @@ import useCategories from '../../queries/queries';
 import LoaderComponent from '../Loader';
 import { addProduct as addProductMutation } from '../../queries/mutations';
 import { useAuthStore } from '../../store/Auth';
-import {Loader } from 'lucide-react'
+import { Loader } from 'lucide-react'
 
 export default function ProductForm() {
     const [loading, setLoading] = React.useState(false);
@@ -20,6 +20,7 @@ export default function ProductForm() {
         setError(null);
         //data collection
         const data = new FormData(e.target);
+        console.log(Object.fromEntries(data.entries()));
 
         //validation
         const result = productSchema.safeParse(Object.fromEntries(data.entries()));
@@ -46,11 +47,12 @@ export default function ProductForm() {
 
     return (
         <div>
-            <h1>Edit Product Details</h1>
+            <h3 className='text-lg font-bold '>Add New Item Details</h3>
+            {console.log('cat', categories)}
             {error?.message && <p className="text-center text-red-500 mt-2">{error.message}</p>}
             {isAddProductError && <p className="text-center text-red-500 mt-2">{JSON.stringify(addProductError)}</p>}
 
-            <form onSubmit={handleSubmit}>
+            <form onSubmit={handleSubmit} className='flex flex-col gap-2'>
                 <Input
                     label="Product Name"
                     type="text"
@@ -80,25 +82,30 @@ export default function ProductForm() {
                     required
                     variant="bordered"
                 />
-                { Array.isArray(categories) && categories.length > 0 && <Select
-                    label="Select Product Category"
-                    name="category_id"
-                    className="max-w-xs"
-                    errorMessage={error?.category_id}
-                    isInvalid={error?.category_id}
-                    required
-                >
-                    {categories?.map((category) => (
-                        <SelectItem value={category.id} key={category.id}>
-                            {category.name}
-                        </SelectItem>
-                    ))}
-                </Select>
-                }
-                {Array.isArray(categories) && categories.length === 0 && <p>Add some categories</p>}
-                <Button >Add category</Button>
+                {Array.isArray(categories) && categories.length > 0 ? (
+                    <Select
+                        label="Select Product Category"
+                        name="category_id"
+                        className="max-w-xs"
+                        errorMessage={error?.category_id}
+                        isInvalid={error?.category_id}
+                        required
+                    >
+                        {categories.map(category => (
+                            <SelectItem value={category.id} key={category.id}>
+                                {category.name}
+                            </SelectItem>
+                        ))}
+                    </Select>
+                ) : (
+                    <p>{categories.length === 0 ? 'No categories available. Please add some.' : 'Error loading categories.'}</p>
+                )}
+
+
+                <Button >Add New category</Button>
                 <Input
                     label="Upload Product Image"
+                    labelPlacement='outside-left'
                     type="file"
                     name="productImage"
                     id="productImage"

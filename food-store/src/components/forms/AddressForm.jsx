@@ -3,10 +3,13 @@ import { Input, Button } from '@nextui-org/react'
 import { restaurantAddressSchema } from '../../schemas/restaurantSchema';
 import { useRestaurantStore } from '../../store/Restaurant';
 import { useAuthStore } from '../../store/Auth';
+import toast, { Toaster } from 'react-hot-toast';
+import { useNavigate } from 'react-router-dom';
 
 export default function RestaurantAddressForm({ setFormState, formState, resId }) {
   const [loading, setLoading] = React.useState(false);
   const [error, setError] = React.useState(null);
+  const navigate = useNavigate()
   const { accessToken } = useAuthStore()
 
   const { addRestaurantAddress } = useRestaurantStore();
@@ -23,21 +26,23 @@ export default function RestaurantAddressForm({ setFormState, formState, resId }
     if (!result.success) {
       setError(result.error.formErrors.fieldErrors);
       setLoading(false);
-      console.log(result.error);
       return;
     }
 
-    const response = await addRestaurantAddress(data,accessToken, resId);
+    const response = await addRestaurantAddress(Object.fromEntries(data.entries()),accessToken, resId);
 
     if (!response.success) {
       setError(response.error);
       setLoading(false);
       return;
     }
+    toast.success("Address added successfully");
+
 
     setError(null);
     setLoading(false);
     setFormState && setFormState({ ...formState, addressSubmitted: true})
+    navigate('/business-portal')
   }
 
 
@@ -46,6 +51,7 @@ export default function RestaurantAddressForm({ setFormState, formState, resId }
       className="flex flex-col gap-y-4 h-screen justify-center items-center mx-auto w-[90%]"
       onSubmit={handleSubmit}
     >
+      <Toaster />
       <h1 className="text-3xl font-semibold">Enter Restaurant Address</h1>
       {error?.message && <p className="text-red-500">{error.message}</p>}
 

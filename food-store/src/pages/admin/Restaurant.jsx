@@ -14,11 +14,14 @@ import {
 } from '@nextui-org/react';
 import { MoreVertical } from 'lucide-react';
 import { Toaster,toast } from 'react-hot-toast'
-import { Link } from 'react-router-dom';
+import { Link, useRevalidator } from 'react-router-dom';
 import { useUnapprovedRestaurants } from '../../queries/queries';
 import { useAdminStore } from '../../store/Admin';
+import { useRestaurantStore } from '../../store/Restaurant';
 import { approveRestaurant as approveRestaurantMutation, rejectRestaurant as rejectRestaurantMutation } from '../../queries/mutations'
 import LoaderComponent from '../../components/Loader';
+import { QueryClient } from '@tanstack/react-query';
+import { useAuthStore } from '../../store/Auth';
 
 export default function Restaurant() {
   const { adminToken } = useAdminStore()
@@ -46,8 +49,11 @@ export default function Restaurant() {
 }
 
 const RestaurantsTable = ({ restaurants, adminToken }) => {
-  const { mutate: approveRestaurant, isSuccess : isApproveRestaurantSuccess , isLoading: approveRestaurantLoading, isError: approveRestaurantError } = approveRestaurantMutation(adminToken)
-  const { mutate: rejectRestaurant, isSuccess : isRejectRestaurantSuccess, isLoading: rejectRestaurantLoading, isError: rejectRestaurantError } = rejectRestaurantMutation()
+  const { getUserRestaurants } = useRestaurantStore()
+  const { accessToken } = useAuthStore()
+  const {revalidate} = useRevalidator()
+  const { mutate: approveRestaurant, isLoading: approveRestaurantLoading, isError: isApproveRestaurantError, error: approveRestaurantError } = approveRestaurantMutation(adminToken)
+  const { mutate: rejectRestaurant, isLoading: rejectRestaurantLoading, isError: isRejectRestaurantError, error: rejectRestaurantError } = rejectRestaurantMutation()
   if (restaurants.length === 0) {
     return<>
     <div className='m-4'>
@@ -56,6 +62,8 @@ const RestaurantsTable = ({ restaurants, adminToken }) => {
 
     </> 
   }
+  if(isApproveRestaurantError){ toast.error(approveRestaurantError.message) }
+  if(isRejectRestaurantError){ toast.error(rejectRestaurantError.message) }
   return (
     <Table>
       {console.log(adminToken)
@@ -86,10 +94,23 @@ const RestaurantsTable = ({ restaurants, adminToken }) => {
                 </DropdownTrigger>
                 <DropdownMenu>
                   <DropdownItem >
-                    <Button color='success' onClick={()=> approveRestaurant(restaurant.id, adminToken)} disabled={rejectRestaurantLoading || approveRestaurantLoading} className='w-full text-center'> Approve </Button>
+                    <Button color='success' 
+                    onClick={()=> {
+                      const res = approveRestaurant(restaurant.id, adminToken)
+                      res.success ? toast.success('Restaurant rejected successfully') : toast.error('Error rejecting restaurant')
+                      res.success && getUserRestaurants(accessToken)
+                      revalidate()
+                    }} 
+                    disabled={rejectRestaurantLoading || approveRestaurantLoading} className='w-full text-center'> Approve </Button>
                   </DropdownItem>
                   <DropdownItem  className='w-full text-center' >
-                   <Button color='danger' onClick={()=> rejectRestaurant(restaurant.id, adminToken)} disabled={rejectRestaurantLoading || approveRestaurantLoading} className='w-full text-center'> Reject </Button>
+                   <Button color='danger' 
+                    onClick={()=> {
+                    const res = rejectRestaurant(restaurant.id, adminToken)
+                    res.success ? toast.success('Restaurant rejected successfully') : toast.error('Error rejecting restaurant')
+                    revalidate()
+                  }}
+                     disabled={rejectRestaurantLoading || approveRestaurantLoading}className='w-full text-center'> Reject </Button>
                   </DropdownItem>
                 </DropdownMenu>
               </Dropdown>

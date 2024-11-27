@@ -31,7 +31,7 @@ const getUnApprovedRestaurants = asyncHandler(async (req, res) => {
 
     res
         .status(200)
-        .json(new ApiResponse(200, { unApprovedRestaurants }, 'success'))
+        .json(new ApiResponse(200, { unApprovedRestaurants, success: true }, 'success'))
 })
 
 const approveRestaurant = asyncHandler(async (req, res) => {
@@ -48,7 +48,7 @@ const approveRestaurant = asyncHandler(async (req, res) => {
 
     res
         .status(200)
-        .json(new ApiResponse(200, {approvedRestaurant}, 'Restaurant approved'))
+        .json(new ApiResponse(200, {approvedRestaurant, success : true}, 'Restaurant approved'))
 })
 
 const rejectRestaurant = asyncHandler(async (req, res) => {
@@ -65,7 +65,7 @@ const rejectRestaurant = asyncHandler(async (req, res) => {
 
     res
         .status(200)
-        .json(new ApiResponse(200, rejectedRestaurant, 'Restaurant rejected'))
+        .json(new ApiResponse(200, {rejectedRestaurant, success: true}, 'Restaurant rejected'))
 })
 
 const getUsers = asyncHandler(async (req, res) => {
@@ -103,7 +103,7 @@ const getOrders = asyncHandler(async (req, res) => {
 
     res
         .status(200)
-        .json(new ApiResponse(200, { orders }, 'success'))  
+        .json(new ApiResponse(200, { orders , success: true}, 'success'))  
 })
 
 const getRiders = asyncHandler(async (req, res) => {
@@ -119,7 +119,7 @@ const getRiders = asyncHandler(async (req, res) => {
     })
     res
         .status(200)
-        .json(new ApiResponse(200, { riders}, "Riders fetched successfully"))
+        .json(new ApiResponse(200, { riders, success: true}, "Riders fetched successfully"))
 })
 
 export {

@@ -17,18 +17,18 @@ export default function CategoryForm() {
     setName(e.target.value);
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     if (!nameSchema.safeParse(name).success) {
       toast.error("Category name must be at least 3 characters long");
       return;
     }
-    const response = mutate({ name });
+    const response = await mutate({ name });
     // console.log( "respomse",response);
     
     if (response.success) {
       toast.success("Category added successfully");
-    } else console.log(response.error);
+    } else toast.error('Error adding category');
   };
   return (
     <div className="max-w-lg mx-auto mt-20 p-8 rounded-lg shadow-lg bg-white relative">
@@ -69,11 +69,11 @@ export default function CategoryForm() {
                   label="Category Name"
                   type="text"
                   value={name}
-                  onChange={()=>handleNameChange()}
+                  onChange={handleNameChange}
                 />
             </div>
             <div className="flex justify-end  w-full mt-2">
-                <Button color="success" variant="flat" type="submit" disabled={isLoading} onClick={handleSubmit}>
+                <Button color="primary" variant="flat" type="submit" disabled={isLoading} onClick={handleSubmit}>
                   Add Category
                 </Button>
             </div>

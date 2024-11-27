@@ -49,32 +49,24 @@ export const useRestaurantStore = create(
       },
       addRestaurantAddress: async (addressData, accessToken, restaurantId) => {
         try {
+          console.log(JSON.stringify(addressData));
           const response = await (
             await fetch(
               `${
                 import.meta.env.VITE_API_URL
               }/restaurants/${restaurantId}/address`,
               {
-                body: JSON.stringify(addressData),
                 method: "POST",
                 headers: accessToken && {
                   Authorization: `Bearer ${accessToken}`,
+                  'Content-Type': 'application/json',
                 },
+                body: JSON.stringify(addressData),
               }
             )
           ).json();
           if (response?.data && response.data?.success) {
-            set({
-              restaurants: useRestaurantStore
-                ?.getState()
-                ?.restaurants.map((r) =>
-                  r.id === restaurantId
-                    ? r.address
-                      ? r.address?.push(response?.data?.updatedRestaurant)
-                      : (r.address = [response?.data?.updatedRestaurant])
-                    : r
-                ),
-            });
+            useRestaurantStore.getState().getRestaurants(accessToken);
           } else {
             throw new Error(response.message);
           }
@@ -128,6 +120,7 @@ export const useRestaurantStore = create(
               method: "PUT",
               headers: accessToken && {
                 Authorization: `Bearer ${accessToken}`,
+                'Content-Type': 'application/json',
               },
             })
           ).json();

@@ -60,7 +60,8 @@ export const updateProduct = (id) => {
                 method: 'PUT',
                 body: JSON.stringify(updateData),
                 headers: {
-                    'Authorization': `Bearer ${accessToken}`
+                    'Authorization': `Bearer ${accessToken}`,
+                    'Content-Type': 'application/json'
                 }
             })
                 .then((res) => res.json())
@@ -94,7 +95,8 @@ export const addCategory = () => {
                 method: 'POST',
                 body: JSON.stringify(categoryData),
                 headers: {
-                    'Authorization': `Bearer ${accessToken}`
+                    'Authorization': `Bearer ${accessToken}`,
+                    'Content-Type': 'application/json'
                 }
             })
                 .then((res) => res.json()).then(res => {
@@ -115,7 +117,8 @@ export const updateOrder = (restaurantId) => {
             return fetch(`${import.meta.env.VITE_API_URL}/orders/${id}/accept`, {
                 method: 'PUT',
                 headers: {
-                    'Authorization': `Bearer ${accessToken}`
+                    'Authorization': `Bearer ${accessToken}`,
+                    'Content-Type': 'application/json'
                 },
                 body: JSON.stringify({ orderStatus })
             })
@@ -140,13 +143,15 @@ export const deleteUserAccount = () => {
 }
 export const approveRestaurant = (adminToken) => {
     return useMutation({
-        mutationFn: (id ) => {
-            console.log(id, adminToken);
-            
-            return fetch(`${import.meta.env.VITE_API_URL}/admin/restaurant/${id}/approve`, {
+        mutationFn: (id ) => {            
+            fetch(`${import.meta.env.VITE_API_URL}/admin/restaurant/${id}/approve`, {
                 headers: { 'AdminAuthorization': `Bearer ${adminToken}` },
                 method: 'PUT'
             }).then(response => response.json())
+            .then(res => {
+                console.log('res',res.data.success)
+                return res.data && res.data
+            })
         },
         mutationKey: ['unapproved-restaurants'],
         onSuccess: () => queryClient.invalidateQueries(['unapproved-restaurants'])
@@ -158,10 +163,14 @@ export const rejectRestaurant = () => {
         mutationFn: (id, adminToken) => {
             console.log(id, adminToken);
             
-            return fetch(`${import.meta.env.VITE_API_URL}/admin/restaurant/${id}/reject`, {
+            fetch(`${import.meta.env.VITE_API_URL}/admin/restaurant/${id}/reject`, {
                 headers: { 'AdminAuthorization': `Bearer ${adminToken}` },
                 method: 'PUT'
             }).then(response => response.json())
+            then(res => {
+                console.log('res',res)
+                return res.data && res.data
+            })
         },
         mutationKey: ['unapproved-restaurants'],
         onSuccess: () => queryClient.invalidateQueries(['unapproved-restaurants'])
