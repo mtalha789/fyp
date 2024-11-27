@@ -442,6 +442,8 @@ const addRestaurantAddress = asyncHandler(async (req, res) => {
     const { id } = req.params
     const { city, state, zipCode, street } = req.body
 
+    console.log(city, state, zipCode, street);
+    
     if (!city || !state || !zipCode || !street) {
         throw new ApiError('All fields are required', 400)
     }

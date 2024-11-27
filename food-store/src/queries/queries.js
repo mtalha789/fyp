@@ -4,7 +4,7 @@ export const useCategories = () => {
     return useQuery({
         queryKey:['categories'],
         queryFn:  () => {
-        const response = fetch(`${import.meta.env.VITE_API_URL}/categories`).then(response => response.json()).then(res => {
+        return fetch(`${import.meta.env.VITE_API_URL}/categories`).then(response => response.json()).then(res => {
             console.log('res',res.data.categories);
             
             return res.data.categories
@@ -17,7 +17,11 @@ export const useMenu =  () => {
     return useQuery({
         queryKey: ['menu'],
         queryFn: () => {
-        return fetch(`${import.meta.env.VITE_API_URL}/products`).then(response => response.json())
+        return fetch(`${import.meta.env.VITE_API_URL}/products`).then(response => response.json()).then(res => {
+            console.log('res',res.data.products);
+            
+            return res.data && res.data?.products
+        })
         }
     })
 }
@@ -26,7 +30,13 @@ export const useRestaurants = () => {
     return useQuery({
         queryKey: ['restaurant'],
         queryFn: () => {
-            return fetch(`${import.meta.env.VITE_API_URL}/restaurants`).then(res => res.json())
+            return fetch(`${import.meta.env.VITE_API_URL}/restaurants`)
+            .then(res => res.json())
+            .then(res => {
+                console.log('res',res.data.restaurants);
+                
+                return res.data.restaurants
+            })
         }
     })
 }
@@ -34,7 +44,13 @@ export const useRestaurant = (id) => {
     return useQuery({
         queryKey: ['restaurant', id],
         queryFn: () => {
-            return fetch(`${import.meta.env.VITE_API_URL}/restaurants/${id}`).then(res => res.json())
+            return fetch(`${import.meta.env.VITE_API_URL}/restaurants/${id}`)
+            .then(res => res.json())
+            .then(res => {
+                console.log('res',res.data.restaurant);
+                
+                return res.data.restaurant
+            })
         }
     })
 }

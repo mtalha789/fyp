@@ -60,7 +60,8 @@ export const updateProduct = (id) => {
                 method: 'PUT',
                 body: JSON.stringify(updateData),
                 headers: {
-                    'Authorization': `Bearer ${accessToken}`
+                    'Authorization': `Bearer ${accessToken}`,
+                    'Content-Type': 'application/json'
                 }
             })
                 .then((res) => res.json())
@@ -94,7 +95,8 @@ export const addCategory = () => {
                 method: 'POST',
                 body: JSON.stringify(categoryData),
                 headers: {
-                    'Authorization': `Bearer ${accessToken}`
+                    'Authorization': `Bearer ${accessToken}`,
+                    'Content-Type': 'application/json'
                 }
             })
                 .then((res) => res.json()).then(res => {
@@ -115,7 +117,8 @@ export const updateOrder = (restaurantId) => {
             return fetch(`${import.meta.env.VITE_API_URL}/orders/${id}/accept`, {
                 method: 'PUT',
                 headers: {
-                    'Authorization': `Bearer ${accessToken}`
+                    'Authorization': `Bearer ${accessToken}`,
+                    'Content-Type': 'application/json'
                 },
                 body: JSON.stringify({ orderStatus })
             })
@@ -146,8 +149,8 @@ export const approveRestaurant = (adminToken) => {
                 method: 'PUT'
             }).then(response => response.json())
             .then(res => {
-                console.log('res',res)
-                return res.data && res.data.success
+                console.log('res',res.data.success)
+                return res.data && res.data
             })
         },
         mutationKey: ['unapproved-restaurants'],
@@ -166,7 +169,7 @@ export const rejectRestaurant = () => {
             }).then(response => response.json())
             then(res => {
                 console.log('res',res)
-                return res.data && res.data.success
+                return res.data && res.data
             })
         },
         mutationKey: ['unapproved-restaurants'],

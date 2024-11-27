@@ -17,8 +17,11 @@ import { Toaster,toast } from 'react-hot-toast'
 import { Link, useRevalidator } from 'react-router-dom';
 import { useUnapprovedRestaurants } from '../../queries/queries';
 import { useAdminStore } from '../../store/Admin';
+import { useRestaurantStore } from '../../store/Restaurant';
 import { approveRestaurant as approveRestaurantMutation, rejectRestaurant as rejectRestaurantMutation } from '../../queries/mutations'
 import LoaderComponent from '../../components/Loader';
+import { QueryClient } from '@tanstack/react-query';
+import { useAuthStore } from '../../store/Auth';
 
 export default function Restaurant() {
   const { adminToken } = useAdminStore()
@@ -46,6 +49,8 @@ export default function Restaurant() {
 }
 
 const RestaurantsTable = ({ restaurants, adminToken }) => {
+  const { getUserRestaurants } = useRestaurantStore()
+  const { accessToken } = useAuthStore()
   const {revalidate} = useRevalidator()
   const { mutate: approveRestaurant, isLoading: approveRestaurantLoading, isError: isApproveRestaurantError, error: approveRestaurantError } = approveRestaurantMutation(adminToken)
   const { mutate: rejectRestaurant, isLoading: rejectRestaurantLoading, isError: isRejectRestaurantError, error: rejectRestaurantError } = rejectRestaurantMutation()
@@ -58,7 +63,7 @@ const RestaurantsTable = ({ restaurants, adminToken }) => {
     </> 
   }
   if(isApproveRestaurantError){ toast.error(approveRestaurantError.message) }
-  if(isRejectRestaurantError){ toast.error(rejectRestaurant.message) }
+  if(isRejectRestaurantError){ toast.error(rejectRestaurantError.message) }
   return (
     <Table>
       {console.log(adminToken)
@@ -93,6 +98,7 @@ const RestaurantsTable = ({ restaurants, adminToken }) => {
                     onClick={()=> {
                       const res = approveRestaurant(restaurant.id, adminToken)
                       res.success ? toast.success('Restaurant rejected successfully') : toast.error('Error rejecting restaurant')
+                      res.success && getUserRestaurants(accessToken)
                       revalidate()
                     }} 
                     disabled={rejectRestaurantLoading || approveRestaurantLoading} className='w-full text-center'> Approve </Button>

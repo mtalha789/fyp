@@ -55,9 +55,11 @@ const BusinessPartner = () => {
                                 size="lg"
                                 className="mr-0 sm:mr-4 mb-4 sm:mb-0"
                             />
-                            <div className="flex-grow">
-                                <h3 className="text-lg font-bold">{restaurant.name}</h3>
-                                {restaurant?.approved && <Verified fill='blue' />}    
+                            <div className="flex flex-col">
+                                <div className="flex items-center">
+                                    <h3 className="text-lg font-bold">{restaurant.name}</h3>
+                                    {restaurant?.approved && <Verified fill='green' size={16} />}    
+                                </div>
                                 <p className="text-xs text-gray-500">{restaurant.corporateEmail}</p>
                                 {restaurant.address?.[0]?.deleted === false ? (
                                     <p className='text-xs'>{restaurant.address[0].street}-{restaurant.address[0].city}</p>
@@ -74,7 +76,7 @@ const BusinessPartner = () => {
                         </CardHeader>
                         <CardBody className="py-4">
                             <p className="mb-2"><strong>Phone:</strong> {restaurant.phone}</p>
-                            <p className="mb-2"><strong>Minimum Order:</strong> PKR {restaurant.minimumOrderPrice.toFixed(2)}</p>
+                            <p className="mb-2"><strong>Minimum Order:</strong> PKR {restaurant.minimumOrderPrice}</p>
                             {restaurant.approved && <p className="mb-2"><strong>Status:</strong> {restaurant.closed ? "Closed" : "Open"}</p>}
                             {restaurant.approved && (
                                 <div className="mt-4">
