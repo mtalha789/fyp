@@ -14,7 +14,7 @@ import {
 } from '@nextui-org/react';
 import { MoreVertical } from 'lucide-react';
 import { Toaster,toast } from 'react-hot-toast'
-import { Link } from 'react-router-dom';
+import { Link, useRevalidator } from 'react-router-dom';
 import { useUnapprovedRestaurants } from '../../queries/queries';
 import { useAdminStore } from '../../store/Admin';
 import { approveRestaurant as approveRestaurantMutation, rejectRestaurant as rejectRestaurantMutation } from '../../queries/mutations'
@@ -46,11 +46,14 @@ export default function Restaurant() {
 }
 
 const RestaurantsTable = ({ restaurants, adminToken }) => {
-  const { mutate: approveRestaurant, isSuccess : isApproveRestaurantSuccess , isLoading: approveRestaurantLoading, isError: approveRestaurantError } = approveRestaurantMutation(adminToken)
-  const { mutate: rejectRestaurant, isSuccess : isRejectRestaurantSuccess, isLoading: rejectRestaurantLoading, isError: rejectRestaurantError } = rejectRestaurantMutation()
+  const {revalidate} = useRevalidator()
+  const { mutate: approveRestaurant, isLoading: approveRestaurantLoading, isError: isApproveRestaurantError, error: approveRestaurantError } = approveRestaurantMutation(adminToken)
+  const { mutate: rejectRestaurant, isLoading: rejectRestaurantLoading, isError: isRejectRestaurantError, error: rejectRestaurantError } = rejectRestaurantMutation()
   if (restaurants.length === 0) {
     return <p className='mt-3 font-bold'>No unapproved restaurants</p>
   }
+  if(isApproveRestaurantError){ toast.error(approveRestaurantError.message) }
+  if(isRejectRestaurantError){ toast.error(rejectRestaurant.message) }
   return (
     <Table>
       {console.log(adminToken)
@@ -81,10 +84,22 @@ const RestaurantsTable = ({ restaurants, adminToken }) => {
                 </DropdownTrigger>
                 <DropdownMenu>
                   <DropdownItem >
-                    <Button color='success' onClick={()=> approveRestaurant(restaurant.id, adminToken)} disabled={rejectRestaurantLoading || approveRestaurantLoading} className='w-full text-center'> Approve </Button>
+                    <Button color='success' 
+                    onClick={()=> {
+                      const res = approveRestaurant(restaurant.id, adminToken)
+                      res.success ? toast.success('Restaurant rejected successfully') : toast.error('Error rejecting restaurant')
+                      revalidate()
+                    }} 
+                    disabled={rejectRestaurantLoading || approveRestaurantLoading} className='w-full text-center'> Approve </Button>
                   </DropdownItem>
                   <DropdownItem  className='w-full text-center' >
-                   <Button color='danger' onClick={()=> rejectRestaurant(restaurant.id, adminToken)} disabled={rejectRestaurantLoading || approveRestaurantLoading} className='w-full text-center'> Reject </Button>
+                   <Button color='danger' 
+                    onClick={()=> {
+                    const res = rejectRestaurant(restaurant.id, adminToken)
+                    res.success ? toast.success('Restaurant rejected successfully') : toast.error('Error rejecting restaurant')
+                    revalidate()
+                  }}
+                     disabled={rejectRestaurantLoading || approveRestaurantLoading}className='w-full text-center'> Reject </Button>
                   </DropdownItem>
                 </DropdownMenu>
               </Dropdown>

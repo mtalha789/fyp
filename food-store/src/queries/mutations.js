@@ -140,13 +140,15 @@ export const deleteUserAccount = () => {
 }
 export const approveRestaurant = (adminToken) => {
     return useMutation({
-        mutationFn: (id ) => {
-            console.log(id, adminToken);
-            
-            return fetch(`${import.meta.env.VITE_API_URL}/admin/restaurant/${id}/approve`, {
+        mutationFn: (id ) => {            
+            fetch(`${import.meta.env.VITE_API_URL}/admin/restaurant/${id}/approve`, {
                 headers: { 'AdminAuthorization': `Bearer ${adminToken}` },
                 method: 'PUT'
             }).then(response => response.json())
+            .then(res => {
+                console.log('res',res)
+                return res.data && res.data.success
+            })
         },
         mutationKey: ['unapproved-restaurants'],
         onSuccess: () => queryClient.invalidateQueries(['unapproved-restaurants'])
@@ -158,10 +160,14 @@ export const rejectRestaurant = () => {
         mutationFn: (id, adminToken) => {
             console.log(id, adminToken);
             
-            return fetch(`${import.meta.env.VITE_API_URL}/admin/restaurant/${id}/reject`, {
+            fetch(`${import.meta.env.VITE_API_URL}/admin/restaurant/${id}/reject`, {
                 headers: { 'AdminAuthorization': `Bearer ${adminToken}` },
                 method: 'PUT'
             }).then(response => response.json())
+            then(res => {
+                console.log('res',res)
+                return res.data && res.data.success
+            })
         },
         mutationKey: ['unapproved-restaurants'],
         onSuccess: () => queryClient.invalidateQueries(['unapproved-restaurants'])
