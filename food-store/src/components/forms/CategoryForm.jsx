@@ -24,6 +24,8 @@ export default function CategoryForm() {
       return;
     }
     const response = mutate({ name });
+    // console.log( "respomse",response);
+    
     if (response.success) {
       toast.success("Category added successfully");
     } else console.log(response.error);
@@ -60,14 +62,14 @@ export default function CategoryForm() {
           <>
             <div className="flex w-full flex-wrap md:flex-nowrap my-6 md:mb-0 gap-4">
                 <Input
-                onSubmit={handleSubmit}
+                onSubmit={() => {handleSubmit()}}
                   name="name"
                   variant="flat"
                   size="md"
                   label="Category Name"
                   type="text"
                   value={name}
-                  onChange={handleNameChange}
+                  onChange={()=>handleNameChange()}
                 />
             </div>
             <div className="flex justify-end  w-full mt-2">

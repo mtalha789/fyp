@@ -17,10 +17,10 @@ export default function Customers() {
   if (isError) return <p>Error: {error.message}</p>
   // if (!users || users.length === 0) return <div>No customers</div>
   return (
-    <div>
-      <h1>Customers</h1>
+    <div className='m-4'>
+      <h1 className='text-2xl font-bold mb-4'>Customers</h1>
       <Toaster />
-      <Table>
+      <Table >
         <TableHeader>
           <TableColumn>Name</TableColumn>
           <TableColumn>Email</TableColumn>

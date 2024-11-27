@@ -57,31 +57,31 @@ function SignupForm() {
     }
 
     return (
-        <div className='h-screen'>
-            <p className="font-bold text-3xl text-center text-inherit my-4">
-                Sign Up
+        <div className='h-screen flex flex-col justify-center items-center'>
+            <p className="font-bold text-4xl text-center text-inherit pb-12">
+               Create an account
             </p>
             <form onSubmit={handleSubmit} className="flex flex-col gap-y-4 justify-center items-center mx-auto w-[90%]">
                 {error?.message && <p className="text-red-500">{error?.message}</p>}
                 <Input
+                isRequired
+                isClearable
                     type="text"
-                    // placeholder="Full Name"
                     name='fullname'
                     label="Enter Full Name"
                     isInvalid={error?.fullname}
                     errorMessage={error?.fullname}
-                    color='primary'
-                    variant='underlined'
-                    className="border border-gray-300 max-w-sm sm:min-w-lg rounded-md px-3 py-2"
+                    variant='flat'
+                    className=" max-w-sm sm:min-w-lg rounded-md px-3 py-2"
                 />
                 <Input
                     type="text"
                     label="Enter Username"
                     isInvalid={error?.username}
                     errorMessage={error?.username} name='username'
-                    color='primary'
-                    variant='underlined'
-                    className="border border-gray-300 max-w-sm sm:min-w-lg rounded-md px-3 py-2"
+                    
+                    variant='flat'
+                    className="max-w-sm sm:min-w-lg rounded-md px-3 py-2"
                 />
                 <Input
                     type="email"
@@ -90,16 +90,16 @@ function SignupForm() {
                     errorMessage={error?.email}
                     isRequired
                     name='email'
-                    color='primary'
-                    variant='underlined'
-                    className="border border-gray-300 max-w-sm sm:min-w-lg rounded-md px-3 py-2"
+                    
+                    variant='flat'
+                    className="max-w-sm sm:min-w-lg rounded-md px-3 py-2"
                 />
                 <Input
                     label="Password"
-                    color='primary'
+                    
                     name='password'
-                    variant='underlined'
-                    className="border border-gray-300 max-w-sm sm:min-w-lg rounded-md px-3 py-2"
+                    variant='flat'
+                    className="max-w-sm sm:min-w-lg rounded-md px-3 py-2"
                     endContent={
                         <Button isIconOnly variant='light' className="focus:outline-none rounded-full" type="button" onClick={toggleVisibility} aria-label="toggle password visibility">
                             {isVisible ? (
@@ -121,9 +121,9 @@ function SignupForm() {
                     id='avatar'
                     accept='image/*'
                     isRequired
-                    color='primary'
-                    variant='bordered'
-                    className="border border-gray-300 max-w-sm sm:min-w-lg rounded-md px-3 py-2"
+                    
+                    variant='flat'
+                    className="max-w-sm sm:min-w-lg rounded-md px-3 py-2"
                     isInvalid={error?.avatar}
                     errorMessage={error?.avatar}
                 />
@@ -134,22 +134,22 @@ function SignupForm() {
                     name='coverImage'
                     id="Cover Image"
                     accept='image/*'
-                    color='primary'
-                    variant='bordered'
+                    
+                    variant='flat'
                     isInvalid={error?.coverImage}
                     errorMessage={error?.coverImage}
-                    className="border border-gray-300 max-w-sm sm:min-w-lg rounded-md px-3 py-2"
+                    className="max-w-sm sm:min-w-lg rounded-md px-3 py-2"
                 />
                 <Button
                     type="submit"
-                    className="bg-blue-500 focus:outline max-w-xl mx-auto hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
+                    className="w-[23rem] mx-auto bg-black text-white font-bold py-2 px-4 rounded-lg"
                     disabled={loading}
-                    variant='shadow'
+                    variant='flat'
                 >
                     {loading ? "Registering..." : 'Sign Up'}
                 </Button>
             </form>
-            <p className="text-gray-500 text-center my-2">Already have an account? <Link to="/login" className="text-blue-500 underline">Login</Link></p>
+            <p className="text-gray-500 text-center my-2">Already have an account? <Link to="/login" className="text-black underline">Login</Link></p>
         </div>
     )
 }

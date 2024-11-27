@@ -161,14 +161,19 @@ const Sales = () => {
   if (salesIsError) return <p>Error: {salesError.message}</p>
 
   return (
-    <div className="flex flex-col">
+    <div className="flex flex-col m-4 ">
+      <div className='flex'>
       <h1 className="text-3xl font-bold mb-4">Sales</h1>
-      <Card className="w-full">
+
+      </div>
+      <div className='flex gap-4'>
+
+      <Card className='w-96'>
         <CardBody className="flex flex-col m-4">
           <div>
 
             <h3 className="font-bold text-xl">Total Orders: ${sales?.totalOrders}</h3>
-            <h3 className="font-bold text-xl">Total Amount: ${sales?.totalAmount}</h3>
+            
           </div>
           <div className="">
             <div>
@@ -197,24 +202,60 @@ const Sales = () => {
           </div>
           {/* <Table>
             <TableHeader>
-              <TableColumn>Name</TableColumn>
+            <TableColumn>Name</TableColumn>
               <TableColumn>Date</TableColumn>
               <TableColumn>Amount</TableColumn>
             </TableHeader>
             <TableBody>
-              {orders.map((order) => (
-                <TableRow key={order.id}>
-                  <TableCell className="text-left">{order.order.user.name}</TableCell>
-                  <TableCell className="text-left">
-                    {new Date(order.createdAt).toLocaleString()}
-                  </TableCell>
-                  <TableCell className="text-left">$ {order.amount}</TableCell>
-                </TableRow>
+            {orders.map((order) => (
+              <TableRow key={order.id}>
+              <TableCell className="text-left">{order.order.user.name}</TableCell>
+              <TableCell className="text-left">
+              {new Date(order.createdAt).toLocaleString()}
+              </TableCell>
+              <TableCell className="text-left">$ {order.amount}</TableCell>
+              </TableRow>
               ))}
-            </TableBody>
-          </Table> */}
+              </TableBody>
+              </Table> */}
         </CardBody>
       </Card>
+      <Card className='w-96'>
+        <CardBody className="flex flex-col m-4">
+          <div>
+
+            
+            <h3 className="font-bold text-xl">Total Amount: ${sales?.totalAmount}</h3>
+          </div>
+          <div className="">
+            <div>
+              <h2 className="text-xl font-semibold">Last Month</h2>
+
+              {
+                lastMonthSales == null ? (<h1>No Sales</h1>) : (
+                  <pre className="text-xl font-semibold">
+                    Orders: {lastMonthSales?.orders}
+                    Total Sales: ${lastMonthSales?.amount}
+                  </pre>
+                )
+              }
+            </div>
+            <div>
+              <h2 className="text-xl font-semibold">This Month</h2>
+              {
+                thisMonthSales == null ? (<h1>No Sales</h1>) : (
+                  <pre className="text-xl font-semibold">
+                    Orders: {thisMonthSales?.orders}
+                    Total Sales: ${thisMonthSales?.amount}
+                  </pre>
+                )
+              }
+            </div>
+          </div>
+         
+        </CardBody>
+      </Card>
+              </div>
     </div>
   );
   // return (

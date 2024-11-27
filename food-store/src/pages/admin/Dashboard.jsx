@@ -1,129 +1,111 @@
-import React from "react";
-import { useAdminStore } from "../../store/Admin"
-import { useOrders } from '../../queries/queries'
-import LoaderComponent from "../../components/Loader";
-import { updateProduct } from "../../queries/mutations";
-import { Card, CardBody, CardHeader, TableBody, TableCell, TableColumn, TableHeader } from "@nextui-org/react";
-import { Table } from "lucide-react";
+import React, { useState } from 'react';
+import { Card, Button, Table, TableHeader, TableBody, TableRow, TableCell, TableColumn } from "@nextui-org/react";
+import { CheckCircle2, XCircle, MoreVertical } from 'lucide-react';
+import { Link } from "react-router-dom";
+import { useParams } from 'react-router-dom';
+import { useAuthStore } from '../../store/Auth';
+import { useRestaurantOrders, useRestaurantSalesReport } from '../../queries/queries';
+import LoaderComponent from '../../components/Loader';
 
-export default function Dashboard() {
-  const { adminToken } = useAdminStore()
-  const { data: orders, isLoading, isError, error } = useOrders(adminToken);
 
-  const { mutate: updateOrder, isLoading: updateIsLoading, isError: updateIsError, error: updateError } = updateProduct();
 
-  const [lastMonthSales, setlastMonthSales] = React.useState(null);
-  const [thisMonthSales, setthisMonthSales] = React.useState(null);
+const stats = {
+  totalOrders: 50,
+  totalRevenue: 5000,
+  pendingOrders: 10,
+};
+
+export default function RestaurantDashboard() {
+  const { id } = useParams();
+  const { accessToken } = useAuthStore();
+  const { data: orders, isLoading, isError, error } = useRestaurantOrders(id, accessToken);
+  const { data: sales, isLoading: salesLoading, isError: salesIsError, error: salesError } = useRestaurantSalesReport(id, accessToken);
  
-  const setLastMonthSales = () => {
-    if (orders == null || Array.isArray(orders) && orders.length === 0) {
-      return;
-    }
-
-    const lastMonthOrders = Array.isArray(orders) && orders.filter((order) => {
-      const orderDate = new Date(order.createdAt);
-      const lastMonth = new Date();
-      lastMonth.setMonth(lastMonth.getMonth() - 1);
-      return orderDate >= lastMonth;
-    });
-
-    setlastMonthSales({
-      amount: lastMonthOrders == null && Array.isArray(lastMonthOrders) && lastMonthOrders.length === 0 ? 0 : Array.isArray(lastMonthOrders) && lastMonthOrders.reduce((total, order) => total + order.amount, 0),
-      orders: lastMonthOrders == null && Array.isArray(lastMonthOrders) && lastMonthOrders.length,
-    });
-  }
-
-  const setThisMonthSales = () => {
-    if (Array.isArray(orders) && orders.length === 0) {
-      return;
-    }
-
-    const thisMonthOrders = Array.isArray(orders) && orders.filter((order) => {
-      const orderDate = new Date(order.createdAt);
-      const thisMonth = new Date();
-      return orderDate >= thisMonth;
-    });
-
-    setthisMonthSales({
-      amount: Array.isArray(thisMonthOrders) && thisMonthOrders.length === 0 ? 0 : Array.isArray(thisMonthOrders) && thisMonthOrders.reduce((total, order) => total + order.amount, 0),
-      orders:  Array.isArray(thisMonthOrders) && thisMonthOrders.length,
-    });
-  }
-
-  React.useEffect(() => {
-    setLastMonthSales();
-    setThisMonthSales();
-  }, [orders]);
-
-  if (isLoading || updateIsLoading) return <LoaderComponent />
-
-  if (isError) return <p>Error: {error.message}</p>
-
-  if (updateIsError) return <p>Error: {updateError.message}</p>
-
+  if (isLoading || salesLoading) return <div className="h-screen"><LoaderComponent /></div>;
+  if (isError || salesIsError) return <p>Error: {error.message}</p>;
   return (
-  
-    <div className="flex flex-col">
-  { console.log(orders) }
-      <h1 className="text-3xl font-bold mb-4">Sales</h1>
-      <Card className="w-full">
-        <CardHeader>
-          <h1 className="font-bold text-3xl">Sales</h1>
-          
-          <div className="">
-            <div>
-              <h2 className="text-xl font-semibold">Last Month</h2>
-
-              {
-                lastMonthSales == null ? (<h1>No Sales</h1>) : (
-                  <pre className="text-xl font-semibold">
-                    Orders: {lastMonthSales?.orders}
-                    Total Sales: ${lastMonthSales?.amount}
-                  </pre>
-                )
-              }
-            </div>
-            <div>
-              <h2 className="text-xl font-semibold">This Month</h2>
-              {
-                thisMonthSales == null ? (<h1>No Sales</h1>) : (
-                  <pre className="text-xl font-semibold">
-                    Orders: {thisMonthSales?.orders}
-                    Total Sales: ${thisMonthSales?.amount}
-                  </pre>
-                )
-              }
-            </div>
-          </div>
-        </CardHeader>
-        <CardBody>
-          <Table>
-            <TableHeader>
-              <TableColumn>Name</TableColumn>
-              <TableColumn>Date</TableColumn>
-              <TableColumn>Amount</TableColumn>
-            </TableHeader>
-            <TableBody>
-              {Array.isArray(orders) && orders.map((order) => (
-                <TableRow key={order.id}>
-                  <TableCell className="text-left">{order.order.user.name}</TableCell>
-                  <TableCell className="text-left">
-                    {new Date(order.createdAt).toLocaleString()}
-                  </TableCell>
-                  <TableCell className="text-left">$ {order.amount}</TableCell>
-                </TableRow>
-              ))}
-            </TableBody>
-          </Table>
-        </CardBody>
-        {/* <CardFooter>
-          <div className="flex justify-end">
-            <Button color="success" variant='flat' auto>
-              Download
-            </Button>
-          </div>
-        </CardFooter> */}
-      </Card>
+    <div className="flex flex-col container">
+      <div className="p-4">
+        <h1 className="text-2xl font-bold mb-4">Restaurant Dashboard</h1>
+      </div>
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 p-4 gap-4">
+        <Card className='p-3'>
+          <h1 className="text-xl font-semibold mb-4">Total Orders</h1>
+          <h1 className="text-3xl font-bold">{sales.totalOrders}</h1>
+        </Card>
+        <Card className='p-3'>
+          <h1 className="text-xl font-semibold mb-4">Total Revenue</h1>
+          <h1 className="text-3xl font-bold">${sales.totalRevenue}</h1>
+        </Card>
+        {/* <Card className='p-3'>
+          <h1 className="text-xl font-semibold mb-4">Pending Orders</h1>
+          <h1 className="text-3xl font-bold">{sales.pendingOrders}</h1>
+        </Card> */}
+      </div>
+      <div className="col-span-full p-4">
+        <h1 className="text-2xl font-bold mb-4">Recent Orders</h1>
+        <OrderTable orders={orders} />
+      </div>
     </div>
   );
 }
+
+function OrderTable({ orders }) {
+  if (!orders || orders.length === 0) {
+    return <h1>No orders found.</h1>;
+  }
+  return (
+    <Table>
+      <TableHeader>
+        <TableColumn>Customer</TableColumn>
+        <TableColumn>Total</TableColumn>
+        <TableColumn>Status</TableColumn>
+      </TableHeader>
+      <TableBody>
+        {orders.map(order => (
+          <TableRow key={order.id}>
+            <TableCell>{order.customer}</TableCell>
+            <TableCell>${order.total}</TableCell>
+            <TableCell>{order.status}</TableCell>
+          </TableRow>
+        ))}
+      </TableBody>
+    </Table>
+  );
+}
+
+function ProductTable({ products }) {
+  if (!products || products.length === 0) {
+    return <h1>No products found.</h1>;
+  }
+  return (
+    <Table >
+      <TableHeader>
+        <TableColumn>Available</TableColumn>
+        <TableColumn>Name</TableColumn>
+        <TableColumn>Price</TableColumn>
+        <TableColumn>Actions</TableColumn>
+      </TableHeader>
+      <TableBody>
+        {products.map(product => (
+          <TableRow key={product.id}>
+            <TableCell>
+              {product.isAvailableForPurchase ? (
+                <CheckCircle2 className="mr-2" size={16} />
+              ) : (
+                <XCircle className="mr-2 stroke-destructive" size={16} />
+              )}
+            </TableCell>
+            <TableCell>{product.name}</TableCell>
+            <TableCell>${product.price}</TableCell>
+            <TableCell>
+              <MoreVertical className="cursor-pointer" />
+            </TableCell>
+          </TableRow>
+        ))}
+      </TableBody>
+    </Table>
+  );
+}
+
+

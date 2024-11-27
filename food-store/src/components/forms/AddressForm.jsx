@@ -55,9 +55,9 @@ export default function RestaurantAddressForm({ setFormState, formState, resId }
         name="city"
         isInvalid={error?.city}
         errorMessage={error?.city}
-        color="primary"
-        variant="underlined"
-        className="border border-gray-300 max-w-sm sm:min-w-lg rounded-md px-3 py-2"
+
+        variant="flat"
+        className=" max-w-sm sm:min-w-lg rounded-md px-3 py-2"
       />
 
       <Input
@@ -66,9 +66,9 @@ export default function RestaurantAddressForm({ setFormState, formState, resId }
         name="state"
         isInvalid={error?.state}
         errorMessage={error?.state}
-        color="primary"
-        variant="underlined"
-        className="border border-gray-300 max-w-sm sm:min-w-lg rounded-md px-3 py-2"
+
+        variant="flat"
+        className=" max-w-sm sm:min-w-lg rounded-md px-3 py-2"
       />
 
       <Input
@@ -77,9 +77,9 @@ export default function RestaurantAddressForm({ setFormState, formState, resId }
         name="zipCode"
         isInvalid={error?.zipCode}
         errorMessage={error?.zipCode}
-        color="primary"
-        variant="underlined"
-        className="border border-gray-300 max-w-sm sm:min-w-lg rounded-md px-3 py-2"
+
+        variant="flat"
+        className="max-w-sm sm:min-w-lg rounded-md px-3 py-2"
       />
 
       <Input
@@ -88,14 +88,14 @@ export default function RestaurantAddressForm({ setFormState, formState, resId }
         name="street"
         isInvalid={error?.street}
         errorMessage={error?.street}
-        color="primary"
-        variant="underlined"
-        className="border border-gray-300 max-w-sm sm:min-w-lg rounded-md px-3 py-2"
+
+        variant="flat"
+        className=" max-w-sm sm:min-w-lg rounded-md px-3 py-2"
       />
 
       <Button
-        variant="solid"
-        color="primary"
+        variant="flat"
+        className='bg-black text-white '
         type="submit"
         disabled={loading}
       >

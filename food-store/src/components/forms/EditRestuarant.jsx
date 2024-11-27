@@ -1,4 +1,4 @@
-import { Button } from "@nextui-org/react";
+import { Button, Input } from "@nextui-org/react";
 import { useParams } from "react-router-dom";
 import { useRestaurant } from "../../queries/queries";
 import { Loader } from "..";
@@ -14,7 +14,7 @@ const EditRestuarant = () => {
     <div>
         <form>
             <h1>Edit Restuarant Image</h1>
-            <input type="file" accept="image/*" />
+            <Input type="file" accept="image/*" variant="flat" />
             <Button type="submit">Upload</Button>
         </form>
     </div>

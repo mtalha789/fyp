@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { useCart } from "../../state/Cart"
 import { loadStripe } from '@stripe/stripe-js';
 import { Elements, CardElement, useStripe, useElements } from '@stripe/react-stripe-js';
+import { Button, Input } from '@nextui-org/react';
 
 const stripePromise = loadStripe('your-publishable-key-here'); // Replace with your actual Stripe public key
 
@@ -64,62 +65,68 @@ const CheckoutForm = () => {
       <form onSubmit={handleSubmit} className="max-w-lg mx-auto p-6 bg-white shadow-lg rounded-lg mt-7">
         <h2 className="text-2xl font-semibold mb-6">Delivery Information</h2>
         <div className="space-y-4 mb-6">
-          <input
+          <Input
+          variant='flat'
             type="text"
             name="name"
             placeholder="Name"
             value={customerInfo.name}
             onChange={handleInputChange}
             required
-            className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500"
+            className="w-full px-4 py-2  rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500"
           />
-          <input
+          <Input
+          variant='flat'
             type="text"
             name="address"
             placeholder="Address"
             value={customerInfo.address}
             onChange={handleInputChange}
             required
-            className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500"
+            className="w-full px-4 py-2  rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500"
           />
           <div className="grid grid-cols-2 gap-4">
-            <input
+            <Input
+              variant='flat'
               type="text"
               name="city"
               placeholder="City"
               value={customerInfo.city}
               onChange={handleInputChange}
               required
-              className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500"
+              className="w-full px-4 py-2  rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500"
             />
-            <input
+            <Input
+              variant='flat'
               type="text"
               name="state"
               placeholder="State"
               value={customerInfo.state}
               onChange={handleInputChange}
               required
-              className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500"
+              className="w-full px-4 py-2  rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500"
             />
           </div>
           <div className="grid grid-cols-2 gap-4">
-            <input
+            <Input
+              variant='flat'
               type="text"
               name="zip"
               placeholder="Zip Code"
               value={customerInfo.zip}
               onChange={handleInputChange}
               required
-              className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500"
+              className="w-full px-4 py-2  rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500"
             />
-            <input
+            <Input
+              variant='flat'
               type="text"
               name="country"
               placeholder="Country"
               value={customerInfo.country}
               onChange={handleInputChange}
               required
-              className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500"
+              className="w-full px-4 py-2  rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500"
             />
           </div>
         </div>
@@ -139,16 +146,16 @@ const CheckoutForm = () => {
   
         <h2 className="text-2xl font-semibold mb-6">Payment Information</h2>
         <div className="mb-6">
-          <CardElement className="p-4 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500" />
+          <CardElement className="p-4  rounded-md "  />
         </div>
   
-        <button
+        <Button
           type="submit"
           disabled={!stripe}
-          className="w-full bg-gray-100  py-2 rounded-md hover:bg-black hover:text-white focus:outline-none focus:ring-2 focus:ring-indigo-500"
+          className="w-full bg-black py-2 rounded-md  text-white "
         >
           Confirm and Pay
-        </button>
+        </Button>
       </form>
     );
   };

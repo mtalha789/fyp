@@ -124,7 +124,7 @@ const Cart = () => {
               <div className="flex justify-center mt-2">
                 <Button
                   isIconOnly
-                  variant="flat"
+                  variant="light"
                   color="danger"
                   onClick={clearCart}
                   className="rounded-full p-2   transition"
@@ -153,12 +153,13 @@ const Cart = () => {
 
           {/* Order Now Button */}
           <Button
+          variant="flat"
             disabled={cart?.length === 0}
             onClick={() => {
               onOpenChange(false); // Close the cart
               navigate("/checkout");
             }}
-            className="w-full mt-4 bg-black text-white hover:bg-gray-800"
+            className="w-full mt-4 bg-black text-white "
           >
             Order Now
           </Button>
