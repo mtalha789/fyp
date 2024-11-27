@@ -75,9 +75,8 @@ export const useAuthStore = create(
           };
         }
       },
-      async logout() {
+      async logout(accessToken) {
         try {
-          const accessToken = get().accessToken;
           const response = await (
             await fetch(`${import.meta.env.VITE_API_URL}/users/logout`, {
               method: "POST",

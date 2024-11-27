@@ -47,7 +47,7 @@ export const useRestaurantStore = create(
           };
         }
       },
-      addRestaurantAddress: async (addressData, accessToken, restaurantId) => {
+      addRestaurantAddress: async (addressData, accessToken, restaurantId, getRestaurants) => {
         try {
           console.log(JSON.stringify(addressData));
           const response = await (
@@ -57,7 +57,7 @@ export const useRestaurantStore = create(
               }/restaurants/${restaurantId}/address`,
               {
                 method: "POST",
-                headers: accessToken && {
+                headers: {
                   Authorization: `Bearer ${accessToken}`,
                   'Content-Type': 'application/json',
                 },
@@ -66,7 +66,7 @@ export const useRestaurantStore = create(
             )
           ).json();
           if (response?.data && response.data?.success) {
-            useRestaurantStore.getState().getRestaurants(accessToken);
+            getRestaurants(accessToken);
           } else {
             throw new Error(response.message);
           }
@@ -87,17 +87,13 @@ export const useRestaurantStore = create(
           const response = await (
             await fetch(`${import.meta.env.VITE_API_URL}/restaurants/${id}`, {
               method: "DELETE",
-              headers: accessToken && {
-                Authorization: `Bearer ${accessToken}`,
+              headers: {
+                'Authorization': `Bearer ${accessToken}`,
               },
             })
           ).json();
           if (response?.data && response.data?.success) {
-            set({
-              restsurants: useRestaurantStore
-                ?.getState()
-                ?.restaurants.filter((r) => r.id !== id),
-            });
+            useRestaurantStore.getState().getUserRestaurants(accessToken)
           } else {
             throw new Error(response.message);
           }
@@ -125,11 +121,7 @@ export const useRestaurantStore = create(
             })
           ).json();
           if (response?.data && response.data?.success) {
-            set({
-              restaurants: useRestaurantStore
-                ?.getState()
-                ?.restaurants.map((r) => (r.id === id ? response?.data : r)),
-            });
+            useRestaurantStore.getState().getUserRestaurants()
           } else {
             throw new Error(response.message);
           }

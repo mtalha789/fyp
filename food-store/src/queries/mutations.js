@@ -36,10 +36,10 @@ export const deleteProduct = async (id, accessToken) => {
     })
 }
 
-export const addProduct = () => {
+export const addProduct = (id) => {
     return useMutation({
         mutationFn: (postData, accessToken) => {
-            return fetch(`${import.meta.env.VITE_API_URL}/products`, {
+            return fetch(`${import.meta.env.VITE_API_URL}/restaurants/${id}/menu`, {
                 method: 'POST',
                 body: postData,
                 headers: {
@@ -47,9 +47,14 @@ export const addProduct = () => {
                 }
             })
                 .then((res) => res.json())
+                .then(res => {
+                    console.log('res',res);
+                    
+                    return res.data && res.data
+                })
         },
-        mutationKey: ['menu'],
-        onSuccess: () => queryClient.invalidateQueries(['menu']),
+        mutationKey: ['restaurant-menu',id],
+        onSuccess: () => queryClient.invalidateQueries(['restaurant-menu',id]),
     })
 }
 
@@ -133,7 +138,10 @@ export const deleteUserAccount = () => {
     return useMutation({
         mutationFn: (id, adminToken) => {
             return fetch(`${import.meta.env.VITE_API_URL}/admin/user/${id}`, {
-                headers: { 'Authorization': `Bearer ${adminToken}` }, method: 'DELETE'
+                headers: { 
+                    'Authorization': `Bearer ${adminToken}`,
+                    'Content-Type': 'application/json'
+                }, method: 'DELETE'
             }).then(response => response.json())
 
         },
@@ -145,7 +153,10 @@ export const approveRestaurant = (adminToken) => {
     return useMutation({
         mutationFn: (id ) => {            
             fetch(`${import.meta.env.VITE_API_URL}/admin/restaurant/${id}/approve`, {
-                headers: { 'AdminAuthorization': `Bearer ${adminToken}` },
+                headers: { 
+                    'AdminAuthorization': `Bearer ${adminToken}`,
+                    'Content-Type': 'application/json'
+                },
                 method: 'PUT'
             }).then(response => response.json())
             .then(res => {
@@ -164,7 +175,10 @@ export const rejectRestaurant = () => {
             console.log(id, adminToken);
             
             fetch(`${import.meta.env.VITE_API_URL}/admin/restaurant/${id}/reject`, {
-                headers: { 'AdminAuthorization': `Bearer ${adminToken}` },
+                headers: { 
+                    'AdminAuthorization': `Bearer ${adminToken}`,
+                    'Content-Type': 'application/json'
+                },
                 method: 'PUT'
             }).then(response => response.json())
             then(res => {

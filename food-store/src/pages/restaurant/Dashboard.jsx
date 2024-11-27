@@ -7,14 +7,6 @@ import { useAuthStore } from '../../store/Auth';
 import { useRestaurantOrders, useRestaurantSalesReport } from '../../queries/queries';
 import LoaderComponent from '../../components/Loader';
 
-
-
-const stats = {
-  totalOrders: 50,
-  totalRevenue: 5000,
-  pendingOrders: 10,
-};
-
 export default function RestaurantDashboard() {
   const { id } = useParams();
   const { accessToken } = useAuthStore();

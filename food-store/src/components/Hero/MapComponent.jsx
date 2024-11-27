@@ -6,17 +6,16 @@ import { MapPin } from 'lucide-react';
 
 
 const MapComponent = () => {
-  const [position, setPosition] = useState(null); // User's location
-  const [selectedLocation, setSelectedLocation] = useState(null); // Location set by the user
+  const [position, setPosition] = useState(null); 
+  const [selectedLocation, setSelectedLocation] = useState(null);
   const { isOpen, onOpen, onOpenChange } = useDisclosure();
   
-  // Function to handle "Locate Me" button click
   const handleLocateMe = () => {
     onOpen();
     if (navigator.geolocation) {
       navigator.geolocation.getCurrentPosition(
         ({ coords: { latitude, longitude } }) => {
-          setPosition([latitude, longitude]); // Set the user's current location
+          setPosition([latitude, longitude]); 
        
         },
         (error) => {
@@ -29,18 +28,17 @@ const MapComponent = () => {
     }
   };
   
-  // Function to allow the user to click and set their location on the map
+  
   const SetMarkerOnClick = () => {
     useMapEvents({
       click: (e) => {
         const { lat, lng } = e.latlng;
-        setSelectedLocation([lat, lng]); // Update selected location
+        setSelectedLocation([lat, lng]);
       },
     });
     return selectedLocation ? <Marker position={selectedLocation} /> : null;
   };
 
-  // Function to close the modal and log the selected location
   const handleSaveLocation = () => {
     console.log('Selected Location:', selectedLocation);
   };
@@ -48,7 +46,6 @@ const MapComponent = () => {
   return (
     <>
     <div className='flex justify-center ' >
-      {/* Locate Me Button */}
       <Button onPress={handleLocateMe} 
       variant='light'
       color='default'
@@ -58,7 +55,6 @@ const MapComponent = () => {
         <MapPin   /> 
       </Button>
 
-      {/* Modal with Map */}
     </div>
     <Modal
         className="pt-9"
@@ -73,7 +69,7 @@ const MapComponent = () => {
         <ModalBody>
           <div className="h-96 w-full">
             <MapContainer
-              center={position || [51.505, -0.09]} // Center on user's location or default
+              center={position || [51.505, -0.09]}
               zoom={13}
               style={{ height: '100%', width: '100%' }}
             >

@@ -20,7 +20,7 @@ const BusinessPartner = () => {
 
     const handleDeleteRestaurant = async (id) => {
         setActionLoading(true)
-        toast.success('Restaurant deleted successfully')
+        // toast.success('Restaurant deleted successfully')
         const response = deleteRestaurant(id, accessToken);
         if(response?.success) {
             setActionLoading(false);
@@ -62,7 +62,7 @@ const BusinessPartner = () => {
                                 </div>
                                 <p className="text-xs text-gray-500">{restaurant.corporateEmail}</p>
                                 {restaurant.address?.[0]?.deleted === false ? (
-                                    <p className='text-xs'>{restaurant.address[0].street}-{restaurant.address[0].city}</p>
+                                    <p className='text-xs'>{restaurant.address[0].street && decodeURIComponent(restaurant.address[0].street)}-{restaurant.address[0].city}</p>
                                 ) : (
                                     <Button
                                         onClick={() => navigate(`/business/restaurant/${restaurant.id}/address`)}
@@ -119,7 +119,7 @@ const BusinessPartner = () => {
                 ))}
                     
             </div>
-            <Toaster />
+            {/* <Toaster /> */}
         </div>
     );
     

@@ -1,5 +1,5 @@
 import Navbar from './MyNavbar'
-import ProductCard from './ProductCard'
+import ProductCard from './RestauerantCard'
 import Footer from './Footer'
 import AuthLayout from './AuthLayout'
 import Rating from './Rating'

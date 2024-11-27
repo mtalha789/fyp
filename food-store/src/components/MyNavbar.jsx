@@ -16,13 +16,13 @@ import toast, { Toaster } from "react-hot-toast";
 
 export default function MyNavbar() {
   const navigate = useNavigate();
-  const { status: authStatus, logout, user } = useAuthStore();
+  const { status: authStatus, logout, user, accessToken } = useAuthStore();
   const { resetAccount } = useRestaurantStore()
   const { isOpen, onOpen, onOpenChange } = useDisclosure()
 
   const handleLogout = async () => {
     const businessAcoount = user?.role?.toUpperCase() === "SELLER";
-    const response = await logout();
+    const response = await logout(accessToken);
 
     if (response.success === false) {
       toast.error("Error logging out...");

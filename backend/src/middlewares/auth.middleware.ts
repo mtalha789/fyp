@@ -26,14 +26,18 @@ export const verifyJWT = asyncHandler(async (req, _, next) => {
     req.cookies?.accessToken ||
     req.header("Authorization")?.replace("Bearer ", "");
 
+    console.log(token);
+    
   if (!token) {
     throw new ApiError("Unauthorized request", 401);
   }
 
-  const decodedToken: JwtPayload = JWT.verify(
+  const decodedToken: JwtPayload = await JWT.verify(
     token,
     process.env.ACCESS_TOKEN_SECRET as string
   ) as JwtPayload;
+
+  console.log(decodedToken);
 
   const user = await db.user.findFirst({
     where: { id: decodedToken.id as string },

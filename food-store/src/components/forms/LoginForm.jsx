@@ -106,7 +106,7 @@ export default function LoginForm() {
         />
         <Button
           type="submit"
-          className="w-[23rem] mx-auto bg-black text-white font-bold py-2 px-4 rounded"
+          className="w-full sm:max-w-[20rem] mx-auto bg-black text-white font-bold py-2 px-4 rounded"
           disabled={loading}
           variant="flat"
         >

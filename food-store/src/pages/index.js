@@ -1,5 +1,5 @@
 import MyNavbar from '../components/MyNavbar'
-import ProductCard from '../components/ProductCard'
+import ProductCard from '../components/RestauerantCard'
 import LoginForm from '../components/forms/LoginForm'
 import Footer from '../components/Footer'
 import RestaurantDetails from './RestaurantDetails'
@@ -10,6 +10,7 @@ import Careers from './careers/Careers'
 import RiderRegistration from './careers/RiderRegistration'
 import AddressPage from './AddressPage'
 import AddTimeSlots from './AddTimeSlots'
+import Restaurants from './Restaurants'
 
 
 export {
@@ -24,5 +25,6 @@ export {
     PartnerWithUs,
     Careers,
     RiderRegistration,
-    AddressPage
+    AddressPage,
+    Restaurants as UserFacingRestaurantPage 
 }

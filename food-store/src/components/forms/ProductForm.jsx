@@ -6,12 +6,13 @@ import LoaderComponent from '../Loader';
 import { addProduct as addProductMutation } from '../../queries/mutations';
 import { useAuthStore } from '../../store/Auth';
 import { Loader } from 'lucide-react'
+import CategoryForm from './CategoryForm';
 
-export default function ProductForm() {
+export default function ProductForm({ id }) {
     const [loading, setLoading] = React.useState(false);
     const [error, setError] = React.useState(null);
     const { data: categories, isError, isLoading, error: fetchError } = useCategories()
-    const { mutate: addProduct, isLoading: addProductLoading, isError: isAddProductError, error: addProductError } = addProductMutation();
+    const { mutate: addProduct, isLoading: addProductLoading, isError: isAddProductError, error: addProductError } = addProductMutation(id);
     const { accessToken } = useAuthStore()
 
     const handleSubmit = async (e) => {
@@ -31,11 +32,24 @@ export default function ProductForm() {
             return;
         }
 
+        const isCat = data.get('category_id');
+        if (!isCat) {
+            setError({ category: 'Category is required' });
+            setLoading(false);
+            return;
+        }
+
         setLoading(false);
         setError(null);
 
         //send data to backend
-        addProduct(data, accessToken)
+        const response = await addProduct(data, accessToken)
+
+        if (!response.success) {
+            setError(response.message);
+            setLoading(false);
+        }
+        
     }
 
     if (isLoading) {
@@ -102,7 +116,7 @@ export default function ProductForm() {
                 )}
 
 
-                <Button >Add New category</Button>
+                <CategoryForm />
                 <Input
                     label="Upload Product Image"
                     labelPlacement='outside-left'

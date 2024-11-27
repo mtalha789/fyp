@@ -12,7 +12,7 @@ export default function RestaurantAddressForm({ setFormState, formState, resId }
   const navigate = useNavigate()
   const { accessToken } = useAuthStore()
 
-  const { addRestaurantAddress } = useRestaurantStore();
+  const { addRestaurantAddress, getUserRestaurants } = useRestaurantStore();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -29,10 +29,13 @@ export default function RestaurantAddressForm({ setFormState, formState, resId }
       return;
     }
 
-    const response = await addRestaurantAddress(Object.fromEntries(data.entries()),accessToken, resId);
+    const finalData = { ...result.data,street: encodeURIComponent(result.data.street) }
+    
+    const response = await addRestaurantAddress(finalData,accessToken, resId, getUserRestaurants);
 
     if (!response.success) {
       setError(response.error);
+      toast.error("Error adding address");
       setLoading(false);
       return;
     }
@@ -41,7 +44,6 @@ export default function RestaurantAddressForm({ setFormState, formState, resId }
 
     setError(null);
     setLoading(false);
-    setFormState && setFormState({ ...formState, addressSubmitted: true})
     navigate('/business-portal')
   }
 

@@ -142,7 +142,7 @@ function SignupForm() {
                 />
                 <Button
                     type="submit"
-                    className="w-[23rem] mx-auto bg-black text-white font-bold py-2 px-4 rounded-lg"
+                    className="w-full sm:max-w-[20rem] mx-auto bg-black text-white font-bold py-2 px-4 rounded-lg"
                     disabled={loading}
                     variant='flat'
                 >

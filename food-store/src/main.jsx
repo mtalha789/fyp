@@ -23,7 +23,8 @@ import {
   Careers,
   RiderRegistration,
   AddressPage,
-  AddTimeSlots
+  AddTimeSlots,
+  UserFacingRestaurantPage
 } from "./pages/index.js";
 
 import {
@@ -95,6 +96,10 @@ const router = createBrowserRouter([
             <EditRestuarant />
           </AuthLayout>
         )
+      },
+      {
+        path: '/restaurants',
+        element: <UserFacingRestaurantPage />
       },
       {
         path: "/restaurant/:id",

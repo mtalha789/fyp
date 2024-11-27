@@ -31,6 +31,7 @@ export default function Restaurant() {
 
   if(isLoading) return <div className="h-screen"><LoaderComponent /></div>
   if(isError) return <p>Error: {error.message}</p>
+  
   return (
     <div className="w-full mx-auto  sm:px-6 lg:px-8 py-4">
       
@@ -99,7 +100,7 @@ const RestaurantsTable = ({ restaurants, adminToken }) => {
                       const res = approveRestaurant(restaurant.id, adminToken)
                       res.success ? toast.success('Restaurant rejected successfully') : toast.error('Error rejecting restaurant')
                       res.success && getUserRestaurants(accessToken)
-                      revalidate()
+                      revalidate('/admin/restaurants')
                     }} 
                     disabled={rejectRestaurantLoading || approveRestaurantLoading} className='w-full text-center'> Approve </Button>
                   </DropdownItem>

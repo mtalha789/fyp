@@ -33,8 +33,8 @@ const GeoAddressSearch = () => {
         const { latitude, longitude } = location;
 
         try {
-          const url = `https://api.opencagedata.com/geocode/v1/json?q=${latitude}+${longitude}&key=${import.meta.env.VITE_OPENCAGE_APIKEY}`;
-          const response = await axios.get(url);
+          const url = `https://api.opencagedata.com/geocode/v1/json?q=${latitude}+${longitude}&key=5e6caa49c7ae44feb25c181c5ad52b0e`;
+          const response = await (await fetch(url)).json();
 
           if (response.data.results.length > 0) {
             const result = response.data.results[0];
@@ -55,6 +55,22 @@ const GeoAddressSearch = () => {
       }
     });
   };
+
+  async function getZipCode(lat, lon) {
+    const apiKey = '5e6caa49c7ae44feb25c181c5ad52b0e';
+    const url = `https://api.opencagedata.com/geocode/v1/json?q=${lat}+${lon}&key=${apiKey}`;
+  
+    try {
+      const response = await fetch(url);
+      const data = await response.json();
+      const postalCode = data.results[0].components.postcode;
+  
+      console.log('Zip Code:', postalCode);
+    } catch (error) {
+      console.error('Error fetching zip code:', error);
+    }
+  }
+  
 
   return (
     <div>

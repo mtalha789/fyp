@@ -91,18 +91,18 @@ const addTimeSlot = asyncHandler(async (req, res) => {
 })
 
 const getAllRestaurants = asyncHandler(async (req, res) => {
-    const { search, city } = req.query
+    // const { search, city } = req.query
 
     const restaurants = await db.restaurant.findMany({
         where: {
             deleted: false,
             approved: true,
-            name: { contains: search as string, mode: 'insensitive' },
-            address: { 
-                some: { 
-                city: { contains: city as string, mode: 'insensitive' } 
-                }
-            } 
+            // name: { contains: search as string, mode: 'insensitive' },
+            // address: { 
+            //     some: { 
+            //     city: { contains: city as string, mode: 'insensitive' } 
+            //     }
+            // } 
         },
             select: {
                 id: true,
@@ -118,6 +118,8 @@ const getAllRestaurants = asyncHandler(async (req, res) => {
                         comment: true
                     }
                 },
+                address: true,
+                timeSlots: true
             },
         })
     if (restaurants == null) {
@@ -206,6 +208,8 @@ const deleteRestaurant = asyncHandler(async (req, res) => {
             deleted: true
         }
     })
+    console.log(restaurant.owner_id);
+    
     if (restaurant == null) {
         throw new ApiError('Error Deleting restaurant', 500)
     }
@@ -447,17 +451,15 @@ const addRestaurantAddress = asyncHandler(async (req, res) => {
     if (!city || !state || !zipCode || !street) {
         throw new ApiError('All fields are required', 400)
     }
+
+    console.log(req.user);
+    
     const restaurant = await db.restaurant.findUnique({
         where: {
             id: id as string,
             deleted: false,
-            owner_id: req.user?.id as string
         },
     })
-
-    if (restaurant == null) {
-        throw new ApiError('Unauthorized Request', 401)
-    }
 
     const updatedRestaurant = await db.restaurantAddress.create({
         data: {
@@ -468,9 +470,9 @@ const addRestaurantAddress = asyncHandler(async (req, res) => {
             street
         }
     })
-    if (updatedRestaurant == null) {
-        throw new ApiError('Error updating restaurant', 500)
-    }
+    // if (updatedRestaurant == null) {
+    //     throw new ApiError('Error updating restaurant', 500)
+    // }
     res
         .status(200)
         .json(new ApiResponse(200, { updatedRestaurant, success: true  }, 'Updated Restaurant Successfully'))

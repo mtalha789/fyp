@@ -4,13 +4,13 @@ import { useParams } from "react-router-dom";
 import { useAuthStore } from "../../store/Auth";
 import { useRestaurantOrders } from "../../queries/queries";
 import LoaderComponent from "../../components/Loader";
-import { updateOrder } from "../../queries/mutations";
+import { updateOrder as updateOrderMutation } from "../../queries/mutations";
 const OrdersPage = () => {
   const { id } = useParams();
   const { accessToken } = useAuthStore();
   const { data: orders, isLoading, isError, error } = useRestaurantOrders(id, accessToken)
 
-  const {error: updateError, isError: updateIsError, isLoading: updateIsLoading, mutate: updateOrder} = updateOrder(id)
+  const {error: updateError, isError: updateIsError, isLoading: updateIsLoading, mutate: updateOrder} = updateOrderMutation(id)
 
   if (isLoading) return <div className="h-screen"><LoaderComponent /></div>
   if (isError) return <p>Error: {error.message}</p>

@@ -4,7 +4,9 @@ export const restaurantSchema = z.object({
     name: z.string().trim().min(1,'Name must be at least 1 characters').max(20,''),
     email: z.string().email('Invalid email'),
     minOrderPrice: z.coerce.number('Order price must be a number').min(1,'Order price must be greater than 1'),
-    phone: z.string().trim().length(11,'Phone number muat be 11 characters long'),
+    phone: z.string().trim().regex(/^\d+$/, {
+        message: 'Phone number must contain only numeric characters',
+      }).length(11,'Phone number muat be 11 characters long'),
     profileImage: z.instanceof(File,'Profile Image is required').refine(file => file.size < 1024 * 1024 && file.type.startsWith('image/'), 'Image size must be less than 1MB'),
 })
 
