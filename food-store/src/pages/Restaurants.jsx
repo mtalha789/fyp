@@ -19,7 +19,7 @@ export default function Restaurants() {
         <h1 className='text-3xl font-extrabold py-4 p-2'>Restaurants</h1>
         {
             Array.isArray(restaurants) && restaurants.length > 0 ? (
-                <div className='grid grid-cols-1 sm:grid-cols-3 gap-y-4 px-3'>
+                <div className='mx-auto grid justify-center items-center grid-cols-1 sm:grid-cols-3 gap-y-4 px-3'>
                     {restaurants.map(restaurant => <RestaurantCard key={restaurant.id} restaurant={restaurant} />)}
                 </div>
             ) : (

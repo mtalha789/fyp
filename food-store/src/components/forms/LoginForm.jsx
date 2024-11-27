@@ -66,7 +66,7 @@ export default function LoginForm() {
         onSubmit={handleSubmit}
         className="flex flex-col gap-y-4 justify-center items-center mx-auto w-[90%]"
       >
-        {error?.message && <p className="text-red-500">{error?.message}</p>}
+        {error?.message && <p className="text-red-500">Error Logging in</p>}
 
         <Input
           isRequired

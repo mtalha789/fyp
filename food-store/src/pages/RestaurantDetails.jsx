@@ -40,54 +40,54 @@ const RestaurantDetails = () => {
             <Loader />
         </div>
     }
-    React.useEffect(() => {
-        if (restaurant !== null)
-            if (isLoading === false && isError === false) {
+    // React.useEffect(() => {
+    //     if (restaurant !== null)
+    //         if (isLoading === false && isError === false) {
 
-                if (restaurant.timeSlots && Array.isArray(restaurant.timeSlots) && restaurant.timeSlots.length > 0) {
-                    const now = new Date();
-                    const dayOfWeek = now.getDay();
-                    const startTime = restaurant.timeSlots[(dayOfWeek - 1) % 7]?.startTime;
-                    const endTime = restaurant.timeSlots[(dayOfWeek - 1) % 7]?.endTime;
-                    const currentTime = now.toTimeString();
-                    if (startTime && endTime) {
-                        if (currentTime > startTime && currentTime < endTime) {
-                            setIsOpen({ open: true, closingTime: endTime });
-                        } else {
-                            if (currentTime < startTime) {
-                                setIsOpen({ open: false, openingTime: restaurant.timeSlots[(dayOfWeek - 1) % 7].startTime });
-                            } else {
-                                setIsOpen({ open: false, openingTime: restaurant.timeSlots[dayOfWeek % 7].startTime });
-                            }
-                        }
-                    }
-                }
-            }
-    }, [restaurant, isLoading, isError])
+    //             if (restaurant.timeSlots && Array.isArray(restaurant.timeSlots) && restaurant.timeSlots.length > 0) {
+    //                 const now = new Date();
+    //                 const dayOfWeek = now.getDay();
+    //                 const startTime = restaurant.timeSlots[(dayOfWeek - 1) % 7]?.startTime;
+    //                 const endTime = restaurant.timeSlots[(dayOfWeek - 1) % 7]?.endTime;
+    //                 const currentTime = now.toTimeString();
+    //                 if (startTime && endTime) {
+    //                     if (currentTime > startTime && currentTime < endTime) {
+    //                         setIsOpen({ open: true, closingTime: endTime });
+    //                     } else {
+    //                         if (currentTime < startTime) {
+    //                             setIsOpen({ open: false, openingTime: restaurant.timeSlots[(dayOfWeek - 1) % 7].startTime });
+    //                         } else {
+    //                             setIsOpen({ open: false, openingTime: restaurant.timeSlots[dayOfWeek % 7].startTime });
+    //                         }
+    //                     }
+    //                 }
+    //             }
+    //         }
+    // }, [restaurant, isLoading, isError])
     // const { data: restaurant, isLoading, isError, error } = useRestaurant(id)
 
-    // if (isLoading) {
-    //     return (
-    //         <div>
-    //             <div className='flex gap-x-4 py-4 md:px-10'>
-    //                 <div className='relative'>
-    //                     <div className="w-40 h-40 bg-gray-200 animate-pulse rounded"></div>
-    //                 </div>
-    //                 <div className="flex flex-col gap-2">
-    //                     <div className="w-40 h-4 bg-gray-200 animate-pulse rounded"></div>
-    //                     <div className='w-40 h-4 bg-gray-200 animate-pulse rounded'></div>
-    //                     <div className='w-40 h-4 bg-gray-200 animate-pulse rounded'></div>
-    //                     <div className='w-40 h-4 bg-gray-200 animate-pulse rounded'></div>
-    //                 </div>
-    //             </div>
-    //             <Divider className="my-4" />
-    //         </div>
-    //     )
-    // }
+    if (isLoading) {
+        return (
+            <div>
+                <div className='flex gap-x-4 py-4 md:px-10'>
+                    <div className='relative'>
+                        <div className="w-40 h-40 bg-gray-200 animate-pulse rounded"></div>
+                    </div>
+                    <div className="flex flex-col gap-2">
+                        <div className="w-40 h-4 bg-gray-200 animate-pulse rounded"></div>
+                        <div className='w-40 h-4 bg-gray-200 animate-pulse rounded'></div>
+                        <div className='w-40 h-4 bg-gray-200 animate-pulse rounded'></div>
+                        <div className='w-40 h-4 bg-gray-200 animate-pulse rounded'></div>
+                    </div>
+                </div>
+                <Divider className="my-4" />
+            </div>
+        )
+    }
 
-    // if (isError) {
-    //     return <p>{JSON.stringify(error.message)}</p>
-    // }
+    if (isError) {
+        return <p>{JSON.stringify(error.message)}</p>
+    }
 
     if (!restaurant) {
         return <p>No restaurant found</p>
@@ -96,6 +96,8 @@ const RestaurantDetails = () => {
     return (
         <>
             <div className='flex gap-x-4 py-4 md:px-10'>
+                {console.log(restaurant)
+                }
                 <div className='relative'>
                     <Image
                         src={restaurant.imageUrl || 'food-store/src/assets/cafe.png'}

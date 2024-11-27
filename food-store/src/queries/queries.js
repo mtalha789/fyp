@@ -4,9 +4,7 @@ export const useCategories = () => {
     return useQuery({
         queryKey:['categories'],
         queryFn:  () => {
-        return fetch(`${import.meta.env.VITE_API_URL}/categories`).then(response => response.json()).then(res => {
-            console.log('res',res.data.categories);
-            
+        return fetch(`${import.meta.env.VITE_API_URL}/categories`).then(response => response.json()).then(res => {            
             return res.data.categories
         })
         }
@@ -18,7 +16,6 @@ export const useMenu =  () => {
         queryKey: ['menu'],
         queryFn: () => {
         return fetch(`${import.meta.env.VITE_API_URL}/products`).then(response => response.json()).then(res => {
-            console.log('res',res.data.products);
             
             return res.data && res.data?.products
         })
@@ -71,8 +68,7 @@ export const useRestaurantSellerMenu = (id, accessToken) => {
         queryKey: ['restaurant-seller-menu', id],
         queryFn: async() => {
             const response = await (await fetch(`${import.meta.env.VITE_API_URL}/restaurants/${id}/seller-menu`,{headers: {'Authorization': `Bearer ${accessToken}`}})).json()
-            console.log('ress',response);
-            
+             
             return response.data.restaurantMenu
         }
     })

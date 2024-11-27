@@ -87,13 +87,13 @@ const BusinessPartner = () => {
                                     >
                                         Go to Dashboard
                                     </Button>
-                                    <Button
+                                    {/* <Button
                                         onClick={() => navigate(`/business/restaurant/${restaurant.id}/timeslots`)}
                                         className="bg-blue-500 text-white"
                                         size="sm"
                                     >
                                         Manage Time Slots
-                                    </Button>
+                                    </Button> */}
                                 </div>
                             )}
                         </CardBody>

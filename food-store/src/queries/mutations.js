@@ -2,9 +2,9 @@ import { useMutation, QueryClient } from "@tanstack/react-query"
 import { useAuthStore } from "../store/Auth"
 
 const queryClient = new QueryClient()
-export const toggleProductAvailability = async (id, accessToken) => {
+export const toggleProductAvailability = (accessToken) => {
     return useMutation({
-        mutationFn: () => {
+        mutationFn: (id) => {
             return fetch(`${import.meta.env.VITE_API_URL}/products/${id}/toggle-unavailable`, {
                 method: 'PUT',
                 headers: {
@@ -13,9 +13,10 @@ export const toggleProductAvailability = async (id, accessToken) => {
                 }
             })
                 .then((res) => res.json())
+                .then(res => res.data && res.data.success && { success: true})
         },
-        mutationKey: ['menu', id],
-        onSuccess: () => queryClient.invalidateQueries(['menu', id]),
+        mutationKey: ['menu'],
+        onSuccess: () => queryClient.invalidateQueries(['menu']),
     })
 }
 
@@ -36,9 +37,9 @@ export const deleteProduct = async (id, accessToken) => {
     })
 }
 
-export const addProduct = (id) => {
+export const addProduct = (id, accessToken) => {
     return useMutation({
-        mutationFn: (postData, accessToken) => {
+        mutationFn: (postData) => {
             return fetch(`${import.meta.env.VITE_API_URL}/restaurants/${id}/menu`, {
                 method: 'POST',
                 body: postData,
@@ -152,7 +153,7 @@ export const deleteUserAccount = () => {
 export const approveRestaurant = (adminToken) => {
     return useMutation({
         mutationFn: (id ) => {            
-            fetch(`${import.meta.env.VITE_API_URL}/admin/restaurant/${id}/approve`, {
+            return fetch(`${import.meta.env.VITE_API_URL}/admin/restaurant/${id}/approve`, {
                 headers: { 
                     'AdminAuthorization': `Bearer ${adminToken}`,
                     'Content-Type': 'application/json'
@@ -174,7 +175,7 @@ export const rejectRestaurant = () => {
         mutationFn: (id, adminToken) => {
             console.log(id, adminToken);
             
-            fetch(`${import.meta.env.VITE_API_URL}/admin/restaurant/${id}/reject`, {
+            return fetch(`${import.meta.env.VITE_API_URL}/admin/restaurant/${id}/reject`, {
                 headers: { 
                     'AdminAuthorization': `Bearer ${adminToken}`,
                     'Content-Type': 'application/json'

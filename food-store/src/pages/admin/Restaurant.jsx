@@ -50,7 +50,7 @@ export default function Restaurant() {
 }
 
 const RestaurantsTable = ({ restaurants, adminToken }) => {
-  const { getUserRestaurants } = useRestaurantStore()
+  const { getUserRestaurants, businessStatus } = useRestaurantStore()
   const { accessToken } = useAuthStore()
   const {revalidate} = useRevalidator()
   const { mutate: approveRestaurant, isLoading: approveRestaurantLoading, isError: isApproveRestaurantError, error: approveRestaurantError } = approveRestaurantMutation(adminToken)
@@ -96,11 +96,14 @@ const RestaurantsTable = ({ restaurants, adminToken }) => {
                 <DropdownMenu>
                   <DropdownItem >
                     <Button color='success' 
-                    onClick={()=> {
-                      const res = approveRestaurant(restaurant.id, adminToken)
+                    onClick={async ()=> {
+                      const res = await approveRestaurant(restaurant.id, adminToken)
                       res.success ? toast.success('Restaurant rejected successfully') : toast.error('Error rejecting restaurant')
-                      res.success && getUserRestaurants(accessToken)
-                      revalidate('/admin/restaurants')
+                      console.log(res);
+                      
+                      businessStatus && getUserRestaurants(accessToken)
+                      // revalidate('/admin/restaurants')
+                      window.location.reload();
                     }} 
                     disabled={rejectRestaurantLoading || approveRestaurantLoading} className='w-full text-center'> Approve </Button>
                   </DropdownItem>
@@ -109,7 +112,9 @@ const RestaurantsTable = ({ restaurants, adminToken }) => {
                     onClick={()=> {
                     const res = rejectRestaurant(restaurant.id, adminToken)
                     res.success ? toast.success('Restaurant rejected successfully') : toast.error('Error rejecting restaurant')
-                    revalidate()
+                    businessStatus && getUserRestaurants(accessToken)
+                    // revalidate('/admin/restaurants')
+                    window.location.reload();
                   }}
                      disabled={rejectRestaurantLoading || approveRestaurantLoading}className='w-full text-center'> Reject </Button>
                   </DropdownItem>

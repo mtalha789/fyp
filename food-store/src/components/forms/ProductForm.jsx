@@ -7,13 +7,16 @@ import { addProduct as addProductMutation } from '../../queries/mutations';
 import { useAuthStore } from '../../store/Auth';
 import { Loader } from 'lucide-react'
 import CategoryForm from './CategoryForm';
+import toast from 'react-hot-toast';
+import { useNavigate } from 'react-router-dom';
 
 export default function ProductForm({ id }) {
+    const navigate = useNavigate();
     const [loading, setLoading] = React.useState(false);
     const [error, setError] = React.useState(null);
-    const { data: categories, isError, isLoading, error: fetchError } = useCategories()
-    const { mutate: addProduct, isLoading: addProductLoading, isError: isAddProductError, error: addProductError } = addProductMutation(id);
     const { accessToken } = useAuthStore()
+    const { data: categories, isError, isLoading, error: fetchError } = useCategories()
+    const { mutate: addProduct, isLoading: addProductLoading, isError: isAddProductError, error: addProductError } = addProductMutation(id, accessToken);
 
     const handleSubmit = async (e) => {
         e.preventDefault();
@@ -25,7 +28,7 @@ export default function ProductForm({ id }) {
 
         //validation
         const result = productSchema.safeParse(Object.fromEntries(data.entries()));
-        if (!result.success) {
+        if (!result?.success) {
             setError(result.error.formErrors.fieldErrors);
             setLoading(false);
             console.log(result.error);
@@ -43,17 +46,21 @@ export default function ProductForm({ id }) {
         setError(null);
 
         //send data to backend
-        const response = await addProduct(data, accessToken)
+        const response = await addProduct(data)
 
         if (!response.success) {
             setError(response.message);
             setLoading(false);
+            toast.error('Error Adding Item');
+            return;
         }
         
+        toast.success('Added Item successfully')
+        navigate('/corporate/' + id + '/menu')
     }
 
-    if (isLoading) {
-        return <LoaderComponent />
+    if (isLoading || addProductLoading) {
+        return <div className="h-full"><LoaderComponent /></div>
     }
     if (isError) {
         return <p className="text-red-500">{fetchError.message}</p>

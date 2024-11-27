@@ -121,7 +121,7 @@ export const useRestaurantStore = create(
             })
           ).json();
           if (response?.data && response.data?.success) {
-            useRestaurantStore.getState().getUserRestaurants()
+            useRestaurantStore.getState().getUserRestaurants(accessToken)
           } else {
             throw new Error(response.message);
           }

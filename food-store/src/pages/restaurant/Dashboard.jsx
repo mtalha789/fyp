@@ -27,7 +27,7 @@ export default function RestaurantDashboard() {
         </Card>
         <Card className='p-3'>
           <h1 className="text-xl font-semibold mb-4">Total Revenue</h1>
-          <h1 className="text-3xl font-bold">${sales.totalRevenue}</h1>
+          <h1 className="text-3xl font-bold">PKR {sales.totalRevenue ? sales.totalRevenue : 0}</h1>
         </Card>
         {/* <Card className='p-3'>
           <h1 className="text-xl font-semibold mb-4">Pending Orders</h1>

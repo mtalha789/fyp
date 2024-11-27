@@ -50,6 +50,7 @@ import {
   OrdersPage,
   SalesPage,
   AddItemPage,
+  EditItemPage,
 } from "./pages/restaurant/index.js";
 
 import {
@@ -204,7 +205,8 @@ const router = createBrowserRouter([
         element: <SalesPage />,
       },
       {
-        // path: "/corporate/:restaurantId/menu/:id/edit",
+        path: "/corporate/:id/menu/:productId",
+        element: <EditItemPage />,
       }
     ]
   },

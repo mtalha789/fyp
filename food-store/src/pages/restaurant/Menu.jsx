@@ -1,10 +1,13 @@
 import { DropdownMenu, DropdownItem, Table, TableBody, TableCell, TableHeader, TableRow, DropdownTrigger, Dropdown, TableColumn, Button } from "@nextui-org/react";
-import { MoreVertical, CheckCircle2, XCircle } from 'lucide-react';
+import { MoreVertical, CheckCircle2, XCircle, Edit } from 'lucide-react';
 import { useState } from "react";
 import { Link, useNavigate, useParams } from "react-router-dom";
 import { useRestaurantSellerMenu } from "../../queries/queries";
 import { useAuthStore } from "../../store/Auth";
 import LoaderComponent from "../../components/Loader";
+import { toggleProductAvailability } from "../../queries/mutations";
+import toast, { Toaster } from "react-hot-toast";
+
 
 export default function MenuPage() {
   const navigate = useNavigate();
@@ -17,6 +20,7 @@ export default function MenuPage() {
 
   return (
     <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+      <Toaster />
       <div className="flex justify-between">
         <h1 className="text-3xl mb-4">Menu</h1>
         <Button asChild variant="shadow" color="default" onClick={() => {navigate(`/corporate/${id}/menu/add-item`)}}>
@@ -24,15 +28,19 @@ export default function MenuPage() {
         </Button>
       </div>
       {
-        menu && Array.isArray(menu) && menu.length > 0  ? <ProductTable className="mt-8" products={menu} /> : <p>No Item</p> }
+        menu && Array.isArray(menu) && menu.length > 0  ? <ProductTable className="mt-8" products={menu} accessToken={accessToken} /> : <p>No Item</p> }
     </div>
   );
 }
 
-function ProductTable({ products }) {
+function ProductTable({ products, accessToken }) {
+  const { mutate, data, isLoading, isError } = toggleProductAvailability( accessToken)
+
+  const { navigate } = useNavigate();
   if (products.length === 0) {
     return <p className="mt-3 font-bold">Add some products</p>;
   }
+
   return (
     <Table className="mt-4">
       <TableHeader>
@@ -73,10 +81,20 @@ function ProductTable({ products }) {
                 </DropdownTrigger>
                 <DropdownMenu>
                   <DropdownItem asChild>
-                    <Button onClick={() => console.log(`Toggle availability for ${product.id}`)}>Toggle Availability</Button>
+                    <Button
+                    disabled={isLoading}
+                    isLoading={isLoading}
+                    className="w-full" 
+                    onClick={async() => {
+                      const res = await mutate(product.id)
+                      console.log(data);
+                      
+                      data.data && data.data.success && toast('Successfully updated')
+                      
+                    }}>Toggle Availability</Button>
                   </DropdownItem>
                   <DropdownItem asChild>
-                    <Link to={`/corporate/${product.restaurantId}/menu/${product.id}/edit`}>Edit</Link>
+                  <Button className="w-full" onClick={() => navigate(`/corporate/${id}/menu/${product.id}`)}>Edit <Edit /></Button>
                   </DropdownItem>
                 </DropdownMenu>
               </Dropdown>

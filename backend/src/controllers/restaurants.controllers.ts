@@ -134,7 +134,7 @@ const getRestaurantById = asyncHandler(async (req, res) => {
     const { id } = req.params
 
     const restaurant = await db.restaurant.findUnique({
-        where: { id: id as string, deleted: false, approved: true },
+        where: { id: id as string, deleted: false},
         select: {
             id: true,
             name: true,
@@ -182,13 +182,18 @@ const getRestaurantById = asyncHandler(async (req, res) => {
 
 const updateRestaurant = asyncHandler(async (req, res) => {
     const { id } = req.params
-    const { name, phone, email } = req.body
+    const { name, phone, email, minOrderPrice } = req.body
+    const minimumOrderPrice = parseInt(minOrderPrice)
+    if(minOrderPrice && isNaN(minimumOrderPrice)){
+        throw new ApiError('Minimum order price should be a number', 400)
+    }
     const updatedRestaurant = await db.restaurant.update({
-        where: { id: id as string, deleted: false, owner_id: req.user?.id as string, approved: true },
+        where: { id: id as string, deleted: false, owner_id: req.user?.id as string },
         data: {
             name: name as string,
             phone: phone as string,
-            corporateEmail: email as string
+            corporateEmail: email as string,
+            minimumOrderPrice: minimumOrderPrice as number 
         }
     })
     if (updateRestaurant == null) {
