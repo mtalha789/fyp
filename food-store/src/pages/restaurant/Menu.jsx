@@ -28,13 +28,13 @@ export default function MenuPage() {
         </Button>
       </div>
       {
-        menu && Array.isArray(menu) && menu.length > 0  ? <ProductTable className="mt-8" products={menu} accessToken={accessToken} /> : <p>No Item</p> }
+        menu && Array.isArray(menu) && menu.length > 0  ? <ProductTable className="mt-8" resId={id} products={menu} accessToken={accessToken} /> : <p>No Item</p> }
     </div>
   );
 }
 
-function ProductTable({ products, accessToken }) {
-  const { mutate, data, isLoading, isError } = toggleProductAvailability( accessToken)
+function ProductTable({ products, accessToken, resId }) {
+  const { mutate, data, isLoading, isError } = toggleProductAvailability(resId, accessToken)
 
   const { navigate } = useNavigate();
   if (products.length === 0) {
@@ -57,7 +57,7 @@ function ProductTable({ products, accessToken }) {
         {products.map(product => (
           <TableRow key={product.id}>
             <TableCell>
-              {product.isAvailableForPurchase ? (
+              {product.isAvailable ? (
                 <>
                   <span className="hidden sr-only">Available</span>
                   <CheckCircle2 />

@@ -2,7 +2,7 @@ import { useMutation, QueryClient } from "@tanstack/react-query"
 import { useAuthStore } from "../store/Auth"
 
 const queryClient = new QueryClient()
-export const toggleProductAvailability = (accessToken) => {
+export const toggleProductAvailability = (resId,accessToken) => {
     return useMutation({
         mutationFn: (id) => {
             return fetch(`${import.meta.env.VITE_API_URL}/products/${id}/toggle-unavailable`, {
@@ -15,8 +15,8 @@ export const toggleProductAvailability = (accessToken) => {
                 .then((res) => res.json())
                 .then(res => res.data && res.data.success && { success: true})
         },
-        mutationKey: ['menu'],
-        onSuccess: () => queryClient.invalidateQueries(['menu']),
+        mutationKey: ['restaurant-seller-menu',resId],
+        onSuccess: () => queryClient.invalidateQueries(['restaurant-seller-menu'],resId),
     })
 }
 
