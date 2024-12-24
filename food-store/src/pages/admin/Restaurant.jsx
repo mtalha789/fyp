@@ -39,7 +39,7 @@ export default function Restaurant() {
         <h2 className='p-2 text-3xl font-bold'>Un Approved Restaurants</h2>
         <Toaster position="top-center" reverseOrder={false} />
         
-        <RestaurantsTable adminToken={adminToken} restaurants={restaurants.filter(restaurant => !restaurant.approved)} />
+        <RestaurantsTable adminToken={adminToken} restaurants={restaurants?.filter(restaurant => !restaurant.approved)} />
       </div>
       {/* <div className="flex flex-col justify-between shadow-lg mt-8">
         <h1 className='p-2 text-2xl font-semibold'>Approved Restaurants</h1>
@@ -55,7 +55,7 @@ const RestaurantsTable = ({ restaurants, adminToken }) => {
   const {revalidate} = useRevalidator()
   const { mutate: approveRestaurant, isLoading: approveRestaurantLoading, isError: isApproveRestaurantError, error: approveRestaurantError } = approveRestaurantMutation(adminToken)
   const { mutate: rejectRestaurant, isLoading: rejectRestaurantLoading, isError: isRejectRestaurantError, error: rejectRestaurantError } = rejectRestaurantMutation()
-  if (restaurants.length === 0) {
+  if (restaurants?.length === 0) {
     return<>
     <div className='m-4'>
     <p className='mt-3 text-lg font-bold'>No unapproved restaurants</p>
@@ -79,7 +79,7 @@ const RestaurantsTable = ({ restaurants, adminToken }) => {
         </TableColumn>
       </TableHeader>
       <TableBody>
-        {restaurants.map(restaurant => (
+        {restaurants?.map(restaurant => (
           <TableRow key={restaurant.id}>
             <TableCell>{restaurant.name}</TableCell>
             <TableCell>{restaurant.corporateEmail}</TableCell>

@@ -31,7 +31,7 @@ export default function Customers() {
         </TableHeader>
         <TableBody>
           {
-            users.map((user) => (
+            users?.map((user) => (
               <TableRow key={user.id}>
                 <TableCell>{user.fullname}</TableCell>
                 <TableCell>{user.email}</TableCell>

@@ -96,7 +96,7 @@ export const useRestaurantSalesReport = (id, accessToken) => {
     })
 }
 
-export const useRestaurantOrders = (id, accessToken) => {
+export const useRestaurantOrders = async (id, accessToken) => {
     return useQuery({
         queryKey: ['restaurant-orders', id],
         queryFn: async () => {
@@ -125,7 +125,7 @@ export const useMenuItem = (id) => {
     })
 }
 
-export const useUser = (adminToken) => {
+export const useUser = async(adminToken) => {
     return useQuery({
         queryKey: ['users'],
         queryFn: async () => {
@@ -137,7 +137,7 @@ export const useUser = (adminToken) => {
     })
 }
 
-export const useUnapprovedRestaurants = (adminToken) => {
+export const useUnapprovedRestaurants = async(adminToken) => {
     return useQuery({
         queryKey: ['unapproved-restaurants'],
         queryFn: async () => {
